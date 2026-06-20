@@ -34,10 +34,36 @@ import { FeatherUser } from "@subframe/core";
 import { FeatherWand } from "@subframe/core";
 import { FeatherWrench } from "@subframe/core";
 import { FeatherZap } from "@subframe/core";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
+import { getDeal } from "@/lib/api";
+import type { DealDetail } from "@/lib/types";
+
+function fmtPrice(v: number, currency: string) {
+  return new Intl.NumberFormat("de-DE", { style: "currency", currency, maximumFractionDigits: 0 }).format(v);
+}
 
 export default function LeadMasterDataPage() {
   const router = useRouter();
+  const params = useParams();
+  const dealId = Number(params.id);
+
+  const [data, setData] = React.useState<DealDetail | null>(null);
+  const [error, setError] = React.useState<string>("");
+
+  React.useEffect(() => {
+    getDeal(dealId).then(setData).catch((e) => setError(String(e)));
+  }, [dealId]);
+
+  if (error)
+    return (
+      <div className="p-8">
+        <Alert variant="error" icon={<FeatherAlertTriangle />} title="Failed to load deal" description={error} />
+      </div>
+    );
+  if (!data) return <div className="p-8 text-subtext-color">Loading…</div>;
+
+  const { customer, quote, notes } = data;
+  const system = quote.products.map((p) => p.type).join(" + ") || "—";
 
   return (
     <div className="flex h-full w-full items-start bg-default-background">
@@ -149,7 +175,7 @@ export default function LeadMasterDataPage() {
             </span>
             <FeatherChevronRight className="text-body font-body text-subtext-color" />
             <span className="text-body font-body text-subtext-color">
-              Sabine Müller
+              {customer.name}
             </span>
             <FeatherChevronRight className="text-body font-body text-subtext-color" />
             <span className="text-heading-3 font-heading-3 text-default-font">
@@ -167,7 +193,7 @@ export default function LeadMasterDataPage() {
               <div className="flex items-center gap-2 mobile:grow mobile:shrink-0 mobile:basis-0 mobile:flex-col">
                 <Button
                   icon={<FeatherWand />}
-                  onClick={() => router.push("/requests/sabine-muller/strategy")}
+                  onClick={() => router.push(`/requests/${dealId}/strategy`)}
                 >
                   Regenerate strategy
                 </Button>
@@ -205,18 +231,18 @@ export default function LeadMasterDataPage() {
               >
                 <TextField.Input
                   placeholder=""
-                  value="Sabine Müller"
+                  value={customer.name}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
                 />
               </TextField>
               <TextField
                 className="h-auto min-w-[240px] grow shrink-0 basis-0"
-                label="Email"
+                label="Region"
                 helpText=""
               >
                 <TextField.Input
                   placeholder=""
-                  value="sabine.mueller@email.de"
+                  value={customer.region}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
                 />
               </TextField>
@@ -224,23 +250,23 @@ export default function LeadMasterDataPage() {
             <div className="flex w-full flex-wrap items-start gap-4">
               <TextField
                 className="h-auto min-w-[240px] grow shrink-0 basis-0"
-                label="Address"
+                label="Property type"
                 helpText=""
               >
                 <TextField.Input
                   placeholder=""
-                  value="Sonnenberg 7, 21218 Seevetal"
+                  value={customer.property_type ?? "—"}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
                 />
               </TextField>
               <TextField
                 className="h-auto min-w-[240px] grow shrink-0 basis-0"
-                label="Phone"
+                label="Preferred channel"
                 helpText=""
               >
                 <TextField.Input
                   placeholder=""
-                  value="+49 4105 998231"
+                  value={customer.channel_preference ?? "—"}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
                 />
               </TextField>
@@ -253,7 +279,7 @@ export default function LeadMasterDataPage() {
               >
                 <TextField.Input
                   placeholder=""
-                  value="Heat pump + Solar 9.6 kWp"
+                  value={system}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
                 />
               </TextField>
@@ -264,7 +290,7 @@ export default function LeadMasterDataPage() {
               >
                 <TextField.Input
                   placeholder=""
-                  value="€38,400"
+                  value={fmtPrice(quote.total_price, quote.currency)}
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
                 />
               </TextField>
@@ -277,7 +303,7 @@ export default function LeadMasterDataPage() {
                 <span className="text-heading-3 font-heading-3 text-default-font">
                   Installer notes
                 </span>
-                <Badge variant="neutral">2</Badge>
+                <Badge variant="neutral">{notes.length}</Badge>
               </div>
             </div>
             <div className="flex w-full items-center gap-1">
@@ -286,97 +312,36 @@ export default function LeadMasterDataPage() {
                 Insights here shape the recommended plays
               </span>
             </div>
-            <div className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4">
-              <div className="flex w-full flex-wrap items-center gap-3">
-                <IconButton
-                  variant="brand-primary"
-                  icon={<FeatherPlay />}
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                />
-                <div className="flex grow shrink-0 basis-0 items-center gap-0.5">
-                  <div className="flex h-3 w-0.5 flex-none items-start rounded-full bg-brand-300" />
-                  <div className="flex h-5 w-0.5 flex-none items-start rounded-full bg-brand-400" />
-                  <div className="flex h-8 w-0.5 flex-none items-start rounded-full bg-brand-600" />
-                  <div className="flex h-4 w-0.5 flex-none items-start rounded-full bg-brand-400" />
-                  <div className="flex h-6 w-0.5 flex-none items-start rounded-full bg-brand-500" />
-                  <div className="flex h-3 w-0.5 flex-none items-start rounded-full bg-brand-300" />
-                  <div className="flex h-7 w-0.5 flex-none items-start rounded-full bg-brand-600" />
-                  <div className="flex h-5 w-0.5 flex-none items-start rounded-full bg-brand-400" />
-                  <div className="flex h-2 w-0.5 flex-none items-start rounded-full bg-brand-300" />
-                  <div className="flex h-6 w-0.5 flex-none items-start rounded-full bg-brand-500" />
-                  <div className="flex h-4 w-0.5 flex-none items-start rounded-full bg-brand-400" />
-                  <div className="flex h-8 w-0.5 flex-none items-start rounded-full bg-brand-600" />
-                  <div className="flex h-3 w-0.5 flex-none items-start rounded-full bg-brand-300" />
-                  <div className="flex h-5 w-0.5 flex-none items-start rounded-full bg-brand-400" />
-                  <div className="flex h-7 w-0.5 flex-none items-start rounded-full bg-brand-500" />
-                  <div className="flex h-4 w-0.5 flex-none items-start rounded-full bg-brand-400" />
-                  <div className="flex h-2 w-0.5 flex-none items-start rounded-full bg-brand-300" />
-                  <div className="flex h-6 w-0.5 flex-none items-start rounded-full bg-brand-500" />
-                </div>
-                <span className="text-caption font-caption text-subtext-color">
-                  1:24
-                </span>
-              </div>
-              <div className="flex w-full flex-col items-start gap-2 rounded-md bg-neutral-50 px-4 py-3">
-                <div className="flex w-full items-center gap-2">
-                  <FeatherFileText className="text-caption font-caption text-subtext-color" />
-                  <span className="grow shrink-0 basis-0 text-caption-bold font-caption-bold text-subtext-color">
-                    Transcription
-                  </span>
-                  <Badge variant="success" icon={<FeatherCheck />}>
-                    Transcribed
-                  </Badge>
-                </div>
-                <span className="w-full text-caption font-caption text-default-font">
-                  Sabine seemed really set on the environmental side — kept
-                  asking how much CO₂ she&#39;d actually cut. She also mentioned
-                  twice that she&#39;s comparing us with another installer and
-                  is watching the monthly cost closely. Roof faces south-west,
-                  no shading, so the 9.6 kWp config should perform well.
-                </span>
-              </div>
-              <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
-                <Avatar className="bg-warning-600" size="x-small" image="">
-                  JK
-                </Avatar>
-                <span className="grow shrink-0 basis-0 text-caption font-caption text-subtext-color">
-                  Jonas Krüger · Installer
-                </span>
-                <span className="text-caption font-caption text-subtext-color">
-                  Today, 9:14 am
-                </span>
-              </div>
-            </div>
-            <div className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4">
-              <div className="flex w-full items-center gap-2">
-                <FeatherStickyNote className="text-body font-body text-subtext-color" />
-                <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                  Site visit notes
-                </span>
-                <IconButton
-                  size="small"
-                  icon={<FeatherMoreHorizontal />}
-                  onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                />
-              </div>
-              <span className="w-full text-body font-body text-default-font">
-                Existing oil heating is 18 years old and due for replacement —
-                strong urgency. Meter cabinet has room for the inverter.
-                Customer asked about hold-time on the quote; said she&#39;d
-                decide within two weeks.
+            {notes.length === 0 && (
+              <span className="text-caption font-caption text-subtext-color">
+                No notes yet.
               </span>
-              <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
-                <Avatar className="bg-brand-600" size="x-small" image="">
-                  JK
-                </Avatar>
-                <span className="grow shrink-0 basis-0 text-caption font-caption text-subtext-color">
-                  Jonas Krüger · Installer
+            )}
+            {notes.map((note) => (
+              <div
+                key={note.id}
+                className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-4"
+              >
+                <div className="flex w-full items-center gap-2">
+                  <FeatherStickyNote className="text-body font-body text-subtext-color" />
+                  <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                    {note.type === "voice" ? "Voice note" : "Note"}
+                  </span>
+                  <Badge variant="neutral">{note.type}</Badge>
+                </div>
+                <span className="w-full text-body font-body text-default-font">
+                  {note.content}
                 </span>
-                <span className="text-caption font-caption text-subtext-color">
-                  Yesterday, 4:32 pm
-                </span>
+                <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
+                  <span className="grow shrink-0 basis-0 text-caption font-caption text-subtext-color">
+                    Installer note
+                  </span>
+                  <span className="text-caption font-caption text-subtext-color">
+                    {new Date(note.timestamp).toLocaleString("de-DE")}
+                  </span>
+                </div>
               </div>
-            </div>
+            ))}
             <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
               <Button
                 variant="neutral-secondary"
