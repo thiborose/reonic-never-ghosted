@@ -15,8 +15,8 @@ demo something real to call. We don't start a pillar until the prior one is gree
 |--------|-------|-------|
 | BP0 Foundation | ✅ done, merged to `main` | FastAPI, `/health`, config, db, CI + Postgres service, docker-compose (Postgres on host **5433**) |
 | BP1 Domain + read API | ✅ done, merged to `main` | 13 SQLModel tables, deterministic seed (1 org / 2 installers / 20 active + 100 terminal deals), `/admin/seed`, `/installers/{id}/leads`, `/deals/{id}`, CORS open for dev |
-| BP2 Engine integration | 🔨 in progress (`feat/backend-bp2`) | **integration-first**: build the DB-backed tool data sources + persistence + endpoints behind an engine **Protocol**, inject a **fake engine** for now; swap to the real one when it merges |
-| BP3 Feedback loop | ⬜ not started | needs engine goal-arc |
+| BP2 Engine integration | ✅ backend half done (`feat/backend-bp2`) | `StrategyEngine` Protocol + `FakeEngine`, context assembly, knowledge loader, `POST /deals/{id}/strategy`, `.../steps/{order}/draft`, `.../revise`, `GET /orgs/{id}/benchmarks`; persists Strategy/PersonaProfile + append-only StrategyEvent. **Remaining:** swap `FakeEngine`→real engine in `app/integration/engine.py::get_engine` when `feat/strategy-engine` merges |
+| BP3 Feedback loop | ⬜ not started | `data/simulator.py` outcomes + goal-arc update; needs real engine goal-arc for the reset/advance |
 
 **Repo state:** monorepo — `frontend/` (renamed from `reonic-never-ghosted/`) + `backend/`. The strategy engine ([`agent_plan.md`](agent_plan.md)) is being built in a **separate worktree/branch** `feat/strategy-engine` and is **not yet on `main`** — so BP2 can't import it yet. Canonical entity shapes live in `backend/app/models/` (the engine imports from here, per the seam).
 
