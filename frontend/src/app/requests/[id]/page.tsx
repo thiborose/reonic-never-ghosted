@@ -35,12 +35,8 @@ import { FeatherWand } from "@subframe/core";
 import { FeatherWrench } from "@subframe/core";
 import { FeatherZap } from "@subframe/core";
 import { useRouter, useParams } from "next/navigation";
-import { getDeal } from "@/lib/api";
+import { getDeal, updateMasterData } from "@/lib/api";
 import type { DealDetail } from "@/lib/types";
-
-function fmtPrice(v: number, currency: string) {
-  return new Intl.NumberFormat("de-DE", { style: "currency", currency, maximumFractionDigits: 0 }).format(v);
-}
 
 export default function LeadMasterDataPage() {
   const router = useRouter();
@@ -50,9 +46,59 @@ export default function LeadMasterDataPage() {
   const [data, setData] = React.useState<DealDetail | null>(null);
   const [error, setError] = React.useState<string>("");
 
+  // Editable master-data fields, seeded from the loaded deal.
+  const [form, setForm] = React.useState({
+    name: "",
+    region: "",
+    property_type: "",
+    channel_preference: "",
+    total_price: "",
+  });
+  const [saving, setSaving] = React.useState(false);
+  const [saved, setSaved] = React.useState(false);
+
   React.useEffect(() => {
     getDeal(dealId).then(setData).catch((e) => setError(String(e)));
   }, [dealId]);
+
+  React.useEffect(() => {
+    if (!data) return;
+    setForm({
+      name: data.customer.name ?? "",
+      region: data.customer.region ?? "",
+      property_type: (data.customer.property_type as string) ?? "",
+      channel_preference: (data.customer.channel_preference as string) ?? "",
+      total_price: String(data.quote.total_price ?? ""),
+    });
+  }, [data]);
+
+  const set =
+    (k: keyof typeof form) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setForm((f) => ({ ...f, [k]: event.target.value }));
+      setSaved(false);
+    };
+
+  async function save() {
+    setSaving(true);
+    setError("");
+    try {
+      await updateMasterData(dealId, {
+        customer: {
+          name: form.name,
+          region: form.region,
+          property_type: form.property_type || null,
+          channel_preference: form.channel_preference || null,
+        },
+        quote: { total_price: Number(form.total_price) },
+      });
+      setData(await getDeal(dealId));
+      setSaved(true);
+    } catch (e) {
+      setError(String(e));
+    } finally {
+      setSaving(false);
+    }
+  }
 
   if (error)
     return (
@@ -211,10 +257,11 @@ export default function LeadMasterDataPage() {
               <Button
                 variant="neutral-secondary"
                 size="small"
-                icon={<FeatherEdit2 />}
-                onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+                icon={saved ? <FeatherCheck /> : <FeatherEdit2 />}
+                loading={saving}
+                onClick={save}
               >
-                Edit
+                {saved ? "Saved" : "Save"}
               </Button>
             </div>
             <div className="flex w-full items-center gap-1">
@@ -231,8 +278,8 @@ export default function LeadMasterDataPage() {
               >
                 <TextField.Input
                   placeholder=""
-                  value={customer.name}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
+                  value={form.name}
+                  onChange={set("name")}
                 />
               </TextField>
               <TextField
@@ -242,8 +289,8 @@ export default function LeadMasterDataPage() {
               >
                 <TextField.Input
                   placeholder=""
-                  value={customer.region}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
+                  value={form.region}
+                  onChange={set("region")}
                 />
               </TextField>
             </div>
@@ -255,8 +302,8 @@ export default function LeadMasterDataPage() {
               >
                 <TextField.Input
                   placeholder=""
-                  value={customer.property_type ?? "—"}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
+                  value={form.property_type}
+                  onChange={set("property_type")}
                 />
               </TextField>
               <TextField
@@ -266,8 +313,8 @@ export default function LeadMasterDataPage() {
               >
                 <TextField.Input
                   placeholder=""
-                  value={customer.channel_preference ?? "—"}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
+                  value={form.channel_preference}
+                  onChange={set("channel_preference")}
                 />
               </TextField>
             </div>
@@ -280,18 +327,20 @@ export default function LeadMasterDataPage() {
                 <TextField.Input
                   placeholder=""
                   value={system}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
+                  readOnly
+                  onChange={() => {}}
                 />
               </TextField>
               <TextField
                 className="h-auto min-w-[240px] grow shrink-0 basis-0"
-                label="Quote value"
+                label={`Quote value (${quote.currency})`}
                 helpText=""
               >
                 <TextField.Input
                   placeholder=""
-                  value={fmtPrice(quote.total_price, quote.currency)}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {}}
+                  type="number"
+                  value={form.total_price}
+                  onChange={set("total_price")}
                 />
               </TextField>
             </div>

@@ -1,7 +1,9 @@
 // One helper per backend endpoint. No scattered fetch in pages.
 import type {
+  CreateLeadIn,
   DealDetail,
   Lead,
+  MasterDataIn,
   RevisionResult,
   StrategyResult,
 } from "./types";
@@ -25,6 +27,18 @@ export const getLeads = (installerId = 1) =>
 
 export const getDeal = (dealId: number) =>
   req<DealDetail>(`/deals/${dealId}`);
+
+export const createLead = (payload: CreateLeadIn, installerId = 1) =>
+  req<Lead>(`/installers/${installerId}/leads`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+export const updateMasterData = (dealId: number, payload: MasterDataIn) =>
+  req<unknown>(`/deals/${dealId}/master-data`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
 
 export const generateStrategy = (dealId: number) =>
   req<StrategyResult>(`/deals/${dealId}/strategy`, { method: "POST" });

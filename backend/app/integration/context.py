@@ -15,6 +15,7 @@ def build(session: Session, deal_id: int) -> EngineContext | None:
     org_id = queries.org_id_for_deal(session, deal_id)
     return EngineContext(
         deal=deal,
+        installer=queries.get_installer(session, deal.installer_id),
         customer=queries.get_customer(session, deal.customer_id),
         quote=queries.get_quote(session, deal.quote_id),
         touches=queries.touches_for_deal(session, deal_id),

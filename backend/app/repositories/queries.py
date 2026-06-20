@@ -7,6 +7,7 @@ from app.models import (
     CompetitorPressure,
     Customer,
     Deal,
+    Installer,
     Note,
     PersonaProfile,
     Quote,
@@ -15,6 +16,21 @@ from app.models import (
     Touch,
 )
 from app.models.enums import DealStage
+
+
+def insert(session: Session, row: Customer | Quote | Deal) -> Customer | Quote | Deal:
+    """Add a new row and flush so its id is populated; caller owns the commit."""
+    session.add(row)
+    session.flush()
+    return row
+
+
+def apply_updates(session: Session, row: object, fields: dict) -> object:
+    """Set only the provided fields on an existing row; caller owns the commit."""
+    for key, value in fields.items():
+        setattr(row, key, value)
+    session.add(row)
+    return row
 
 
 def leads_for_installer(session: Session, installer_id: int) -> list[Deal]:
@@ -33,6 +49,10 @@ def get_deal(session: Session, deal_id: int) -> Deal | None:
 
 def get_customer(session: Session, customer_id: int) -> Customer | None:
     return session.get(Customer, customer_id)
+
+
+def get_installer(session: Session, installer_id: int) -> Installer | None:
+    return session.get(Installer, installer_id)
 
 
 def get_quote(session: Session, quote_id: int) -> Quote | None:

@@ -7,11 +7,12 @@ and tests all work now. Swap `get_engine()` to the real impl behind the same
 Protocol with zero endpoint/persistence changes.
 """
 
+import os
 from typing import Any, Protocol
 
 from pydantic import BaseModel
 
-from app.models import Customer, Deal, Note, Quote, Signal, Touch
+from app.models import Customer, Deal, Installer, Note, Quote, Signal, Touch
 from app.models.enums import Goal, PersuasionLever
 
 
@@ -21,6 +22,7 @@ class EngineContext(BaseModel):
     model_config = {"arbitrary_types_allowed": True}
 
     deal: Deal
+    installer: Installer
     customer: Customer
     quote: Quote
     touches: list[Touch] = []
@@ -129,5 +131,12 @@ class FakeEngine:
 
 
 def get_engine() -> StrategyEngine:
-    """Swap point: return the real engine here once it merges."""
+    """Real agent when an OpenAI key is present; deterministic stub otherwise.
+
+    Keeps tests/CI (no key) on FakeEngine — same Protocol, zero endpoint changes.
+    """
+    if os.getenv("OPENAI_API_KEY"):
+        from app.integration.agent_engine import AgentEngine  # lazy: keep pydantic_ai off the test path
+
+        return AgentEngine()
     return FakeEngine()

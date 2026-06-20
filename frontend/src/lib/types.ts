@@ -116,3 +116,39 @@ export interface RevisionResult {
   step: Step;
   reason: string;
 }
+
+// --- Write payloads (POST /leads, PATCH /master-data) ---
+
+export interface CreateLeadIn {
+  customer: {
+    name: string;
+    region: string;
+    channel_preference?: string | null;
+    property_type?: string | null;
+    home_ownership?: string | null;
+    annual_income_band?: string | null;
+  };
+  quote: {
+    products: { type: string; spec?: string; qty?: number }[];
+    total_price: number;
+    currency?: string;
+  };
+}
+
+export interface MasterDataIn {
+  customer?: Partial<{
+    name: string;
+    region: string;
+    channel_preference: string | null;
+    property_type: string | null;
+    home_ownership: string | null;
+    annual_income_band: string | null;
+    current_energy_bill: number | null;
+  }>;
+  quote?: Partial<{
+    products: { type: string; spec?: string; qty?: number }[];
+    total_price: number;
+    currency: string;
+  }>;
+  deal?: Partial<{ stage: string; current_goal: string }>;
+}

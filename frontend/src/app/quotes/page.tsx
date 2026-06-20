@@ -183,9 +183,9 @@ export default function QuotesPage() {
           </span>
           <Button
             icon={<FeatherPlus />}
-            onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
+            onClick={() => router.push("/requests/new")}
           >
-            Create quote
+            New lead
           </Button>
           <ToggleGroup value="kanban" onValueChange={(value: string) => {}}>
             <ToggleGroup.Item icon={null} value="25013662">
