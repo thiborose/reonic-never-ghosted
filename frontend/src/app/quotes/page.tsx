@@ -33,9 +33,41 @@ import { FeatherSparkles } from "@subframe/core";
 import { FeatherWand2 } from "@subframe/core";
 import { FeatherWrench } from "@subframe/core";
 import { useRouter } from "next/navigation";
+import { getLeads } from "@/lib/api";
+import type { Lead } from "@/lib/types";
+
+// stage → column label + badge variant. Stages not listed fall into "Other".
+const STAGE_META: Record<string, { label: string; variant: "error" | "warning" | "neutral" | "success" | "brand" }> = {
+  quote_sent: { label: "Quote sent", variant: "error" },
+  engaged: { label: "Engaged", variant: "warning" },
+  negotiating: { label: "Negotiating", variant: "warning" },
+  verbal_commit: { label: "Verbal commit", variant: "brand" },
+  won: { label: "Won", variant: "success" },
+  lost: { label: "Lost", variant: "neutral" },
+  ghosted: { label: "Ghosted", variant: "neutral" },
+};
+const STAGE_ORDER = ["quote_sent", "engaged", "negotiating", "verbal_commit", "won", "lost", "ghosted"];
+
+function fmtPrice(v: number, currency: string) {
+  return new Intl.NumberFormat("de-DE", { style: "currency", currency, maximumFractionDigits: 0 }).format(v);
+}
 
 export default function QuotesPage() {
   const router = useRouter();
+  const [leads, setLeads] = React.useState<Lead[] | null>(null);
+  const [error, setError] = React.useState<string>("");
+
+  React.useEffect(() => {
+    getLeads(1).then(setLeads).catch((e) => setError(String(e)));
+  }, []);
+
+  const byStage = (leads ?? []).reduce<Record<string, Lead[]>>((acc, l) => {
+    (acc[l.stage] ??= []).push(l);
+    return acc;
+  }, {});
+  const columns = STAGE_ORDER.filter((s) => byStage[s]?.length).concat(
+    Object.keys(byStage).filter((s) => !STAGE_ORDER.includes(s))
+  );
 
   return (
     <div className="flex h-full w-full items-start bg-default-background">
@@ -194,432 +226,95 @@ export default function QuotesPage() {
           </Button>
         </div>
         <div className="flex w-full grow shrink-0 basis-0 items-start gap-4 bg-neutral-50 px-6 py-6 overflow-auto mobile:px-4">
-          <div className="flex w-80 flex-none flex-col items-start self-stretch rounded-md border border-solid border-neutral-border bg-neutral-50">
-            <div className="flex w-full items-center gap-2 px-4 py-3">
-              <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                Waiting for response
-              </span>
-              <Badge variant="error">8×</Badge>
-            </div>
-            <div className="flex w-full flex-col items-start gap-3 px-3 pb-4 overflow-auto">
-              <div
-                className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-3 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
-                onClick={() => router.push("/requests/sabine-muller")}
-              >
-                <div className="flex w-full items-start gap-2">
-                  <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                    Intersolar Demo
-                  </span>
-                  <IconButton
-                    size="small"
-                    icon={<FeatherMoreVertical />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => { event.stopPropagation(); }}
-                  />
-                  <IconButton
-                    variant="neutral-secondary"
-                    size="small"
-                    icon={<FeatherEdit2 />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => { event.stopPropagation(); }}
-                  />
-                </div>
-                <div className="flex w-full flex-col items-start">
-                  <span className="text-caption font-caption text-subtext-color">
-                    Inter Solar · manuel.schneider@reonic.de
-                  </span>
-                  <span className="text-caption font-caption text-subtext-color">
-                    Ungarnstraße 7, 52070 Aachen
-                  </span>
-                </div>
-                <div className="flex w-full flex-col items-start gap-2 rounded-md bg-brand-50 px-3 py-2">
-                  <div className="flex w-full items-center gap-2">
-                    <FeatherSparkles className="text-caption font-caption text-brand-600" />
-                    <span className="grow shrink-0 basis-0 text-caption-bold font-caption-bold text-brand-700">
-                      Next: Generate strategy
+          {error && (
+            <span className="text-body font-body text-error-600">
+              Failed to load leads: {error}
+            </span>
+          )}
+          {!leads && !error && (
+            <span className="text-body font-body text-subtext-color">Loading…</span>
+          )}
+          {leads &&
+            columns.map((stage) => {
+              const meta = STAGE_META[stage] ?? { label: stage, variant: "neutral" as const };
+              const items = byStage[stage] ?? [];
+              const open = stage === "quote_sent" || stage === "engaged" || stage === "negotiating";
+              return (
+                <div
+                  key={stage}
+                  className="flex w-80 flex-none flex-col items-start self-stretch rounded-md border border-solid border-neutral-border bg-neutral-50"
+                >
+                  <div className="flex w-full items-center gap-2 px-4 py-3">
+                    <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                      {meta.label}
                     </span>
+                    <Badge variant={meta.variant}>{items.length}×</Badge>
                   </div>
-                  <Button
-                    variant="brand-secondary"
-                    size="small"
-                    icon={<FeatherWand2 />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => { event.stopPropagation(); router.push("/requests/sabine-muller/strategy"); }}
-                  >
-                    Generate strategy
-                  </Button>
-                </div>
-                <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
-                  <Avatar
-                    size="x-small"
-                    image="https://res.cloudinary.com/subframe/image/upload/v1711417512/shared/btvntvzhdbhpulae3kzk.jpg"
-                  >
-                    M
-                  </Avatar>
-                  <span className="grow shrink-0 basis-0 text-caption font-caption text-default-font">
-                    Manuel
-                  </span>
-                  <FeatherClock className="text-caption font-caption text-subtext-color" />
-                  <span className="text-body-bold font-body-bold text-default-font">
-                    €18,889
-                  </span>
-                </div>
-              </div>
-              <div className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-3 shadow-sm">
-                <div className="flex w-full items-start gap-2">
-                  <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                    Quote 1
-                  </span>
-                  <IconButton
-                    size="small"
-                    icon={<FeatherMoreVertical />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                  <IconButton
-                    variant="neutral-secondary"
-                    size="small"
-                    icon={<FeatherEdit2 />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                </div>
-                <div className="flex w-full flex-col items-start">
-                  <span className="text-caption font-caption text-subtext-color">
-                    Udo Sill · udo.sill@reonic.de
-                  </span>
-                  <span className="text-caption font-caption text-subtext-color">
-                    aLATSEESTR 12, 86162 Augsburg
-                  </span>
-                </div>
-                <Badge variant="warning" icon={<FeatherPenTool />}>
-                  Signature pending
-                </Badge>
-                <div className="flex w-full flex-col items-start gap-2 rounded-md bg-warning-50 px-3 py-2">
-                  <div className="flex w-full items-center gap-2">
-                    <FeatherPhone className="text-caption font-caption text-warning-600" />
-                    <span className="grow shrink-0 basis-0 text-caption-bold font-caption-bold text-warning-700">
-                      Next: Schedule a call
-                    </span>
+                  <div className="flex w-full flex-col items-start gap-3 px-3 pb-4 overflow-auto">
+                    {items.map((lead) => (
+                      <div
+                        key={lead.deal_id}
+                        className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-3 shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+                        onClick={() => router.push(`/requests/${lead.deal_id}`)}
+                      >
+                        <div className="flex w-full items-start gap-2">
+                          <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                            {lead.customer_name}
+                          </span>
+                          <IconButton
+                            size="small"
+                            icon={<FeatherMoreVertical />}
+                            onClick={(event: React.MouseEvent<HTMLButtonElement>) => { event.stopPropagation(); }}
+                          />
+                          <IconButton
+                            variant="neutral-secondary"
+                            size="small"
+                            icon={<FeatherEdit2 />}
+                            onClick={(event: React.MouseEvent<HTMLButtonElement>) => { event.stopPropagation(); }}
+                          />
+                        </div>
+                        <div className="flex w-full flex-col items-start">
+                          <span className="text-caption font-caption text-subtext-color">
+                            {lead.region}
+                          </span>
+                          <span className="text-caption font-caption text-subtext-color">
+                            {lead.products.join(" + ")}
+                          </span>
+                        </div>
+                        {open ? (
+                          <div className="flex w-full flex-col items-start gap-2 rounded-md bg-brand-50 px-3 py-2">
+                            <div className="flex w-full items-center gap-2">
+                              <FeatherSparkles className="text-caption font-caption text-brand-600" />
+                              <span className="grow shrink-0 basis-0 text-caption-bold font-caption-bold text-brand-700">
+                                Next: Generate strategy
+                              </span>
+                            </div>
+                            <Button
+                              variant="brand-secondary"
+                              size="small"
+                              icon={<FeatherWand2 />}
+                              onClick={(event: React.MouseEvent<HTMLButtonElement>) => { event.stopPropagation(); router.push(`/requests/${lead.deal_id}/strategy`); }}
+                            >
+                              Generate strategy
+                            </Button>
+                          </div>
+                        ) : (
+                          <Badge variant="brand" icon={<FeatherCheck />}>
+                            {meta.label}
+                          </Badge>
+                        )}
+                        <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
+                          <FeatherClock className="text-caption font-caption text-subtext-color grow shrink-0 basis-0" />
+                          <span className="text-body-bold font-body-bold text-default-font">
+                            {fmtPrice(lead.total_price, lead.currency)}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <Button
-                    variant="neutral-secondary"
-                    size="small"
-                    icon={<FeatherCalendar />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  >
-                    Schedule call
-                  </Button>
                 </div>
-                <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
-                  <Avatar
-                    size="x-small"
-                    image="https://res.cloudinary.com/subframe/image/upload/v1711417512/shared/btvntvzhdbhpulae3kzk.jpg"
-                  >
-                    M
-                  </Avatar>
-                  <span className="grow shrink-0 basis-0 text-caption font-caption text-default-font">
-                    Manuel
-                  </span>
-                  <FeatherClock className="text-caption font-caption text-subtext-color" />
-                  <span className="text-body-bold font-body-bold text-default-font">
-                    €17,539
-                  </span>
-                </div>
-              </div>
-              <div className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-3 shadow-sm">
-                <div className="flex w-full items-start gap-2">
-                  <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                    Becker, Anja
-                  </span>
-                  <IconButton
-                    size="small"
-                    icon={<FeatherMoreVertical />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                  <IconButton
-                    variant="neutral-secondary"
-                    size="small"
-                    icon={<FeatherEdit2 />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                </div>
-                <div className="flex w-full flex-col items-start">
-                  <span className="text-caption font-caption text-subtext-color">
-                    Anja Becker · anja.becker@reonic.de
-                  </span>
-                  <span className="text-caption font-caption text-subtext-color">
-                    Lindenweg 14, 80331 München
-                  </span>
-                </div>
-                <Badge variant="warning" icon={<FeatherPenTool />}>
-                  Signature pending
-                </Badge>
-                <div className="flex w-full flex-col items-start gap-2 rounded-md bg-warning-50 px-3 py-2">
-                  <div className="flex w-full items-center gap-2">
-                    <FeatherPhone className="text-caption font-caption text-warning-600" />
-                    <span className="grow shrink-0 basis-0 text-caption-bold font-caption-bold text-warning-700">
-                      Next: Follow up on signature
-                    </span>
-                  </div>
-                  <Button
-                    variant="neutral-secondary"
-                    size="small"
-                    icon={<FeatherClipboardList />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  >
-                    Log outcome
-                  </Button>
-                </div>
-                <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
-                  <Avatar
-                    size="x-small"
-                    image="https://res.cloudinary.com/subframe/image/upload/v1711417513/shared/kwut7rhuyivweg8tmyzl.jpg"
-                  >
-                    L
-                  </Avatar>
-                  <span className="grow shrink-0 basis-0 text-caption font-caption text-default-font">
-                    Lukas
-                  </span>
-                  <FeatherClock className="text-caption font-caption text-subtext-color" />
-                  <span className="text-body-bold font-body-bold text-default-font">
-                    €24,210
-                  </span>
-                </div>
-              </div>
-              <div className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-3 shadow-sm">
-                <div className="flex w-full items-start gap-2">
-                  <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                    Hoffmann, Klaus
-                  </span>
-                  <IconButton
-                    size="small"
-                    icon={<FeatherMoreVertical />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                  <IconButton
-                    variant="neutral-secondary"
-                    size="small"
-                    icon={<FeatherEdit2 />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                </div>
-                <div className="flex w-full flex-col items-start">
-                  <span className="text-caption font-caption text-subtext-color">
-                    Klaus Hoffmann · klaus.hoffmann@reonic.de
-                  </span>
-                  <span className="text-caption font-caption text-subtext-color">
-                    Bahnhofstraße 3, 70173 Stuttgart
-                  </span>
-                </div>
-                <div className="flex w-full flex-col items-start gap-2 rounded-md bg-brand-50 px-3 py-2">
-                  <div className="flex w-full items-center gap-2">
-                    <FeatherSparkles className="text-caption font-caption text-brand-600" />
-                    <span className="grow shrink-0 basis-0 text-caption-bold font-caption-bold text-brand-700">
-                      Next: Generate strategy
-                    </span>
-                  </div>
-                  <Button
-                    variant="brand-secondary"
-                    size="small"
-                    icon={<FeatherWand2 />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  >
-                    Generate strategy
-                  </Button>
-                </div>
-                <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
-                  <Avatar
-                    size="x-small"
-                    image="https://res.cloudinary.com/subframe/image/upload/v1711417514/shared/ubsk7cs5hnnaj798efej.jpg"
-                  >
-                    S
-                  </Avatar>
-                  <span className="grow shrink-0 basis-0 text-caption font-caption text-default-font">
-                    Sophie
-                  </span>
-                  <FeatherClock className="text-caption font-caption text-subtext-color" />
-                  <span className="text-body-bold font-body-bold text-default-font">
-                    €31,420
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-80 flex-none flex-col items-start self-stretch rounded-md border border-solid border-neutral-border bg-neutral-50">
-            <div className="flex w-full items-center gap-2 px-4 py-3">
-              <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                To specialist partner
-              </span>
-              <Badge variant="neutral">3×</Badge>
-            </div>
-            <div className="flex w-full flex-col items-start gap-3 px-3 pb-4 overflow-auto">
-              <div className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-3 shadow-sm">
-                <div className="flex w-full items-start gap-2">
-                  <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                    Fleischmann, Paul
-                  </span>
-                  <IconButton
-                    size="small"
-                    icon={<FeatherMoreVertical />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                  <IconButton
-                    variant="neutral-secondary"
-                    size="small"
-                    icon={<FeatherEdit2 />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                </div>
-                <div className="flex w-full flex-col items-start">
-                  <span className="text-caption font-caption text-subtext-color">
-                    Paul Fleischmann · paul.fleischmann@reonic.de
-                  </span>
-                  <span className="text-caption font-caption text-subtext-color">
-                    Langweiderstraße 4a, 86462 Langweid
-                  </span>
-                </div>
-                <Badge variant="brand" icon={<FeatherCheck />}>
-                  Signed
-                </Badge>
-                <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
-                  <FeatherClock className="text-caption font-caption text-subtext-color grow shrink-0 basis-0" />
-                  <span className="text-body-bold font-body-bold text-default-font">
-                    €26,269
-                  </span>
-                </div>
-              </div>
-              <div className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-3 shadow-sm">
-                <div className="flex w-full items-start gap-2">
-                  <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                    Schneider, Lars-Manuel
-                  </span>
-                  <IconButton
-                    size="small"
-                    icon={<FeatherMoreVertical />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                  <IconButton
-                    variant="neutral-secondary"
-                    size="small"
-                    icon={<FeatherEdit2 />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                </div>
-                <div className="flex w-full flex-col items-start">
-                  <span className="text-caption font-caption text-subtext-color">
-                    Lars-Manuel Schneider · manuel.schneider@reonic.de
-                  </span>
-                  <span className="text-caption font-caption text-subtext-color">
-                    Provinostraße 52, 86153 Augsburg
-                  </span>
-                </div>
-                <Badge variant="brand" icon={<FeatherCheck />}>
-                  Signed
-                </Badge>
-                <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
-                  <FeatherClock className="text-caption font-caption text-subtext-color grow shrink-0 basis-0" />
-                  <span className="text-body-bold font-body-bold text-default-font">
-                    €21,140
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-80 flex-none flex-col items-start self-stretch rounded-md border border-solid border-neutral-border bg-neutral-50">
-            <div className="flex w-full items-center gap-2 px-4 py-3">
-              <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                Waiting for installation
-              </span>
-              <Badge variant="neutral">7×</Badge>
-            </div>
-            <div className="flex w-full flex-col items-start gap-3 px-3 pb-4 overflow-auto">
-              <div className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-3 shadow-sm">
-                <div className="flex w-full items-start gap-2">
-                  <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                    Sill, Udo
-                  </span>
-                  <IconButton
-                    size="small"
-                    icon={<FeatherMoreVertical />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                  <IconButton
-                    variant="neutral-secondary"
-                    size="small"
-                    icon={<FeatherEdit2 />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                </div>
-                <div className="flex w-full flex-col items-start">
-                  <span className="text-caption font-caption text-subtext-color">
-                    Udo Sill · manuel.schneider@reonic.de
-                  </span>
-                  <span className="text-caption font-caption text-subtext-color">
-                    Am Mittleren Moos 48, 86167 Augsburg
-                  </span>
-                </div>
-                <Badge variant="brand" icon={<FeatherCheck />}>
-                  Signed
-                </Badge>
-                <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
-                  <FeatherClock className="text-caption font-caption text-subtext-color grow shrink-0 basis-0" />
-                  <span className="text-body-bold font-body-bold text-default-font">
-                    €19,448
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex w-80 flex-none flex-col items-start self-stretch rounded-md border border-solid border-neutral-border bg-neutral-50">
-            <div className="flex w-full items-center gap-2 px-4 py-3">
-              <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                Completed
-              </span>
-              <Badge variant="success">16×</Badge>
-            </div>
-            <div className="flex w-full flex-col items-start gap-3 px-3 pb-4 overflow-auto">
-              <div className="flex w-full flex-col items-start gap-3 rounded-md border border-solid border-neutral-border bg-default-background px-4 py-3 shadow-sm">
-                <div className="flex w-full items-start gap-2">
-                  <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                    Schneider, Manuel
-                  </span>
-                  <IconButton
-                    size="small"
-                    icon={<FeatherMoreVertical />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                  <IconButton
-                    variant="neutral-secondary"
-                    size="small"
-                    icon={<FeatherEdit2 />}
-                    onClick={(event: React.MouseEvent<HTMLButtonElement>) => {}}
-                  />
-                </div>
-                <div className="flex w-full flex-col items-start">
-                  <span className="text-caption font-caption text-subtext-color">
-                    Manuel Schneider · manuel.schneider@reonic.de
-                  </span>
-                  <span className="text-caption font-caption text-subtext-color">
-                    Provinostraße 52, 86153 Augsburg
-                  </span>
-                </div>
-                <Badge variant="brand" icon={<FeatherCheck />}>
-                  Signed
-                </Badge>
-                <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
-                  <Avatar
-                    size="x-small"
-                    image="https://res.cloudinary.com/subframe/image/upload/v1711417512/shared/btvntvzhdbhpulae3kzk.jpg"
-                  >
-                    M
-                  </Avatar>
-                  <span className="grow shrink-0 basis-0 text-caption font-caption text-default-font">
-                    Manuel
-                  </span>
-                  <FeatherClock className="text-caption font-caption text-subtext-color" />
-                  <span className="text-body-bold font-body-bold text-default-font">
-                    €13,898
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
+              );
+            })}
         </div>
       </div>
     </div>
