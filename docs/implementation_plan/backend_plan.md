@@ -9,6 +9,21 @@ demo something real to call. We don't start a pillar until the prior one is gree
 - *AI-vs-deterministic split:* [`information_flow.md`](information_flow.md)
 - *The strategy engine itself:* [`agent_plan.md`](agent_plan.md) — **owned there, not here.**
 
+## Status (2026-06-20)
+
+| Pillar | State | Notes |
+|--------|-------|-------|
+| BP0 Foundation | ✅ done, merged to `main` | FastAPI, `/health`, config, db, CI + Postgres service, docker-compose (Postgres on host **5433**) |
+| BP1 Domain + read API | ✅ done, merged to `main` | 13 SQLModel tables, deterministic seed (1 org / 2 installers / 20 active + 100 terminal deals), `/admin/seed`, `/installers/{id}/leads`, `/deals/{id}`, CORS open for dev |
+| BP2 Engine integration | 🔨 in progress (`feat/backend-bp2`) | **integration-first**: build the DB-backed tool data sources + persistence + endpoints behind an engine **Protocol**, inject a **fake engine** for now; swap to the real one when it merges |
+| BP3 Feedback loop | ⬜ not started | needs engine goal-arc |
+
+**Repo state:** monorepo — `frontend/` (renamed from `reonic-never-ghosted/`) + `backend/`. The strategy engine ([`agent_plan.md`](agent_plan.md)) is being built in a **separate worktree/branch** `feat/strategy-engine` and is **not yet on `main`** — so BP2 can't import it yet. Canonical entity shapes live in `backend/app/models/` (the engine imports from here, per the seam).
+
+**Vercel note:** the frontend folder rename needs the Vercel project's *Root Directory* dashboard setting updated to `frontend/` — not an in-repo change.
+
+**To run/test backend:** `cd backend && docker compose up -d db && uv sync && uv run uvicorn app.main:app --reload`; tests `uv run pytest`; swagger at `/docs`.
+
 ## Scope boundary (read this first)
 
 To avoid duplicating [`agent_plan.md`](agent_plan.md):
@@ -106,6 +121,14 @@ from real responses. Tests assert exact seeded counts (seeded RNG).
 ## Pillar BP2 — Engine integration & persistence
 
 Put the [`agent_plan.md`](agent_plan.md) engine behind HTTP and make its work durable.
+
+**Integration-first (engine not yet on `main`):** define a `StrategyEngine`
+**Protocol** in `integration/`, build the whole backend side against it (tool
+data sources, persistence, endpoints), and inject a **fake engine** returning a
+fixture `Strategy` for tests + local demo. When `feat/strategy-engine` merges,
+swap the fake for the real implementation behind the same Protocol — no endpoint
+or persistence changes. This is the build order: backend half ships now, engine
+binds later.
 
 - `integration/` adapters bind the engine's tool interfaces to BP1 repositories:
   - `benchmark_lookup` → benchmark aggregation over seeded deals (engine's
