@@ -58,6 +58,28 @@ const GOAL_LABEL: Record<string, string> = {
   ask_for_commitment: "ASK FOR COMMITMENT",
 };
 
+// Readable labels for the persuasion-lever and channel chips (the API sends raw
+// snake_case enum values). Unknown keys fall back to the raw value.
+const LEVER_LABEL: Record<string, string> = {
+  roi_financial: "ROI / financial",
+  environmental_impact: "Environmental impact",
+  peace_of_mind: "Peace of mind",
+  proximity_trust: "Proximity & trust",
+  social_proof: "Social proof",
+  urgency: "Urgency",
+  gap_framing: "Gap framing",
+  objection_handling: "Objection handling",
+  product_specific: "Product-specific",
+};
+
+const CHANNEL_LABEL: Record<string, string> = {
+  email: "Email",
+  call: "Call",
+  sms: "SMS",
+  gift: "Gift",
+  wait: "Wait",
+};
+
 // Per-task action: the channel the engine assigns (email/call/sms/gift/wait) drives
 // the button label + icon. `null` = no action (e.g. a wait step).
 const CHANNEL_ACTION: Record<
@@ -346,8 +368,12 @@ export default function StrategyPage() {
                         <Badge variant="brand">
                           {GOAL_LABEL[step.goal] ?? step.goal}
                         </Badge>
-                        <Badge variant="neutral">{step.lever}</Badge>
-                        <Badge variant="neutral">{step.channel}</Badge>
+                        <Badge variant="neutral">
+                          {LEVER_LABEL[step.lever] ?? step.lever}
+                        </Badge>
+                        <Badge variant="neutral">
+                          {CHANNEL_LABEL[step.channel] ?? step.channel}
+                        </Badge>
                       </div>
                       <span className="w-full text-body font-body text-default-font">
                         {step.rationale}
