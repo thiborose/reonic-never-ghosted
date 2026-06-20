@@ -1,8 +1,34 @@
 """FastAPI app entrypoint and router wiring."""
 
-from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
-app = FastAPI(title="Never Ghosted")
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+import app.models  # noqa: F401 — register tables before create_all
+from app.db import create_all
+from app.routers import admin, deals, leads
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_all()
+    yield
+
+
+app = FastAPI(title="Never Ghosted", lifespan=lifespan)
+
+# ponytail: wide-open CORS for local dev; lock to the frontend origin before prod.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(admin.router)
+app.include_router(leads.router)
+app.include_router(deals.router)
 
 
 @app.get("/health")
