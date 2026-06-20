@@ -1,6 +1,16 @@
 # Open Questions: Agent 4
 
-Status: not started.
+Status: completed.
 
-Track unresolved questions, weak assumptions, and items needing stakeholder validation.
-
+| Question | Why it matters | Current evidence | Geography | Confidence | Limitation | Product implication | Owner / next step |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Can Reonic access the homeowner's actual electricity tariff and annual consumption from quote inputs, bills, or CRM notes? | Actual tariff is the largest ROI driver. | S04-004, S04-005 show fallback averages only. | Germany | medium | No internal data checked. | If unavailable, the assistant must label ROI as estimate and ask for bill upload. | Product/data discovery. |
+| Does Reonic already model commissioning date and exact EEG tariff window? | Feed-in tariff changes by commissioning date. | S04-001. | Germany | high | Current source covers 2026-02-01 to 2026-07-31; future windows change. | Need tariff table versioning and stale-data alerts. | Engineering. |
+| How should the product legally interpret service follow-up calls versus advertising calls after quote delivery? | Call recommendations are high-value but risky. | S04-018, S04-019. | Germany | high for advertising-call consent requirement | Borderline call purposes need legal review. | Channel gate may need "requested service call" vs "marketing call" purpose classification. | Counsel/product. |
+| Can the assistant use proposal opens/clicks as buying signals in Germany? | Predictive ghosting/close-readiness may rely on behavioral tracking. | S04-020, S04-021. | Germany | high | Implementation-specific; explicit consent may be required. | Default should disable tracking-based scoring unless separate tracking consent exists. | Privacy counsel/engineering. |
+| What is the exact production impact of Solarspitzengesetz 60% feed-in limits for typical Reonic residential quotes? | Impacts battery/full-feed-in economics and objection handling. | S04-016, S04-015. | Germany | medium | Need legal and simulation validation. | Add export-risk warning but avoid exact loss claims until modeled. | Energy modeling/legal. |
+| Which VNBs are most common among Reonic installers, and can their portal/status data be integrated? | VNB delays are likely a real action/scheduling issue. | S04-017. | Germany/regional | high for general rule, unknown for integrations | No VNB-specific workflow dataset. | Build VNB task templates for top regions. | Product research. |
+| Which local subsidy programs should mock CRM records include? | Local subsidies can be powerful urgency but easy to get wrong. | S04-022, S04-008, S04-009. | Germany/local | medium | Source overview can lag; official local verification needed. | Use "subsidy check required" until program page verified. | Research/product synthesis. |
+| Do installers want the assistant to discuss tax treatment directly with homeowners or only prepare installer-facing notes? | Tax claims can create liability. | S04-006, S04-007. | Germany | high on general rules | Individual ownership/partnership/multi-property cases need advisors. | Generate tax-safe explainer with disclaimers and "ask tax advisor" prompt. | Product/legal. |
+| Are battery backup, dynamic tariff arbitrage, or virtual power plant use cases in Reonic's near-term product scope? | These change battery economics beyond simple self-consumption. | S04-011, S04-016. | Germany | medium | Not enough product scope/context. | Data model may need backup_goal, dynamic_tariff, VPP/direct marketing fields. | Product. |
+| What consent artifacts are already stored in Reonic or connected CRMs? | Without consent provenance, assistant cannot safely recommend channels. | S04-018 to S04-021. | Germany | high | No internal schema reviewed. | Need consent matrix in mock data and CRM integration plan. | Engineering/product. |

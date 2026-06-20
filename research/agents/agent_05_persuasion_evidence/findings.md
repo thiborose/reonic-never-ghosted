@@ -1,6 +1,72 @@
-# Findings: Agent 5
+# Findings: Agent 5 - Persuasion Evidence
 
-Status: not started.
+Status: completed initial synthesis.
 
-Synthesize findings here after sources and evidence are logged.
+Purpose: identify evidence-backed, ethical persuasion methods for Reonic's post-quote marketing assistant. Evidence quality is highest for Germany consumer trust/compliance and general solar adoption risk factors; evidence is weaker for exact post-quote cadence because no German solar quote-stage field experiment was found in this pass.
 
+## Product-Ready Findings
+
+| Finding | Evidence type | Geography | Confidence | Sources / evidence | Date accessed | Limitations | Product implication |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| German PV follow-up should lead with trust and risk reduction: competence, reliability, trustworthiness, availability, local accountability, scope clarity, warranties, and transparent assumptions. | Germany PV survey plus Germany consumer guidance | Germany | Medium-high | S05-002, S05-004, S05-005; E05-002, E05-003, E05-006 | 2026-06-20 | Survey and complaint guidance are not causal post-quote tests. | Add a trust/proof panel and choose next actions that reduce the customer's stated uncertainty, such as ROI review, warranty explainer, scope clarification, or technical call. |
+| Authentic local social proof is useful for PV but must be real, permissioned, and relevant. | Direct solar adoption evidence plus Germany survey | Germany and California, US | Medium | S05-001, S05-002; E05-001 | 2026-06-20 | California peer-effect magnitude should not be treated as Germany fact; social proof may be confounded with local adoption conditions. | Ask installers for local reference projects, verified reviews, and permissioned case stories; suppress unsupported claims like broad neighborhood popularity. |
+| Homeowners should be helped to compare and verify offers, not rushed. | Germany consumer guidance plus EU consumer-protection guidance | Germany and EU | High | S05-004, S05-005, S05-020; E05-005 | 2026-06-20 | Guidance does not quantify conversion impact. | Provide a quote-comparison checklist, component breakdown, exclusions, payment milestones, and a factual quote-validity explanation. |
+| Balanced objection handling is preferable to blanket reassurance when claims are high-stakes. | General meta-analysis plus solar regulator guidance | General marketing; US solar; EU/Germany ethics by transfer | Medium | S05-008, S05-014, S05-015, S05-016; E05-009 | 2026-06-20 | Two-sided advertising evidence is indirect and conditional. | Generate responses that acknowledge the concern, quantify the assumption, show mitigation, and offer verification. |
+| Proposal simplification should reduce decision friction: one recommended path, a small number of alternatives, and expandable detail. | General choice-overload experiments plus Germany PV comparison guidance | US; Germany | Medium | S05-009, S05-004; E05-010 | 2026-06-20 | Choice-overload evidence is not solar-specific and has boundary conditions. | Default to a recommended system and concise comparison; allow technical detail for investor/technical personas. |
+| Concrete next-step planning is a good ethical commitment tactic when it is customer-controlled. | Indirect field experiment plus lead-response evidence | US | Medium | S05-010, S05-006; E05-011 | 2026-06-20 | Health-behavior planning prompt evidence is indirect for solar sales. | Recommend a scheduled review, partner call, document upload, or technical clarification with agenda and calendar task. |
+| Fast response is strongest as an inbound-service rule, not as a pressure rule after a quote. | Business lead-response evidence | US | Medium for inbound; low for German quote-stage | S05-006, S05-007; E05-007 | 2026-06-20 | Older, US, mixed-market and partly vendor-associated; not Germany PV quote data. | Add SLA reminders for customer-initiated events and early quote questions; respect requested review time and consent. |
+| Repeated stale follow-up should have caps, pauses, and channel switches. | Vendor lead-response evidence plus ethics/compliance guidance | US and Germany | Low-medium | S05-007, S05-016, S05-019; E05-008 | 2026-06-20 | Vendor study is old and indirect; exact cadence must be validated. | Track attempts by channel, recommend value-add follow-up or close-the-loop message, and stop when the customer opts out or shows no engagement after agreed cadence. |
+| A/B testing should optimize contract-relevant outcomes and guardrails, not opens alone. | Experimentation methods literature | General method | High | S05-011, S05-012; E05-014, E05-015, E05-022 | 2026-06-20 | Installer sales volume may be too low for per-installer statistical power. | Use randomized assignment, predeclared hypotheses, primary outcomes such as next-step booked and contract signed, and guardrails for opt-outs, complaints, and unsubscribes. |
+
+## Ethical Red Lines
+
+| Red line | Sources / evidence | Date accessed | Geography | Confidence | Limitations | Product implication |
+| --- | --- | --- | --- | --- | --- | --- |
+| Do not create artificial urgency, scarcity, or fear. Use only factual deadlines such as signed quote validity, verified incentive deadlines, supplier price locks, or real installer capacity. | S05-014, S05-015, S05-018, S05-020; E05-021 | 2026-06-20 | Germany, EU, US | High for guardrail | Direct performance evidence for urgency was not found; legal interpretation depends on exact claim. | Require an urgency source, checked date, and expiration before generating urgency language. |
+| Do not claim solar is free, no-cost, guaranteed to eliminate bills, guaranteed to pay for itself, or government/utility endorsed unless exact, current, and contractually supported. | S05-014, S05-015, S05-017, S05-020; E05-016 | 2026-06-20 | US and EU; Germany by ethics/legal transfer | High | US tax-credit details do not transfer to Germany. | Add a claim checker for savings, incentives, financing, performance, and affiliation statements. |
+| Do not fabricate, manipulate, or overstate reviews, local references, rankings, or customer stories. | S05-020, S05-022, S05-016; E05-012, E05-018 | 2026-06-20 | EU, US | High for fake-review prohibition; medium for solar performance effect | Review-demand evidence is from restaurants, not solar. | Store review source, verification status, permission, project similarity, and sponsorship/ranking status. |
+| Do not recommend calls, SMS, email, or WhatsApp follow-up without channel eligibility and consent checks in Germany. | S05-018, S05-019; E05-017 | 2026-06-20 | Germany | High | Legal counsel must classify quote-service messages versus advertising for the final implementation. | Maintain per-channel consent, opt-out, purpose, and proof logs; suppress noncompliant channels. |
+| Do not use sensitive or inferred vulnerability traits for manipulation. | S05-015, S05-016, S05-017, S05-020; E05-019, E05-020 | 2026-06-20 | US, EU; Germany by product ethics | Medium-high | Sources identify risk categories but do not define Reonic's data policy. | Use explicit customer needs and stated objections; escalate confusion to clarification, not pressure. |
+| Do not hide material limitations, assumptions, or exclusions in generated messages. | S05-014, S05-015, S05-016, S05-020; E05-016, E05-018 | 2026-06-20 | EU, US | High | Exact disclosure duties depend on product, financing, and German law. | Require visible assumptions for ROI, tariffs, warranty, maintenance, grid connection, financing, and incentive claims. |
+
+## Assistant Strategy Rules
+
+| Rule | Source / date / geography / confidence / limitation | Product behavior |
+| --- | --- | --- |
+| Diagnose the hesitation before writing copy. | Sources: S05-002, S05-003, S05-004. Date accessed: 2026-06-20. Geography: Germany and US. Confidence: medium. Limitation: no German CRM outcome data. | Classify current state as risk/cost concern, installer-trust concern, comparison shopping, partner alignment, technical uncertainty, administrative delay, or stale/no-response. |
+| Choose the lowest-pressure action that resolves the blocker. | Sources: S05-004, S05-005, S05-016, S05-020. Date accessed: 2026-06-20. Geography: Germany, EU, US. Confidence: high for ethics; medium for performance. Limitation: not tested for conversion. | Recommend proposal revision, proof asset, call agenda, comparison checklist, or pause instead of defaulting to a close email. |
+| Explain strategy in installer language without crude persuasion labels. | Sources: S05-013, S05-014, S05-016, S05-020. Date accessed: 2026-06-20. Geography: US and EU. Confidence: high. Limitation: UI wording needs user testing. | "This action reduces financing uncertainty and respects the customer's requested review time" is acceptable; "use loss aversion to push them" is not. |
+| Keep homeowner-facing language factual, specific, and permissioned. | Sources: S05-018, S05-019, S05-020. Date accessed: 2026-06-20. Geography: Germany and EU. Confidence: high. Limitation: legal review needed for exact channel wording. | Include identity, relevance to the requested quote, clear next step, and opt-out/consent handling where required. |
+
+## Recommended A/B Test Candidates
+
+| Experiment hypothesis | Evidence base | Date accessed | Geography | Confidence | Limitations | Primary metric | Guardrails |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Balanced objection response beats one-sided reassurance for skeptical or technical prospects. | S05-008, S05-014, S05-015; E05-009 | 2026-06-20 | General/US, transfer to Germany | Medium | Indirect marketing evidence; must keep both variants truthful. | Next-step booked, signed contract | Complaint, opt-out, manual negative feedback |
+| Recommended-plan summary beats full option dump for undecided or busy prospects. | S05-009, S05-004; E05-010 | 2026-06-20 | US/Germany | Medium | Choice-overload is indirect; technical personas may prefer detail. | Proposal re-open, review call booked, signed contract | Requests for more detail, confusion feedback |
+| Local verified proof asset beats no proof asset for trust-risk prospects. | S05-001, S05-002, S05-022; E05-001, E05-012 | 2026-06-20 | Germany/US | Medium | Must avoid unverified or non-comparable proof. | Reply rate to proof touch, review call booked, signed contract | Privacy issue, complaint, proof-claim accuracy |
+| Scheduled next-step prompt beats generic "following up" for quote-stage leads. | S05-010, S05-006; E05-011 | 2026-06-20 | US, transfer to Germany | Medium | Implementation-intention evidence is indirect. | Calendar booking, completed call, signed contract | Cancellation, opt-out, negative sentiment |
+| Consent-aware multi-channel sequence beats email-only sequence. | S05-018, S05-019, S05-011; E05-017, E05-014 | 2026-06-20 | Germany for compliance; method general | Medium as hypothesis | No direct German solar sequence evidence found. | Qualified next action and contract signed | Consent violations, opt-outs, complaints |
+
+## Claims To Treat As Indirect
+
+| Claim | Why indirect | Sources / date / geography / confidence / limitation | Product use |
+| --- | --- | --- | --- |
+| "Call within 5 minutes" style speed-to-lead statistics. | Evidence is US, old, inbound web-lead focused, and partly vendor-associated. | S05-006, S05-007. Date accessed: 2026-06-20. Geography: US. Confidence: medium for inbound, low for quote-stage Germany. Limitation: not a German PV quote study. | Use as SLA hypothesis for customer-initiated actions, not as homeowner-facing claim or hard rule. |
+| Yelp/review revenue effects. | Restaurant reputation is not solar purchasing. | S05-022, S05-020. Date accessed: 2026-06-20. Geography: US/EU. Confidence: medium indirect. Limitation: not high-cost home improvement. | Supports verified review assets, not standalone proof of installer quality. |
+| Choice overload experiments. | Jam/chocolate/essay experiments are not PV quotes. | S05-009. Date accessed: 2026-06-20. Geography: US. Confidence: medium indirect. Limitation: boundary conditions. | Use for UI simplification and test with Reonic outcomes. |
+| Implementation intention prompts. | Vaccination follow-through is not purchase commitment. | S05-010. Date accessed: 2026-06-20. Geography: US. Confidence: medium indirect. Limitation: no effect size captured in this pass. | Use for ethical scheduling, not pressure to sign. |
+| Social-comparison energy reports. | Energy conservation behavior is not buying PV. | S05-021. Date accessed: 2026-06-20. Geography: US. Confidence: medium indirect. Limitation: social comparison can feel manipulative. | Use only factual, aggregate, non-shaming benchmarks with proof. |
+
+## Product Data Needed
+
+| Data need | Why | Supporting evidence | Date accessed | Geography | Confidence | Limitation | Product implication |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Per-channel consent and opt-out state. | Germany telephone/electronic advertising rules require consent handling. | S05-018, S05-019; E05-017 | 2026-06-20 | Germany | High | Legal classification of post-quote messages still needed. | Required before recommending calls, SMS, email, or WhatsApp. |
+| Source-backed quote and ROI assumptions. | Savings/performance claims are high-risk. | S05-014, S05-015, S05-017; E05-016 | 2026-06-20 | US/EU transfer; Germany implementation needed | High for guardrail | German-specific incentive/tariff sources must be refreshed elsewhere. | Required for any ROI or incentive messaging. |
+| Proof asset inventory. | Trust and social proof require actual, verifiable proof. | S05-001, S05-002, S05-004, S05-022; E05-001, E05-012 | 2026-06-20 | Germany/US | Medium | No direct proof-asset conversion data. | Store local projects, reviews, references, credentials, warranty/service docs. |
+| Outcome instrumentation. | A/B tests need reliable causal outcome measurement. | S05-011, S05-012; E05-014, E05-015 | 2026-06-20 | Method general | High | Low installer volume may limit inference. | Track next-step booked, completed interaction, signed contract, lost reason, opt-out, complaint. |
+
+## Bottom Line
+
+The most defensible strategy is not "persuasion pressure." Based on Germany-specific PV trust evidence, consumer-protection guidance, solar financing warnings, and indirect behavioral evidence, Reonic should position the assistant as a decision-support and risk-reduction layer: diagnose the blocker, select a consent-safe action, provide proof or clarification, schedule the next concrete step, and learn from outcomes.

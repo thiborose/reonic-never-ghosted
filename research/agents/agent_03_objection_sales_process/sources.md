@@ -1,6 +1,31 @@
-# Sources: Agent 3
+# Sources: Agent 3 - Objection And Sales Process
 
-Status: not started.
+Status: completed by main agent on 2026-06-20 after two Agent 3 workers stalled.
 
-Use `_templates/source_record.md` for each source.
+Scope note: this workstream does not introduce assumptions as evidence. It consolidates the real-data evidence already gathered by Agents 0, 1, 2, 4, 5, and 6 into a quote-stage objection and sales-process playbook. Original URLs, access dates, geographies, confidence ratings, and limitations remain in the upstream source files.
 
+## Source Records
+
+| Source ID | Source type | Title / upstream file | URL or local path | Date accessed | Geography | Confidence | Limitations | Agent 3 use |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| A3-S01 | Upstream product evidence | Agent 0 Reonic public ecosystem sources, evidence, findings, handoff | `research/agents/agent_00_reonic_public_ecosystem/` | 2026-06-20 | Germany / Reonic public docs | high for public product workflow; medium for actual usage mix | Public docs and testimonials do not expose private funnel outcomes. | Reonic workflow moment, offer status, quote fields, CRM/task/email/calendar data, mock installer profiles. |
+| A3-S02 | Upstream persona evidence | Agent 1 persona segmentation sources, evidence, findings, handoff | `research/agents/agent_01_persona_segmentation/` | 2026-06-20 | Germany-first | high for ROI/risk dimensions; medium for climate/autarky; unknown for family-as-persona | No Reonic CRM, call transcripts, or win/loss data. | Motive scores, proof needs, stakeholder-review state, objection overlays. |
+| A3-S03 | Upstream VOC evidence | Agent 2 voice-of-customer sources, evidence, findings, handoff | `research/agents/agent_02_voice_of_customer/` | 2026-06-20 | Germany-first, some DACH forum context | medium to high by claim; reviews/forums not prevalence data | Public reviews/forums are biased and cannot rank objection frequency. | Customer language, trust breakers/builders, quote clarity, battery/winter/roof/aftercare objections. |
+| A3-S04 | Upstream market/economics evidence | Agent 4 Germany market economics sources, evidence, findings, handoff | `research/agents/agent_04_germany_market_economics/` | 2026-06-20 | Germany | high for official/current tariff, tax, MaStR, consent; medium for consumer cost ranges | Time-sensitive; local subsidies and financing rates must be checked at generation time. | ROI guardrails, current feed-in tariffs, electricity-price assumptions, paperwork, tax, subsidy, financing, consent gates. |
+| A3-S05 | Upstream persuasion evidence | Agent 5 persuasion sources, evidence, findings, handoff | `research/agents/agent_05_persuasion_evidence/` | 2026-06-20 | Germany, EU, US transfer evidence | high for ethical/compliance guardrails; medium for indirect tactics | Limited direct German solar quote-stage experiment evidence. | Ethical objection handling, low-pressure next steps, proof assets, A/B test guardrails. |
+| A3-S06 | Upstream action/scheduling evidence | Agent 6 action calendar debrief sources, evidence, findings, handoff | `research/agents/agent_06_action_calendar_debrief/` | 2026-06-20 | Germany-first with operational transfer evidence | high for consent/proposal/document rules; medium for channel/visit routing | Cadence and travel thresholds need Reonic outcomes/installer validation. | Channel routing, calendar rules, visit justification, action/debrief records. |
+| A3-S07 | Direct original source referenced through A3-S04 | Bundesnetzagentur EEG subsidy rates | https://www.bundesnetzagentur.de/DE/Fachthemen/ElektrizitaetundGas/ErneuerbareEnergien/EEG_Foerderung/start.html | 2026-06-20 | Germany | high | Applies by commissioning date, system size, and feed-in mode; export rules can alter economics. | Ground ROI/feed-in objection responses in current official tariffs. |
+| A3-S08 | Direct original source referenced through A3-S04/A3-S06 | Bundesnetzagentur illegal telephone advertising and consent documentation | https://www.bundesnetzagentur.de/unerlaubteTelefonwerbung and https://www.bundesnetzagentur.de/DE/Fachthemen/Telekommunikation/Unternehmenspflichten/Telefonwerbung/start.html | 2026-06-20 | Germany | high | Legal counsel must classify exact post-quote service vs advertising messages. | Phone-call and voicemail eligibility gate. |
+| A3-S09 | Direct original source referenced through A3-S02/A3-S04 | E.ON/Statista homeowner survey via pv magazine | https://www.pv-magazine.de/unternehmensmeldungen/e-on-umfrage-fast-jeder-dritte-hausbesitzer-plant-installation-einer-solaranlage-bis-ende-2025/ | 2026-06-20 | Germany | medium | Corporate survey release; not quote-stage outcomes. | Motives: lower electricity costs, climate, property value, autarky, heat pump, EV. |
+| A3-S10 | Direct original source referenced through A3-S02/A3-S04 | Wegatech / YouGov homeowner energy survey | https://www.wegatech.de/ratgeber/yougov-studie-2022/ | 2026-06-20 | Germany | medium | Older 2022 survey; high-cost market changed. | Barriers: upfront cost, building constraints, economic doubts; autarky interest. |
+| A3-S11 | Direct original source referenced through A3-S02/A3-S03 | Verbraucherzentrale offer-check guidance / consumer guidance | See upstream Agent 2 source VOC-S29 and Agent 1 S08 | 2026-06-20 | Germany | high for offer clarity and consumer-protection needs | Guidance does not quantify conversion impact. | Proposal clarity, itemization, assumptions, local references, economic disclosure. |
+| A3-S12 | Direct original source referenced through A3-S05 | SEIA consumer-protection and solar claim warnings | See upstream Agent 5 sources S05-014/S05-015/S05-017 | 2026-06-20 | US, transferable as ethics/claim-risk evidence only | high for solar claim guardrails; low for Germany law | US incentives do not transfer to Germany. | Avoid "free solar", guaranteed bill elimination, fake urgency, and unsupported savings. |
+
+## Evidence Coverage
+
+The combined source base covers these sales-process questions with usable evidence:
+
+- What homeowners hesitate about after a renewable-energy quote: cost, financing, ROI assumptions, comparison offers, proposal clarity, battery value, winter/heat-pump performance, building suitability, paperwork, installer trust, aftercare, and co-decision-maker review.
+- Which data the assistant needs before acting: quote line items, assumptions, current tariff/feed-in/subsidy facts, consent, channel preference, contact history, product mix, missing documents, decision-maker state, and installer capacity.
+- Which actions are defensible: revise proposal, send proof asset, request missing document, schedule assumptions review, run technical call, arrange virtual/in-person visit when justified, pause, or escalate.
+- Which claims remain weak: exact objection prevalence, exact cadence, offer-open predictive value, travel thresholds, and video-message conversion lift.
