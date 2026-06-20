@@ -4,7 +4,7 @@ Enums use native_enum=False → stored as VARCHAR + CHECK, so reset()/create_all
 stay painless (no Postgres ENUM types to migrate).
 """
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 from sqlalchemy import Column, Enum as SAEnum
 from sqlalchemy.dialects.postgresql import JSONB
@@ -21,6 +21,10 @@ from app.models.enums import (
     SignalType,
     Sophistication,
 )
+
+
+def _now() -> datetime:
+    return datetime.now(UTC)
 
 
 def _enum(enum_cls: type) -> Column:
@@ -142,7 +146,7 @@ class PersonaProfile(SQLModel, table=True):
     scores: list = Field(default_factory=list, sa_column=_jsonb())
     top_motivations: list = Field(default_factory=list, sa_column=_jsonb())
     objections: list = Field(default_factory=list, sa_column=_jsonb())
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=_now)
 
 
 class Strategy(SQLModel, table=True):
@@ -151,7 +155,7 @@ class Strategy(SQLModel, table=True):
     current_goal: Goal = Field(sa_column=_enum(Goal))
     buyer_profile: dict = Field(default_factory=dict, sa_column=_jsonb())
     steps: list = Field(default_factory=list, sa_column=_jsonb())
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=_now)
 
 
 class StrategyEvent(SQLModel, table=True):
@@ -161,7 +165,7 @@ class StrategyEvent(SQLModel, table=True):
     deal_id: int = Field(foreign_key="deal.id")
     event_type: str
     payload: dict = Field(default_factory=dict, sa_column=_jsonb())
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=_now)
 
 
 class Outcome(SQLModel, table=True):
@@ -169,4 +173,4 @@ class Outcome(SQLModel, table=True):
     deal_id: int = Field(foreign_key="deal.id")
     step_id: int | None = None
     event: OutcomeEvent = Field(sa_column=_enum(OutcomeEvent))
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime = Field(default_factory=_now)
