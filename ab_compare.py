@@ -92,17 +92,20 @@ def to_deal_context(prospect):
 def run_engine(prospect) -> dict:
     """Engine A: deterministic context + single structured call + hard validation."""
     from engine.llm import openai_llm
-    from engine.strategy import StrategyInvariantError, generate_strategy
+    from engine.strategy import (
+        build_context,
+        validate_strategy,
+        _render_prompt,
+    )
 
     model = os.getenv("ENGINE_MODEL", "gpt-4o-2024-08-06")
-    try:
-        strategy = generate_strategy(
-            prospect, llm=openai_llm(model), allowed_refs=set(), now=NOW
-        )
-        return strategy.model_dump(mode="json")
-    except StrategyInvariantError as e:
-        # The guardrail firing is itself a result worth showing, not a crash.
-        return {"error": "engine guardrail rejected output", "violations": str(e)}
+    context = build_context(prospect, now=NOW)
+    strategy = openai_llm(model)(_render_prompt(prospect, context))
+    out = strategy.model_dump(mode="json")
+    # Surface the guardrail result alongside the plan (allowed_refs empty until a
+    # benchmark pool exists) — it's a feature the basic agent lacks, not a crash.
+    out["guardrail_violations"] = validate_strategy(strategy, allowed_refs=set())
+    return out
 
 
 def run_basic(prospect) -> dict:

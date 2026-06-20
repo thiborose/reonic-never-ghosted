@@ -27,9 +27,10 @@ from engine.strategy import (
     PersonaScore,
     Step,
     Strategy,
-    StrategyInvariantError,
     TaskType,
-    generate_strategy,
+    build_context,
+    validate_strategy,
+    _render_prompt,
 )
 
 NOW = datetime(2026, 6, 20, 12, 0, 0)
@@ -118,12 +119,18 @@ def main(argv: list[str]) -> None:
     from engine.llm import openai_llm
 
     model = os.getenv("ENGINE_MODEL", "gpt-4o-2024-08-06")
-    try:
-        strategy = generate_strategy(prospect, llm=openai_llm(model),
-                                     allowed_refs=set(), now=NOW)
-    except StrategyInvariantError as e:
-        sys.exit(f"engine guardrail rejected the output: {e}")
+    # Run the pieces directly (not generate_strategy) so we always SEE the output
+    # and report guardrail violations as warnings rather than swallowing it.
+    # allowed_refs is empty until a won/lost benchmark pool exists, so any
+    # benchmark/deal_history chip the model invents will (correctly) flag here.
+    context = build_context(prospect, now=NOW)
+    strategy = openai_llm(model)(_render_prompt(prospect, context))
     _print(strategy)
+    violations = validate_strategy(strategy, allowed_refs=set())
+    if violations:
+        print("⚠ guardrail flags (ungrounded — would be rejected in prod):")
+        for v in violations:
+            print(f"   - {v}")
 
 
 if __name__ == "__main__":
