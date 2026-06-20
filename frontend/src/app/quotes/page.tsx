@@ -71,10 +71,6 @@ export default function QuotesPage() {
     <div className="flex h-full w-full items-start bg-default-background">
       <div className="flex w-60 flex-none flex-col items-start self-stretch border-r border-solid border-neutral-border bg-default-background mobile:hidden">
         <div className="flex w-full items-center gap-2 border-b border-solid border-neutral-border px-4 py-3">
-          <img
-            className="h-5 flex-none object-contain"
-            src="https://res.cloudinary.com/subframe/image/upload/v1711417518/shared/fdb8rlpzh1gds6vzsnt0.svg"
-          />
           <span className="text-body-bold font-body-bold text-default-font">
             Reonic
           </span>
