@@ -23,7 +23,10 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Never Ghosted", lifespan=lifespan)
-logfire.instrument_fastapi(app)
+# NB: no logfire.instrument_fastapi(app) — otel's FastAPI route resolver crashes on
+# this version's `_IncludedRouter` mounts (AttributeError: no `.path`), which 500s the
+# CORS preflight and breaks the frontend. Agent calls are still traced via
+# instrument_pydantic_ai above.
 
 # ponytail: wide-open CORS for local dev; lock to the frontend origin before prod.
 app.add_middleware(
