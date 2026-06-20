@@ -29,7 +29,9 @@ import { FeatherHardHat } from "@subframe/core";
 import { FeatherInbox } from "@subframe/core";
 import { FeatherLayoutDashboard } from "@subframe/core";
 import { FeatherLeaf } from "@subframe/core";
+import { FeatherGift } from "@subframe/core";
 import { FeatherMail } from "@subframe/core";
+import { FeatherMessageSquare } from "@subframe/core";
 import { FeatherMousePointerClick } from "@subframe/core";
 import { FeatherPhone } from "@subframe/core";
 import { FeatherPiggyBank } from "@subframe/core";
@@ -44,7 +46,7 @@ import { FeatherWallet } from "@subframe/core";
 import { FeatherWand } from "@subframe/core";
 import { FeatherWrench } from "@subframe/core";
 import { useRouter, useParams } from "next/navigation";
-import { generateStrategy, draftStep, reviseStep } from "@/lib/api";
+import { generateStrategy, draftStep, reviseStep, getDeal } from "@/lib/api";
 import type { StrategyResult, RevisionResult } from "@/lib/types";
 
 const GOAL_LABEL: Record<string, string> = {
@@ -54,6 +56,19 @@ const GOAL_LABEL: Record<string, string> = {
   close_gap: "CLOSE GAP",
   handle_objection: "HANDLE OBJECTION",
   ask_for_commitment: "ASK FOR COMMITMENT",
+};
+
+// Per-task action: the channel the engine assigns (email/call/sms/gift/wait) drives
+// the button label + icon. `null` = no action (e.g. a wait step).
+const CHANNEL_ACTION: Record<
+  string,
+  { label: string; icon: React.ReactNode } | null
+> = {
+  email: { label: "Draft email", icon: <FeatherMail /> },
+  call: { label: "Draft call script", icon: <FeatherPhone /> },
+  sms: { label: "Draft SMS", icon: <FeatherMessageSquare /> },
+  gift: { label: "Arrange gift", icon: <FeatherGift /> },
+  wait: null,
 };
 
 export default function StrategyPage() {
@@ -68,6 +83,7 @@ export default function StrategyPage() {
   const [revision, setRevision] = React.useState<RevisionResult | null>(null);
   const [revising, setRevising] = React.useState(false);
   const [drafts, setDrafts] = React.useState<Record<number, string>>({});
+  const [customerName, setCustomerName] = React.useState<string>("");
 
   React.useEffect(() => {
     setLoading(true);
@@ -75,6 +91,12 @@ export default function StrategyPage() {
       .then(setStrategy)
       .catch((e) => setError(String(e)))
       .finally(() => setLoading(false));
+  }, [dealId]);
+
+  React.useEffect(() => {
+    getDeal(dealId)
+      .then((d) => setCustomerName(d.customer.name))
+      .catch(() => {});
   }, [dealId]);
 
   async function onDraft(order: number) {
@@ -211,7 +233,7 @@ export default function StrategyPage() {
               className="text-body font-body text-subtext-color cursor-pointer hover:text-default-font"
               onClick={() => router.push(`/requests/${dealId}`)}
             >
-              Deal #{dealId}
+              {customerName || `Deal #${dealId}`}
             </span>
             <FeatherChevronRight className="text-body font-body text-subtext-color" />
             <span className="text-heading-3 font-heading-3 text-default-font">
@@ -248,41 +270,50 @@ export default function StrategyPage() {
                     {strategy.buyer_profile.summary}
                   </span>
                 )}
-                <div className="flex w-full flex-col items-start gap-3 border-t border-solid border-neutral-border pt-4">
-                  <span className="text-caption-bold font-caption-bold text-subtext-color">
-                    PERSONAS
-                  </span>
-                  {strategy.persona_scores.map((p) => (
-                    <div key={p.persona} className="flex w-full items-center gap-3">
-                      <FeatherLeaf className="text-body font-body text-success-600" />
-                      <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                        {p.persona}
-                      </span>
-                      <Badge variant="success">{p.strength}</Badge>
-                      <span className="text-caption font-caption text-subtext-color">
-                        {Math.round(p.weight * 100)}%
-                      </span>
-                    </div>
-                  ))}
-                </div>
-                <div className="flex w-full flex-wrap items-start gap-6 border-t border-solid border-neutral-border pt-4">
-                  <div className="flex flex-col items-start gap-1">
+                {strategy.persona_scores.length > 0 && (
+                  <div className="flex w-full flex-col items-start gap-3 border-t border-solid border-neutral-border pt-4">
                     <span className="text-caption-bold font-caption-bold text-subtext-color">
-                      TOP MOTIVATIONS
+                      PERSONAS
                     </span>
-                    <span className="text-body font-body text-default-font">
-                      {strategy.top_motivations.join(", ") || "—"}
-                    </span>
+                    {strategy.persona_scores.map((p) => (
+                      <div key={p.persona} className="flex w-full items-center gap-3">
+                        <FeatherLeaf className="text-body font-body text-success-600" />
+                        <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                          {p.persona}
+                        </span>
+                        <Badge variant="success">{p.strength}</Badge>
+                        <span className="text-caption font-caption text-subtext-color">
+                          {Math.round(p.weight * 100)}%
+                        </span>
+                      </div>
+                    ))}
                   </div>
-                  <div className="flex flex-col items-start gap-1">
-                    <span className="text-caption-bold font-caption-bold text-subtext-color">
-                      OBJECTIONS
-                    </span>
-                    <span className="text-body font-body text-default-font">
-                      {strategy.objections.join(", ") || "—"}
-                    </span>
+                )}
+                {(strategy.top_motivations.length > 0 ||
+                  strategy.objections.length > 0) && (
+                  <div className="flex w-full flex-wrap items-start gap-6 border-t border-solid border-neutral-border pt-4">
+                    {strategy.top_motivations.length > 0 && (
+                      <div className="flex flex-col items-start gap-1">
+                        <span className="text-caption-bold font-caption-bold text-subtext-color">
+                          TOP MOTIVATIONS
+                        </span>
+                        <span className="text-body font-body text-default-font">
+                          {strategy.top_motivations.join(", ")}
+                        </span>
+                      </div>
+                    )}
+                    {strategy.objections.length > 0 && (
+                      <div className="flex flex-col items-start gap-1">
+                        <span className="text-caption-bold font-caption-bold text-subtext-color">
+                          OBJECTIONS
+                        </span>
+                        <span className="text-body font-body text-default-font">
+                          {strategy.objections.join(", ")}
+                        </span>
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
               </div>
 
               {/* The play — steps */}
@@ -332,15 +363,24 @@ export default function StrategyPage() {
                           </div>
                         ))}
                       </div>
-                      <div className="flex w-full flex-wrap items-center gap-2">
-                        <Button
-                          variant="neutral-secondary"
-                          icon={<FeatherMail />}
-                          onClick={() => onDraft(step.order)}
-                        >
-                          Draft message
-                        </Button>
-                      </div>
+                      {(() => {
+                        const action =
+                          step.channel in CHANNEL_ACTION
+                            ? CHANNEL_ACTION[step.channel]
+                            : { label: "Draft message", icon: <FeatherMail /> };
+                        if (!action) return null;
+                        return (
+                          <div className="flex w-full flex-wrap items-center gap-2">
+                            <Button
+                              variant="neutral-secondary"
+                              icon={action.icon}
+                              onClick={() => onDraft(step.order)}
+                            >
+                              {action.label}
+                            </Button>
+                          </div>
+                        );
+                      })()}
                       {drafts[step.order] && (
                         <div className="flex w-full flex-col items-start gap-1 rounded-md bg-neutral-50 px-4 py-3">
                           <div className="flex items-center gap-2">
