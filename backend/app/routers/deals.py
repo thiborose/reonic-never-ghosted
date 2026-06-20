@@ -34,6 +34,8 @@ def get_deal_detail(deal_id: int, session: Session = Depends(get_session)) -> De
     if deal is None:
         raise HTTPException(status_code=404, detail="deal not found")
     competitor = queries.competitor_for_deal(session, deal_id)
+    persona = queries.latest_persona(session, deal_id)
+    strategy = queries.latest_strategy(session, deal_id)
     return DealDetail(
         deal=deal,
         customer=queries.get_customer(session, deal.customer_id),
@@ -42,4 +44,6 @@ def get_deal_detail(deal_id: int, session: Session = Depends(get_session)) -> De
         notes=queries.notes_for_deal(session, deal_id),
         signals=queries.signals_for_deal(session, deal_id),
         competitor=competitor.model_dump() if competitor else None,
+        persona=persona.model_dump(mode="json") if persona else None,
+        strategy=strategy.model_dump(mode="json") if strategy else None,
     )
