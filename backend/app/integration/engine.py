@@ -43,6 +43,7 @@ class PersonaScore(BaseModel):
     persona: str
     weight: float
     strength: str
+    why: str = ""  # grounded justification (agent path); empty on the deterministic stub
 
 
 class Step(BaseModel):

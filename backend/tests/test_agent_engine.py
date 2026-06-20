@@ -4,6 +4,7 @@ from datetime import UTC, datetime
 
 from app.agent.output_model import (
     ActionPlan,
+    PersonaInsight,
     PhoneCallTask,
     SendEmailTask,
     SendGiftTask,
@@ -18,6 +19,7 @@ from app.models.enums import (
     Direction,
     Goal,
     NoteType,
+    Persona,
     PersuasionLever,
     ProductType,
 )
@@ -70,6 +72,12 @@ def _ctx() -> EngineContext:
 def _plan() -> ActionPlan:
     return ActionPlan(
         summary="Earn trust, then ask.",
+        personas=[
+            PersonaInsight(persona=Persona.environmentalist, weight=0.7, why="Voice note on CO2."),
+            PersonaInsight(persona=Persona.budget_sensitive, weight=0.4, why="Comparing competitors."),
+        ],
+        top_motivations=["lower bills", "CO2 impact"],
+        objections=["install disruption"],
         tasks=[
             SendEmailTask(
                 type="send_email", goal=Goal.build_trust, reason="Open warmly.",
@@ -124,6 +132,14 @@ def test_generate_maps_action_plan_to_strategy_result():
     assert "- point one" in call.rationale  # script bullets rendered
     assert gift.channel == "gift" and "coffee voucher" in gift.rationale
     assert [s.order for s in result.steps] == [1, 2, 3]
+
+    # buyer read is now carried through, each persona with its why
+    assert result.top_motivations == ["lower bills", "CO2 impact"]
+    assert result.objections == ["install disruption"]
+    personas = {p.persona: p for p in result.persona_scores}
+    assert personas["environmentalist"].why == "Voice note on CO2."
+    assert personas["environmentalist"].strength == "strong"  # weight 0.7 → strong
+    assert personas["budget_sensitive"].strength == "moderate"  # weight 0.4 → moderate
 
 
 def test_get_engine_falls_back_without_key(monkeypatch):

@@ -64,15 +64,11 @@ Installer {input.installer.name} sent a homeowner a quote {input.days_since_quot
 ago and they went quiet. Design the next-best sequence of actions to move them from
 "quote received" toward "contract signed".
 
-Return an ordered ActionPlan of typed tasks. Each task is one concrete action:
-- send_email: subject + body (a ready-to-send draft)
-- phone_call: a suggested date + a few talking-point bullets
-- send_sms: a short text
-- send_gift: a gift_type (+ optional note)
-- wait: hold N days before the next touch
-Order the chain by the goal arc — earn trust before creating urgency, ask for
-commitment last. Ground each task's `reason` in the context below; never invent facts.
-Today is {input.today}; any suggested dates must be in the near future.
+First read the buyer (weighted personas with justification, motivations, objections),
+then return an ordered chain of typed tasks (send_email, phone_call, send_sms, send_gift,
+wait). Order it by the goal arc — earn trust before creating urgency, ask for commitment
+last. Every `reason` and every persona `why` must be grounded in the context below; never
+invent facts. Today is {input.today}; suggested dates must be near-future.
 
 Customer: {input.customer.name}, {input.customer.address}
 Quote: {input.quote.product.value} for €{input.quote.price_eur} (competitor prices: {input.competitor_prices})

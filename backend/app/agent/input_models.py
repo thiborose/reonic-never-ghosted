@@ -8,7 +8,7 @@ via ``{input.communications_log}`` without iterating in the template.
 
 from datetime import date
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from app.models.enums import Channel, DealStage, Direction, NoteType, ProductType
 
@@ -16,58 +16,76 @@ from app.models.enums import Channel, DealStage, Direction, NoteType, ProductTyp
 class Installer(BaseModel):
     """The installer (Installeur) running the deal."""
 
-    name: str
-    ok_taking_car: bool = False  # willing to drive out for a site visit?
-    channel_preference: Channel | None = None
+    name: str = Field(description="The installer's name; use it to sign messages.")
+    ok_taking_car: bool = Field(
+        default=False, description="Whether the installer is willing to drive out for a site visit."
+    )
+    channel_preference: Channel | None = Field(
+        default=None, description="Channel the installer prefers to reach this customer on, if known."
+    )
 
 
 class Customer(BaseModel):
-    name: str
-    address: str
-    birthdate: date | None = None
-    annual_income_eur: int | None = None
+    name: str = Field(description="The homeowner's full name.")
+    address: str = Field(description="The homeowner's address or region.")
+    birthdate: date | None = Field(default=None, description="The homeowner's date of birth, if known.")
+    annual_income_eur: int | None = Field(
+        default=None, description="The homeowner's approximate annual income in euros, if known."
+    )
 
 
 class Quote(BaseModel):
-    product: ProductType
-    price_eur: int
-    competitor_prices_eur: list[int] = []
+    product: ProductType = Field(description="The main product quoted, e.g. heat_pump or solar_pv.")
+    price_eur: int = Field(description="The total quoted price, in euros.")
+    competitor_prices_eur: list[int] = Field(
+        default_factory=list, description="Known competitor quotes in euros, for price framing."
+    )
 
 
 class Communication(BaseModel):
     """One exchanged email, call transcript, or SMS."""
 
-    channel: Channel
-    direction: Direction
-    content: str
-    sent_at: date | None = None
+    channel: Channel = Field(description="The channel this exchange happened on.")
+    direction: Direction = Field(
+        description="inbound (from the customer) or outbound (from the installer)."
+    )
+    content: str = Field(description="What was said — the email body, call transcript, or SMS text.")
+    sent_at: date | None = Field(default=None, description="When the message was sent, if known.")
 
 
 class Note(BaseModel):
     """A personal note by the installer — typed, or transcribed from voice."""
 
-    type: NoteType
-    content: str
+    type: NoteType = Field(description="Whether the note was typed or transcribed from voice.")
+    content: str = Field(description="The installer's private note about this customer.")
 
 
 class PastDeal(BaseModel):
     """A previous deal this installer closed (or didn't), for social proof."""
 
-    product: ProductType
-    price_eur: int
-    outcome: DealStage
+    product: ProductType = Field(description="The product sold in this past deal.")
+    price_eur: int = Field(description="The price of this past deal, in euros.")
+    outcome: DealStage = Field(description="How this past deal ended: won, lost, ghosted, …")
 
 
 class DealContext(BaseModel):
     """Everything the agent knows about one ghosted quote."""
 
-    installer: Installer
-    customer: Customer
-    quote: Quote
-    days_since_quote: int
-    communications: list[Communication] = []
-    notes: list[Note] = []
-    past_deals: list[PastDeal] = []
+    installer: Installer = Field(description="The installer running this deal.")
+    customer: Customer = Field(description="The homeowner who received the quote.")
+    quote: Quote = Field(description="The quote that was sent.")
+    days_since_quote: int = Field(
+        description="How many days ago the quote was sent and the customer went quiet."
+    )
+    communications: list[Communication] = Field(
+        default_factory=list, description="Every email, call, and SMS exchanged so far, oldest first."
+    )
+    notes: list[Note] = Field(
+        default_factory=list, description="The installer's private notes about this customer."
+    )
+    past_deals: list[PastDeal] = Field(
+        default_factory=list, description="Previous deals this installer closed, for social proof."
+    )
 
     @property
     def today(self) -> str:

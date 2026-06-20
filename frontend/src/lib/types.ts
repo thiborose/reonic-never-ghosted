@@ -91,6 +91,7 @@ export interface PersonaScore {
   persona: string;
   weight: number;
   strength: string;
+  why?: string;
 }
 
 export interface Step {

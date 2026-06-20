@@ -276,15 +276,22 @@ export default function StrategyPage() {
                       PERSONAS
                     </span>
                     {strategy.persona_scores.map((p) => (
-                      <div key={p.persona} className="flex w-full items-center gap-3">
-                        <FeatherLeaf className="text-body font-body text-success-600" />
-                        <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
-                          {p.persona}
-                        </span>
-                        <Badge variant="success">{p.strength}</Badge>
-                        <span className="text-caption font-caption text-subtext-color">
-                          {Math.round(p.weight * 100)}%
-                        </span>
+                      <div key={p.persona} className="flex w-full flex-col items-start gap-1">
+                        <div className="flex w-full items-center gap-3">
+                          <FeatherLeaf className="text-body font-body text-success-600" />
+                          <span className="grow shrink-0 basis-0 text-body-bold font-body-bold text-default-font">
+                            {p.persona}
+                          </span>
+                          <Badge variant="success">{p.strength}</Badge>
+                          <span className="text-caption font-caption text-subtext-color">
+                            {Math.round(p.weight * 100)}%
+                          </span>
+                        </div>
+                        {p.why && (
+                          <span className="pl-7 text-caption font-caption text-subtext-color">
+                            {p.why}
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>

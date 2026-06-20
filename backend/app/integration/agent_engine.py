@@ -27,7 +27,13 @@ from app.agent.output_model import (
     SendSmsTask,
     WaitTask,
 )
-from app.integration.engine import EngineContext, RevisionResult, Step, StrategyResult
+from app.integration.engine import (
+    EngineContext,
+    PersonaScore,
+    RevisionResult,
+    Step,
+    StrategyResult,
+)
 from app.models.enums import Channel, Goal, PersuasionLever, ProductType
 
 # A reasonable persuasion lever per goal-arc stage (the agent reasons in goals, the
@@ -121,6 +127,15 @@ def _render_task(task) -> str:
     return task.reason
 
 
+def _strength(weight: float) -> str:
+    """Bucket a 0..1 persona weight into the label the frontend badges."""
+    if weight >= 0.66:
+        return "strong"
+    if weight >= 0.33:
+        return "moderate"
+    return "light"
+
+
 def to_strategy_result(ctx: EngineContext, plan: ActionPlan) -> StrategyResult:
     """Map the agent's ActionPlan onto the existing StrategyResult contract."""
     steps = [
@@ -134,12 +149,21 @@ def to_strategy_result(ctx: EngineContext, plan: ActionPlan) -> StrategyResult:
         )
         for i, task in enumerate(plan.tasks)
     ]
+    persona_scores = [
+        PersonaScore(
+            persona=p.persona.value,
+            weight=p.weight,
+            strength=_strength(p.weight),
+            why=p.why,
+        )
+        for p in plan.personas
+    ]
     return StrategyResult(
         current_goal=ctx.deal.current_goal,
         buyer_profile={"summary": plan.summary},
-        persona_scores=[],  # not produced on the agent path yet
-        top_motivations=[],
-        objections=[],
+        persona_scores=persona_scores,
+        top_motivations=plan.top_motivations,
+        objections=plan.objections,
         steps=steps,
     )
 
