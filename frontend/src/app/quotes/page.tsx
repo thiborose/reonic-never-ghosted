@@ -9,7 +9,6 @@ import { TextField } from "@/ui/components/TextField";
 import { ToggleGroup } from "@/ui/components/ToggleGroup";
 import { FeatherArchive } from "@subframe/core";
 import { FeatherCalendar } from "@subframe/core";
-import { FeatherCheck } from "@subframe/core";
 import { FeatherChevronsUpDown } from "@subframe/core";
 import { FeatherClipboardList } from "@subframe/core";
 import { FeatherClock } from "@subframe/core";
@@ -29,7 +28,6 @@ import { FeatherPlus } from "@subframe/core";
 import { FeatherReceipt } from "@subframe/core";
 import { FeatherSearch } from "@subframe/core";
 import { FeatherSettings } from "@subframe/core";
-import { FeatherSparkles } from "@subframe/core";
 import { FeatherWand2 } from "@subframe/core";
 import { FeatherWrench } from "@subframe/core";
 import { useRouter } from "next/navigation";
@@ -238,7 +236,6 @@ export default function QuotesPage() {
             columns.map((stage) => {
               const meta = STAGE_META[stage] ?? { label: stage, variant: "neutral" as const };
               const items = byStage[stage] ?? [];
-              const open = stage === "quote_sent" || stage === "engaged" || stage === "negotiating";
               return (
                 <div
                   key={stage}
@@ -281,28 +278,14 @@ export default function QuotesPage() {
                             {lead.products.join(" + ")}
                           </span>
                         </div>
-                        {open ? (
-                          <div className="flex w-full flex-col items-start gap-2 rounded-md bg-brand-50 px-3 py-2">
-                            <div className="flex w-full items-center gap-2">
-                              <FeatherSparkles className="text-caption font-caption text-brand-600" />
-                              <span className="grow shrink-0 basis-0 text-caption-bold font-caption-bold text-brand-700">
-                                Next: Generate strategy
-                              </span>
-                            </div>
-                            <Button
-                              variant="brand-secondary"
-                              size="small"
-                              icon={<FeatherWand2 />}
-                              onClick={(event: React.MouseEvent<HTMLButtonElement>) => { event.stopPropagation(); router.push(`/requests/${lead.deal_id}/strategy`); }}
-                            >
-                              Generate strategy
-                            </Button>
-                          </div>
-                        ) : (
-                          <Badge variant="brand" icon={<FeatherCheck />}>
-                            {meta.label}
-                          </Badge>
-                        )}
+                        <Button
+                          variant="brand-secondary"
+                          size="small"
+                          icon={<FeatherWand2 />}
+                          onClick={(event: React.MouseEvent<HTMLButtonElement>) => { event.stopPropagation(); router.push(`/requests/${lead.deal_id}/strategy`); }}
+                        >
+                          See strategy
+                        </Button>
                         <div className="flex w-full items-center gap-2 border-t border-solid border-neutral-border pt-3">
                           <FeatherClock className="text-caption font-caption text-subtext-color grow shrink-0 basis-0" />
                           <span className="text-body-bold font-body-bold text-default-font">
