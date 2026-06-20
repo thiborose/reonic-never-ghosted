@@ -36,3 +36,7 @@ next-env.d.ts
 
 # subframe
 .subframe/access-token
+
+# re-include app source: root .gitignore's `lib/` (Python venv) also matches src/lib
+!src/lib/
+!src/lib/**
