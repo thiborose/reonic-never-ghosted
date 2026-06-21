@@ -96,16 +96,70 @@ early).
 | `send_case_study` | email/whatsapp | low | social_proof lever, skeptic; uses local_installs_count |
 | `send_gift` | — | low | relationship warmth, post-verbal-commit thank-you |
 | `share_financing_offer` | email/call | med | upfront_cost / financing_concern objection |
+| `send_physical_mail` | post | low | low-digital-engagement buyer (older, ignores email/whatsapp); tactile premium letter + scratch-card "savings reveal" cuts through digital noise |
+| `offer_bundle` | email/call | med | a want already in the notes (e.g. EV) → complimentary add-on (wallbox) gated on the right plan; raises plan value, reads as gift not upsell |
 
 > Proposal — `send_whatsapp`, `schedule_site_visit`, `send_case_study`,
-> `share_financing_offer` are **additions** to the engine's current 5. Lock the
-> final set before S4 prompt-writing. The lever→action mapping (e.g.
-> `social_proof → send_case_study`, `proximity_trust → meeting_in_person`) lives
-> in the S4 prompt + a deterministic fallback table.
+> `share_financing_offer`, `send_physical_mail`, `offer_bundle` are **additions**
+> to the engine's current 5. Lock the final set before S4 prompt-writing. The
+> lever→action mapping (e.g. `social_proof → send_case_study`,
+> `proximity_trust → meeting_in_person`) lives in the S4 prompt + a deterministic
+> fallback table.
 
 Constraint kept from metadata: a step's `primary_lever` is chosen from the fixed
 9-lever taxonomy; the **action** is *how* that lever is delivered. Lever and
 action are separate axes — the agent picks both.
+
+---
+
+## 3.5 Creative plays (the "something unexpected" bonus)
+
+The judges reward *an idea we didn't think of that actually works*. A generic
+agent reaches for an email every time. We give the agent a **play library** of
+out-of-the-box moves it can select when a trigger fires — and force it to justify
+the pick in the step's `why`.
+
+**Mechanism (lazy, no new architecture):** plays are a JSON knowledge entry
+(`engine/data/plays.json`), surfaced in the S5 prompt the same way benchmarks
+are. The agent *selects* a play and *reasons* it; it never invents the offer
+terms — those (gift cost ceiling, eligible plan tier, price-match rule) are
+deterministic fields the prompt feeds in, like `allowed_refs`. So a play is
+constrained data + LLM judgment, not free-form copy.
+
+| Trigger (from signals/notes) | Play | Action | Lever(s) | Why it's not obvious |
+|------------------------------|------|--------|----------|-----------------------|
+| Older buyer / low digital engagement (email + whatsapp ignored, age cue) | Premium printed letter + scratch-card "guaranteed-savings reveal" | `send_physical_mail` | peace_of_mind + proximity_trust | Tactile novelty cuts through the digital channels this buyer tunes out |
+| EV ownership/intent in notes | Complimentary wallbox install, gated on the higher-tier solar plan | `offer_bundle` | product_specific + roi_financial | Hooks a want they already have; lifts plan value, reads as a gift not an upsell |
+| Competitor flagged + price-sensitive | Price-match **+** local in-person install guarantee | `share_financing_offer` / `meeting_in_person` | roi_financial + proximity_trust | Beats a remote competitor on trust & convenience, not just € |
+| High-value deal gone quiet | Hand-delivered savings dossier over coffee | `send_gift` + `meeting_in_person` | peace_of_mind | Human touch sized to the ticket; re-opens a stalled big deal |
+
+Guardrails: each play carries a **cost ceiling** and **eligibility predicate**
+(deterministic); a play whose predicate the prospect fails is filtered out before
+the prompt sees it, so the agent can't offer a free wallbox to a non-EV buyer.
+Plays stay subject to the same goal-arc + budget invariants (§5).
+
+> Lock the seed play set (4 above + any installer favourites) before S5
+> prompt-writing. Plays are additive data — they need **no** new pillar, just a
+> JSON file + three lines in the S5 prompt.
+
+---
+
+## 3.6 Voice intake + calendar write-back (stretch, top-up)
+
+Same engine, thinner I/O shell — **not** core scope. Two independent add-ons:
+
+- **Voice intake:** installer speaks the customer update → STT → the text drops
+  into the existing notes/touches path → S1 extract runs unchanged. Zero engine
+  change; it's a new *input adapter*, not a new pipeline.
+- **Calendar write-back:** a step that proposes a `phone_call` / `meeting_in_person`
+  emits a `schedule_calendar_event` **tool action** (title, time from
+  `suggested_timing`, attendee) the agent fires directly, instead of rendering an
+  "add to calendar" button the human clicks. Needs an OAuth calendar tool wired as
+  an agent action; gate behind a feature flag so the demo path stays click-based.
+
+Both are post-MVP: ship the click-based version first (button to confirm the
+event, typed notes), add voice + auto-write only if there's time. Flag them as
+`add when: spine (AP1–AP3) is green and there's demo budget left`.
 
 ---
 
@@ -147,3 +201,7 @@ strategy per customer. AP4–AP5 surface the reasoning. AP6 is the wow.
 2. **Final action set** — lock §3 (5 engine kinds vs the proposed 9).
 3. **Provider/model** — engine `llm.py` is OpenAI structured-output today;
    confirm provider + the cheap/strong tier model ids before AP2 wires live calls.
+4. **Seed play set (§3.5)** — lock the 4 plays + any installer favourites, and
+   their cost ceilings / eligibility predicates, before S5 prompt-writing.
+5. **Voice + calendar (§3.6)** — in or out for the demo? Default out (flagged
+   stretch); revisit only once the AP1–AP3 spine is green.
