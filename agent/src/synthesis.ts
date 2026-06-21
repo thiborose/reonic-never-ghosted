@@ -7,7 +7,7 @@ import {
   type RecommendRequest,
   type RecommendationResponse,
 } from "./schemas.js";
-import { openRouterModel, VOLTAGENT_MODEL } from "./agent.js";
+import { openaiModel, VOLTAGENT_MODEL } from "./agent.js";
 
 export const SynthesisSchema = z.object({
   strategyHeadline: z.string().min(12).max(180),
@@ -38,7 +38,7 @@ export async function synthesizeRecommendation(params: {
   const startedAt = Date.now();
   try {
     const result = await generateObject({
-      model: openRouterModel,
+      model: openaiModel,
       schema: SynthesisSchema,
       prompt: buildSynthesisPrompt(params),
       temperature: 0.2,
