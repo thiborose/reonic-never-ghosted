@@ -1,6 +1,9 @@
 node_modules/
 dist/
 .voltagent/
+.data/
 .env
 .env.local
 coverage/
+playwright-report/
+test-results/
