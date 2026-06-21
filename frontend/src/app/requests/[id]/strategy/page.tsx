@@ -22,6 +22,7 @@ import { FeatherWand } from "@subframe/core";
 import { useRouter, useParams } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { InfoTip } from "@/components/InfoTip";
+import { StrategyLoader } from "@/components/StrategyLoader";
 import { addAppointment, draftStep, generateStrategy, reviseStep } from "@/lib/api";
 import type { RevisionResult, Step, StrategyResult } from "@/lib/types";
 
@@ -144,7 +145,7 @@ export default function StrategyPage() {
           </div>
         </div>
         <div className="flex w-full flex-col items-start gap-6 px-8 py-8 mobile:px-4 mobile:py-6">
-          {loading && <span className="text-body font-body text-subtext-color">Generating strategy…</span>}
+          {loading && <StrategyLoader />}
           {error && !loading && (
             <span className="text-body font-body text-error-600">Failed to generate strategy: {error}</span>
           )}
