@@ -232,9 +232,25 @@ a {
   color: var(--muted-2);
 }
 
+.breadcrumbs a:hover {
+  color: var(--blue);
+}
+
 .breadcrumbs strong {
   color: var(--text);
   font-size: 17px;
+}
+
+.board-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0 24px;
+}
+
+.board-toolbar .top-search {
+  flex: 1 1 auto;
+  margin: 0;
 }
 
 .kanban-board {
@@ -752,6 +768,126 @@ a {
 .strategy-card {
   margin-top: 28px;
   padding: 26px 30px;
+}
+
+.agent-run-panel {
+  margin-top: 28px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 5%);
+  padding: 20px 22px;
+}
+
+.agent-run-heading {
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px;
+  margin-bottom: 10px;
+}
+
+.agent-run-heading > div:first-child,
+.agent-run-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.agent-run-heading strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.agent-run-heading span {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.agent-progress-track {
+  margin-top: 13px;
+  height: 7px;
+  border-radius: 999px;
+  background: #edf0f2;
+  overflow: hidden;
+}
+
+.agent-progress-track span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #3b82f6;
+}
+
+.agent-run-list {
+  display: grid;
+}
+
+.agent-run-row {
+  min-height: 52px;
+  padding: 8px 0;
+}
+
+.agent-run-row > div {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.agent-run-row strong,
+.agent-run-row small {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.agent-run-row small,
+.agent-run-row > span:last-child {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.trace-status-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  flex: 0 0 auto;
+  position: relative;
+}
+
+.trace-running .trace-status-dot::after {
+  content: "";
+  position: absolute;
+  inset: 5px;
+  border: 2px solid var(--blue);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.trace-success .trace-status-dot {
+  background: #ecfdf3;
+  border-color: #bbf7d0;
+}
+
+.trace-success .trace-status-dot::after {
+  content: "";
+  position: absolute;
+  width: 9px;
+  height: 5px;
+  left: 5px;
+  top: 6px;
+  border-left: 2px solid var(--green);
+  border-bottom: 2px solid var(--green);
+  transform: rotate(-45deg);
+}
+
+.trace-error .trace-status-dot {
+  background: var(--red-50);
+  border-color: #fecdd3;
 }
 
 .strategy-title {
@@ -1290,6 +1426,33 @@ a {
   padding: 0 12px;
 }
 
+.master-signal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.master-signal {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 14px;
+  display: grid;
+  gap: 7px;
+}
+
+.master-signal span {
+  color: var(--blue);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.master-signal p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
 .notes-list {
   display: grid;
   gap: 16px;
@@ -1387,6 +1550,70 @@ a {
   border-top: 1px solid var(--line);
   margin-top: 18px;
   padding-top: 14px;
+}
+
+.files-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.file-row {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) 34px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.file-row:last-child {
+  border-bottom: 0;
+}
+
+.file-row strong,
+.file-row p,
+.file-row small {
+  min-width: 0;
+}
+
+.file-row p {
+  margin: 3px 0;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.file-row small {
+  color: var(--muted-2);
+}
+
+.file-type {
+  min-height: 26px;
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.file-pdf {
+  background: var(--red-50);
+  color: var(--red);
+}
+
+.file-image {
+  background: var(--green-50);
+  color: var(--green);
+}
+
+.file-audio,
+.file-spreadsheet,
+.file-other {
+  background: #f1f2f4;
+  color: #4b5563;
 }
 
 .count-badge {
@@ -1574,6 +1801,11 @@ a {
   .kanban-board,
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .board-toolbar {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .resource-calendar {

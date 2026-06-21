@@ -93,7 +93,7 @@ const MANUAL_TASK_TERMS: Array<{ taskType: TaskType; terms: string[] }> = [
   },
   {
     taskType: "Send Gift",
-    terms: ["gift", "thank you", "danke", "coffee", "kaffee"],
+    terms: ["gift", "thank you", "danke", "coffee", "kaffee", "send a gift", "geschenk"],
   },
 ];
 
@@ -297,6 +297,13 @@ const KEYWORD_RULES: Array<{
     signals: ["trust_sensitive"],
     objections: ["installer_trust_or_pressure", "responsiveness_or_continuity_gap"],
     reason: "Trust or continuity is a live blocker.",
+  },
+  {
+    id: "sensitive_health_context",
+    terms: ["sick", "ill", "krank", "hospital", "recovered", "recovering", "gesund", "erholt"],
+    signals: ["trust_sensitive"],
+    reason: "The customer has a personal health context; follow up gently in writing.",
+    taskHint: "Send Email",
   },
   {
     id: "climate",
@@ -544,14 +551,21 @@ function diagnose(input: RecommendRequest, kb: LoadedKnowledgeBase): Diagnosis {
     }
   }
 
+  const manualTaskHints = new Map<TaskType, string>();
   for (const termRule of MANUAL_TASK_TERMS) {
     const instruction = normalizeText(input.trigger.installerInstruction ?? "");
     if (instruction && termsFound(instruction, termRule.terms).length > 0) {
-      directTaskHints.set(
+      manualTaskHints.set(
         termRule.taskType,
         "Installer revision request explicitly points to this task type.",
       );
     }
+  }
+  if (manualTaskHints.size > 0 && input.trigger.type === "installer_revision_requested") {
+    directTaskHints.clear();
+  }
+  for (const [taskType, reason] of manualTaskHints.entries()) {
+    directTaskHints.set(taskType, reason);
   }
 
   const quoteAgeDays = diffDays(input.quote.sentAt, input.now);
@@ -713,7 +727,7 @@ function scoreTasks(
   }
 
   for (const [taskType, reason] of diagnosis.directTaskHints.entries()) {
-    addScores(scorecard, [taskType], 45);
+    addScores(scorecard, [taskType], input.trigger.type === "installer_revision_requested" ? 300 : 45);
     factors.push({
       factor: "customer_or_installer_requested_task",
       impact: "positive",
@@ -1130,6 +1144,22 @@ function addScores(scorecard: Scorecard, taskTypes: TaskType[], delta: number) {
 }
 
 function isGiftAllowed(input: RecommendRequest, diagnosis: Diagnosis) {
+  const explicitGiftRequest =
+    input.trigger.type === "installer_revision_requested" &&
+    termsFound(normalizeText(input.trigger.installerInstruction ?? ""), [
+      "gift",
+      "send a gift",
+      "thank you",
+      "danke",
+      "coffee",
+      "kaffee",
+      "geschenk",
+    ]).length > 0;
+  const nearSignature =
+    input.quote.signatureState === "ready" ||
+    input.quote.signatureState === "sent" ||
+    diagnosis.signalIds.includes("ready_to_close") ||
+    diagnosis.stage === "contract_ready";
   const meaningfulPriorInteraction = input.history.actions.some(
     (action) =>
       action.status === "completed" &&
@@ -1144,6 +1174,10 @@ function isGiftAllowed(input: RecommendRequest, diagnosis: Diagnosis) {
     diagnosis.signalIds.includes("convenience_seeker") ||
     diagnosis.signalIds.includes("climate_motivated") ||
     diagnosis.signalIds.includes("stakeholder_review");
+
+  if (explicitGiftRequest && nearSignature && !diagnosis.objectionIds.includes("no_response_or_ghosting")) {
+    return true;
+  }
 
   return meaningfulPriorInteraction && !hasActivePriceOrNoResponse && usefulGiftSignal;
 }
@@ -1266,6 +1300,10 @@ function buildCustomerFacingDraft(
 ) {
   const name = input.customer.name;
   const greeting = input.customer.preferredFormality === "informal" ? `Hallo ${name},` : `Guten Tag ${name},`;
+  const recoveryOpening =
+    termsFound(diagnosis.corpus, ["sick", "ill", "krank", "hospital", "recovered", "recovering"]).length > 0
+      ? "ich hoffe, es geht Ihnen inzwischen wieder besser."
+      : undefined;
 
   if (taskType === "Send Email") {
     if (diagnosis.signalIds.includes("ready_to_close")) {
@@ -1274,6 +1312,7 @@ function buildCustomerFacingDraft(
         body: [
           greeting,
           "",
+          ...(recoveryOpening ? [recoveryOpening, ""] : []),
           "vielen Dank fuer die Rueckmeldung. Ich fasse die offenen Punkte kurz zusammen, damit Sie alles in Ruhe pruefen koennen.",
           "",
           "- Was wir geklaert haben: die wichtigsten technischen und organisatorischen Fragen zur Anlage.",
@@ -1291,6 +1330,7 @@ function buildCustomerFacingDraft(
         body: [
           greeting,
           "",
+          ...(recoveryOpening ? [recoveryOpening, ""] : []),
           "ich wollte nur einmal sinnvoll nachfassen, ohne Sie zu draengen.",
           "",
           "Was waere fuer Sie aktuell am hilfreichsten?",
@@ -1309,6 +1349,7 @@ function buildCustomerFacingDraft(
         body: [
           greeting,
           "",
+          ...(recoveryOpening ? [recoveryOpening, ""] : []),
           "damit der Vergleich fair bleibt, wuerde ich die entscheidenden Punkte nebeneinanderstellen: enthaltene Leistungen, optionale Positionen, Annahmen und Verantwortlichkeiten nach der Unterschrift.",
           "",
           "Wenn Sie moechten, koennen Sie mir die fuer Sie wichtigsten Vergleichspunkte nennen. Ich mache daraus eine kurze neutrale Zusammenfassung.",
@@ -1321,6 +1362,7 @@ function buildCustomerFacingDraft(
       body: [
         greeting,
         "",
+        ...(recoveryOpening ? [recoveryOpening, ""] : []),
         "ich fasse Ihnen die wichtigsten Punkte zum Angebot strukturiert zusammen: was enthalten ist, welche Annahmen wichtig sind und welcher naechste Schritt sinnvoll waere.",
         "",
         "Falls eine Frage noch offen ist, nehme ich sie direkt in den Recap auf.",

@@ -195,10 +195,17 @@ export function buildRecommendationRequest(
     history: {
       communications: buildCommunications(detail.notes, detail.actions),
       actions: detail.actions
-        .filter((action) => action.title !== "Generate closing strategy")
+        .filter((action) => action.title !== "Generate closing strategy" && action.status !== "superseded")
         .map(agentActionFromAction),
       debriefs: buildDebriefs(detail.notes),
       files: [
+        ...detail.files.map((file) => ({
+          id: file.id,
+          name: file.name,
+          type: file.type,
+          summary: file.summary,
+          tags: file.tags,
+        })),
         {
           id: `file_${detail.quote.id}_quote`,
           name: `${detail.quote.productSummary} quote`,
@@ -370,10 +377,11 @@ function channelFromNote(note: NoteRecord): AgentCommunication["channel"] {
 }
 
 function agentActionFromAction(action: ActionRecord): AgentAction {
+  const status = action.status === "superseded" ? "cancelled" : action.status;
   return {
     id: action.id,
     taskType: action.taskType,
-    status: action.status,
+    status,
     ...(action.scheduledFor ? { scheduledFor: action.scheduledFor } : {}),
     ...(action.completedAt ? { completedAt: action.completedAt } : {}),
     summary: action.title,
@@ -539,7 +547,10 @@ function previousActiveTask(detail: QuoteDetailPayload) {
 function completedStrategySteps(detail: QuoteDetailPayload): StrategyStep[] {
   const completedStepIds = new Set(
     detail.actions
-      .filter((action) => action.status === "completed" || action.status === "sent")
+      .filter(
+        (action) =>
+          action.status === "completed" || action.status === "sent" || action.status === "scheduled",
+      )
       .map((action) => action.stepId)
       .filter((stepId): stepId is string => Boolean(stepId)),
   );
@@ -577,13 +588,29 @@ function buildActiveStep(params: {
     status: "active",
     icon: meta.icon,
     guideTitle: meta.guideTitle,
-    bullets: params.recommendation.nextBestAction.agendaOrMessagePlan.slice(0, 5),
+    bullets: visibleStepBullets(params.taskType, params.recommendation),
     whyChips: whyChips(params.recommendation),
     suggestedTime: formatSuggestedDate(suggestedDateTime),
     suggestedDateTime,
     primaryCta: meta.primaryCta,
     secondaryCta: meta.secondaryCta,
   };
+}
+
+function visibleStepBullets(taskType: ActionTaskType, recommendation: RecommendationResponse) {
+  const base = recommendation.nextBestAction.agendaOrMessagePlan.slice(0, 4);
+  const draft = recommendation.nextBestAction.customerFacingDraft;
+  if (taskType !== "Send Email" || !draft) {
+    return base;
+  }
+  const firstDraftLine = draft.body
+    .split("\n")
+    .map((line) => line.trim())
+    .find((line) => line.length > 0 && !line.startsWith("Guten Tag") && !line.startsWith("Hallo"));
+  return [
+    ...base,
+    firstDraftLine ? `Draft opening: ${truncate(firstDraftLine, 130)}` : "Draft email is ready for review.",
+  ];
 }
 
 function buildUpcomingSteps(

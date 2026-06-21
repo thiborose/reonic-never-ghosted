@@ -17,9 +17,57 @@ const page = await browser.newPage({ viewport: { width: 1440, height: 960 } });
 page.setDefaultTimeout(timeout);
 
 try {
+  await page.goto(`${baseUrl}/quotes`, { waitUntil: "networkidle" });
+  await quoteCard(page, "Lehmann, Markus").getByRole("button", { name: /Lehmann, Markus/i }).click();
+  await page.waitForURL(/\/customers\/customer_markus\?quote=quote_markus/);
+  await requireText(page, "Master Data");
+  await requireText(page, "Files");
+  await fetch(`${baseUrl}/api/customers/customer_markus/notes`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: JSON.stringify({
+      type: "text",
+      title: "Customer update",
+      body: "Markus is sick this week; switch to a gentle written follow-up if the strategy is refreshed.",
+    }),
+  });
+  await page.reload({ waitUntil: "networkidle" });
+  await requireText(page, "Master data has changed");
+  await page.getByRole("button", { name: /Regenerate strategy/i }).click();
+  await page.waitForURL(/\/requests\/quote_markus\/strategy/);
+  await requireText(page, "GPT-5 mini");
+  await ensureNoText(page, "Agent run complete");
+  await page.locator("main").getByRole("link", { name: /^Requests$/ }).click();
+  await page.waitForURL(/\/quotes/);
+
+  await page.getByRole("button", { name: /New quote/i }).click();
+  const dialog = page.locator(".dialog-content");
+  await dialog.getByLabel("Name").fill("Laura Stein");
+  await dialog.getByLabel("Email").fill("laura.stein@email.de");
+  await dialog.getByLabel("Phone").fill("+49 821 445566");
+  await dialog.getByLabel("Address").fill("Parkweg 4, 86150 Augsburg");
+  await dialog.getByLabel("System").fill("Solar + battery");
+  await dialog.getByLabel("Quote value").fill("33600");
+  await dialog
+    .getByLabel("Motivation or concern")
+    .fill("Customer wants predictable monthly bills and asked whether the roof needs a closer check.");
+  await dialog
+    .getByLabel("Household / property note")
+    .fill("Family with two EVs; partner reviews larger purchases.");
+  await clickAndWait(page, /Create quote/i, "/api/quotes");
+  await page.waitForURL(/\/requests\/quote_laura_stein_/);
+  await requireText(page, "No closing strategy yet");
+
+  await fetch(`${baseUrl}/api/demo/reset`, {
+    method: "POST",
+    headers: { "content-type": "application/json" },
+    body: "{}",
+  });
+
   await page.goto(`${baseUrl}/requests/quote_sabine/strategy`, { waitUntil: "networkidle" });
   await clickAndWait(page, /Generate strategy/i, "/api/quotes/quote_sabine/generate-strategy");
   await requireText(page, "GPT-5 mini");
+  await ensureNoText(page, "Agent run complete");
   await requireText(page, "Phone Call");
   await page.screenshot({ path: ".tmp-ui/strategy-generated.png", fullPage: true });
 
@@ -90,6 +138,13 @@ async function clickAndWait(page: Page, buttonName: RegExp, ...urlParts: string[
 
 async function requireText(page: Page, text: string) {
   await page.getByText(text, { exact: false }).first().waitFor({ state: "visible", timeout });
+}
+
+async function ensureNoText(page: Page, text: string) {
+  const count = await page.getByText(text, { exact: false }).count();
+  if (count > 0) {
+    throw new Error(`Expected "${text}" to be hidden, but found ${count} match(es).`);
+  }
 }
 
 async function requireHighlightedEvent(page: Page) {

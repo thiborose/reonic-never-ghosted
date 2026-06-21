@@ -50,6 +50,18 @@ export interface CustomerRecord {
   updatedAt: string;
 }
 
+export interface CustomerFileRecord {
+  id: string;
+  customerId: string;
+  name: string;
+  type: "pdf" | "image" | "audio" | "spreadsheet" | "other";
+  sizeLabel: string;
+  summary: string;
+  tags: string[];
+  uploadedAt: string;
+  uploadedBy: string;
+}
+
 export interface QuoteRecord {
   id: string;
   customerId: string;
@@ -124,9 +136,11 @@ export interface ActionRecord {
   stepId?: string;
   taskType: ActionTaskType;
   title: string;
-  status: "recommended" | "scheduled" | "completed" | "sent";
+  status: "recommended" | "scheduled" | "completed" | "sent" | "superseded";
   scheduledFor?: string;
   completedAt?: string;
+  supersededAt?: string;
+  supersededByActionId?: string;
   calendarEventId?: string;
   logPromptTitle: string;
   defaultLogText: string;
@@ -174,6 +188,7 @@ export interface QuoteDetailPayload {
   strategy?: StrategyRecord;
   actions: ActionRecord[];
   notes: NoteRecord[];
+  files: CustomerFileRecord[];
 }
 
 export interface ScheduleActionInput {
@@ -201,4 +216,28 @@ export interface AddNoteInput {
   type: "audio" | "text" | "file";
   title: string;
   body: string;
+}
+
+export interface CreateQuoteInput {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  system: string;
+  quoteValue: number;
+  preferredChannel: string;
+  motivationOrConcern: string;
+  householdNote: string;
+  initialNote?: string;
+}
+
+export interface AgentTraceEvent {
+  id: string;
+  source: "web" | "voltagent";
+  phase: string;
+  title: string;
+  detail?: string;
+  status: "pending" | "running" | "success" | "error";
+  timestamp: string;
+  durationMs?: number;
 }

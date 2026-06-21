@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import * as Tooltip from "@radix-ui/react-tooltip";
 import type { ReactNode } from "react";
+import { Link } from "react-router-dom";
 
 const iconMap = {
   activity: Activity,
@@ -102,14 +103,16 @@ export function PageHeader({
   breadcrumbs,
 }: {
   title: string;
-  breadcrumbs?: string[];
+  breadcrumbs?: Array<{ label: string; to?: string }>;
 }) {
   return (
     <header className="page-header">
       {breadcrumbs ? (
         <div className="breadcrumbs">
           {breadcrumbs.map((item) => (
-            <span key={item}>{item}</span>
+            <span key={item.label}>
+              {item.to ? <Link to={item.to}>{item.label}</Link> : item.label}
+            </span>
           ))}
           <strong>{title}</strong>
         </div>

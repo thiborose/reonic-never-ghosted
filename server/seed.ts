@@ -2,6 +2,7 @@ import type {
   ActionRecord,
   BootstrapPayload,
   CalendarEventRecord,
+  CustomerFileRecord,
   CustomerRecord,
   NoteRecord,
   QuoteRecord,
@@ -521,6 +522,81 @@ export const noteSeeds: NoteRecord[] = [
     authorName: "Lukas Klein · Installer",
     authorAvatar: "LK",
     createdAt: "2026-06-19T12:08:00.000Z",
+  },
+];
+
+export const fileSeeds: CustomerFileRecord[] = [
+  {
+    id: "file_sabine_intake",
+    customerId: DEMO_CUSTOMER_ID,
+    name: "Intake form.pdf",
+    type: "pdf",
+    sizeLabel: "248 KB",
+    summary:
+      "Initial quote request: heat pump replacement, solar coverage preference, and CO2 impact questions.",
+    tags: ["intake", "motivation", "co2"],
+    uploadedAt: "2026-06-20T09:12:00.000Z",
+    uploadedBy: "Jonas Krüger",
+  },
+  {
+    id: "file_sabine_energy_bill",
+    customerId: DEMO_CUSTOMER_ID,
+    name: "Energy bill 2024.pdf",
+    type: "pdf",
+    sizeLabel: "612 KB",
+    summary:
+      "Annual electricity and oil-heating context used to frame monthly payment and payback discussion.",
+    tags: ["bill", "roi", "monthly-payment"],
+    uploadedAt: "2026-06-20T10:05:00.000Z",
+    uploadedBy: "Jonas Krüger",
+  },
+  {
+    id: "file_sabine_roof_photo",
+    customerId: DEMO_CUSTOMER_ID,
+    name: "Roof site photo.jpg",
+    type: "image",
+    sizeLabel: "3.1 MB",
+    summary:
+      "South-west facing roof photo. No obvious shading; useful if the customer asks for physical validation.",
+    tags: ["roof", "site", "trust"],
+    uploadedAt: "2026-06-20T14:20:00.000Z",
+    uploadedBy: "Jonas Krüger",
+  },
+  {
+    id: "file_markus_payback",
+    customerId: "customer_markus",
+    name: "Payback comparison.pdf",
+    type: "pdf",
+    sizeLabel: "184 KB",
+    summary:
+      "Battery/no-battery comparison sent before Markus asked for a monthly cash-flow call.",
+    tags: ["payback", "battery", "cash-flow"],
+    uploadedAt: "2026-06-19T13:06:00.000Z",
+    uploadedBy: "Jonas Krüger",
+  },
+  {
+    id: "file_birgit_video_notes",
+    customerId: "customer_birgit",
+    name: "Similar installation notes.pdf",
+    type: "pdf",
+    sizeLabel: "320 KB",
+    summary:
+      "Reference installation notes used to reassure Birgit about appearance and service coverage.",
+    tags: ["visual-proof", "service", "aftercare"],
+    uploadedAt: "2026-06-19T16:03:00.000Z",
+    uploadedBy: "Clara Richter",
+  },
+  {
+    id: "file_anja_visit",
+    customerId: "customer_anja",
+    name: "Site validation checklist.pdf",
+    type: "pdf",
+    sizeLabel: "276 KB",
+    summary:
+      "Garage wall, cable path, and battery location confirmed before signature follow-up.",
+    tags: ["visit", "signature", "technical"],
+    uploadedAt: "2026-06-19T12:07:00.000Z",
+    uploadedBy: "Lukas Klein",
   },
 ];
 

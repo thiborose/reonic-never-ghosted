@@ -13,13 +13,18 @@ if (existsSync(rootEnvPath)) {
   process.loadEnvFile(rootEnvPath);
 }
 
-export const VOLTAGENT_MODEL = process.env.VOLTAGENT_MODEL ?? "gpt-5-mini";
+export const VOLTAGENT_MODEL = process.env.VOLTAGENT_MODEL ?? "openai/gpt-5-mini";
 // Prefer OPENAI_API_KEY; fall back to OPENROUTER_API_KEY so existing .env files keep working.
 const openaiApiKey = process.env.OPENAI_API_KEY ?? process.env.OPENROUTER_API_KEY;
+const openaiBaseUrl =
+  process.env.OPENAI_BASE_URL ??
+  (process.env.OPENROUTER_API_KEY && !process.env.OPENAI_API_KEY
+    ? "https://openrouter.ai/api/v1"
+    : undefined);
 
 const openai = createOpenAI({
   ...(openaiApiKey ? { apiKey: openaiApiKey } : {}),
-  ...(process.env.OPENAI_BASE_URL ? { baseURL: process.env.OPENAI_BASE_URL } : {}),
+  ...(openaiBaseUrl ? { baseURL: openaiBaseUrl } : {}),
 });
 
 export const openaiModel = openai(VOLTAGENT_MODEL);

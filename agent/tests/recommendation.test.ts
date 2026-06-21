@@ -284,6 +284,57 @@ describe("recommendNextAction", () => {
     expect(result.nextBestAction.customerFacingDraft?.body).toContain("zu draengen");
   });
 
+  it("honors a safe revision that asks for a sensitive email after sickness context", () => {
+    const result = recommendNextAction(
+      baseRequest({
+        trigger: {
+          type: "installer_revision_requested",
+          installerInstruction:
+            "The customer is sick. Make this an email and include a kind note that I hope she recovered.",
+        },
+        customer: {
+          id: "customer-1",
+          name: "Sabine Mueller",
+          language: "de",
+          preferredFormality: "formal",
+          statedConcerns: ["Customer is sick this week and asked not to schedule a call."],
+          explicitMotives: [],
+        },
+      }),
+    );
+
+    expect(result.nextBestAction.taskType).toBe("Send Email");
+    expect(result.nextBestAction.customerFacingDraft?.body).toContain("besser");
+  });
+
+  it("allows an explicit low-pressure gift before signature when the quote is near close", () => {
+    const result = recommendNextAction(
+      baseRequest({
+        trigger: {
+          type: "installer_revision_requested",
+          installerInstruction: "Before sending the contract link, send a small thank-you gift first.",
+        },
+        quote: {
+          id: "quote-1",
+          status: "sent",
+          sentAt: "2026-06-20T09:00:00.000Z",
+          signatureState: "sent",
+          scope: ["PV", "battery"],
+          totalGross: 28_000,
+          currency: "EUR",
+          lineItems: [{ label: "PV system", amountGross: 28_000, optional: false }],
+        },
+        assistantState: {
+          currentStage: "active_followup",
+          activeBuyerSignals: ["ready_to_close"],
+          activeObjections: [],
+        },
+      }),
+    );
+
+    expect(result.nextBestAction.taskType).toBe("Send Gift");
+  });
+
 });
 
 function deepMerge<T>(base: T, overrides: Partial<T>): T {

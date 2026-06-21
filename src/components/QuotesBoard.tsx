@@ -1,11 +1,12 @@
-import { CalendarDays, Clock3, Edit3, Gift, MoreVertical, Search, Send, WandSparkles } from "lucide-react";
+import * as Dialog from "@radix-ui/react-dialog";
+import { CalendarDays, Clock3, Edit3, Gift, MoreVertical, Plus, Search, Send, WandSparkles, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { api, formatMoney } from "../lib/api.js";
 import { Avatar, Badge, ErrorState, IconButton, LoadingState, PageHeader } from "./ui.js";
 import { LogActionDialog } from "./LogActionDialog.js";
-import type { ActionRecord, BootstrapPayload, QuoteRecord } from "../../server/types.js";
+import type { ActionRecord, BootstrapPayload, CreateQuoteInput, QuoteRecord } from "../../server/types.js";
 
 export function QuotesBoard() {
   const [bootstrap, setBootstrap] = useState<BootstrapPayload>();
@@ -14,6 +15,7 @@ export function QuotesBoard() {
   const [error, setError] = useState<string>();
   const [logAction, setLogAction] = useState<ActionRecord>();
   const [logOpen, setLogOpen] = useState(false);
+  const [newQuoteOpen, setNewQuoteOpen] = useState(false);
   const navigate = useNavigate();
 
   async function load() {
@@ -67,9 +69,15 @@ export function QuotesBoard() {
   return (
     <section className="page">
       <PageHeader title="Quotes" />
-      <div className="top-search">
-        <Search size={16} />
-        <input placeholder="Search" />
+      <div className="board-toolbar">
+        <div className="top-search">
+          <Search size={16} />
+          <input placeholder="Search" />
+        </div>
+        <button className="primary-button" type="button" onClick={() => setNewQuoteOpen(true)}>
+          <Plus size={16} />
+          New quote
+        </button>
       </div>
       <div className="kanban-board">
         {bootstrap.columns.map((column) => (
@@ -82,7 +90,12 @@ export function QuotesBoard() {
             </div>
             <div className="quote-list">
               {(grouped.get(column.id) ?? []).map((quote) => (
-                <QuoteCard quote={quote} key={quote.id} onNext={() => void handleNext(quote)} />
+                <QuoteCard
+                  quote={quote}
+                  key={quote.id}
+                  onNext={() => void handleNext(quote)}
+                  onOpenCustomer={() => navigate(`/customers/${quote.customerId}?quote=${quote.id}`)}
+                />
               ))}
             </div>
           </section>
@@ -97,11 +110,28 @@ export function QuotesBoard() {
           navigate(`/requests/${detail.quote.id}/strategy`);
         }}
       />
+      <NewQuoteDialog
+        open={newQuoteOpen}
+        onOpenChange={setNewQuoteOpen}
+        onCreated={(detail) => {
+          setQuotes((current) => [detail.quote, ...current]);
+          setNewQuoteOpen(false);
+          navigate(`/requests/${detail.quote.id}/strategy`);
+        }}
+      />
     </section>
   );
 }
 
-function QuoteCard({ quote, onNext }: { quote: QuoteRecord; onNext: () => void }) {
+function QuoteCard({
+  quote,
+  onNext,
+  onOpenCustomer,
+}: {
+  quote: QuoteRecord;
+  onNext: () => void;
+  onOpenCustomer: () => void;
+}) {
   const nextIcon =
     quote.nextAction.kind === "generate_strategy" ? (
       <WandSparkles size={14} />
@@ -118,7 +148,7 @@ function QuoteCard({ quote, onNext }: { quote: QuoteRecord; onNext: () => void }
   return (
     <article className="quote-card">
       <div className="quote-card-head">
-        <button className="quote-title-button" type="button">
+        <button className="quote-title-button" type="button" onClick={onOpenCustomer}>
           {quote.title}
         </button>
         <div className="card-actions">
@@ -159,5 +189,146 @@ function QuoteCard({ quote, onNext }: { quote: QuoteRecord; onNext: () => void }
         </div>
       </div>
     </article>
+  );
+}
+
+function NewQuoteDialog({
+  open,
+  onOpenChange,
+  onCreated,
+}: {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onCreated: (detail: Awaited<ReturnType<typeof api.createQuote>>) => void;
+}) {
+  const [form, setForm] = useState<CreateQuoteInput>({
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    system: "Solar + battery",
+    quoteValue: 28000,
+    preferredChannel: "Email first, accepts scheduled calls",
+    motivationOrConcern: "",
+    householdNote: "",
+    initialNote: "",
+  });
+  const [saving, setSaving] = useState(false);
+
+  async function submit() {
+    setSaving(true);
+    try {
+      const detail = await api.createQuote(form);
+      onCreated(detail);
+      setForm({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        system: "Solar + battery",
+        quoteValue: 28000,
+        preferredChannel: "Email first, accepts scheduled calls",
+        motivationOrConcern: "",
+        householdNote: "",
+        initialNote: "",
+      });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  function update<K extends keyof CreateQuoteInput>(key: K, value: CreateQuoteInput[K]) {
+    setForm((current) => ({ ...current, [key]: value }));
+  }
+
+  return (
+    <Dialog.Root open={open} onOpenChange={onOpenChange}>
+      <Dialog.Portal>
+        <Dialog.Overlay className="dialog-overlay" />
+        <Dialog.Content className="dialog-content wide-dialog">
+          <div className="dialog-heading">
+            <div>
+              <Dialog.Title>Create quote lead</Dialog.Title>
+              <Dialog.Description>
+                This starts as a fresh quote whose next action is to generate a closing strategy.
+              </Dialog.Description>
+            </div>
+            <Dialog.Close className="icon-button" aria-label="Close">
+              <X size={16} />
+            </Dialog.Close>
+          </div>
+          <div className="form-grid">
+            <Field label="Name" value={form.name} onChange={(value) => update("name", value)} />
+            <Field label="Email" value={form.email} onChange={(value) => update("email", value)} />
+            <Field label="Phone" value={form.phone} onChange={(value) => update("phone", value)} />
+            <Field label="Address" value={form.address} onChange={(value) => update("address", value)} />
+            <Field label="System" value={form.system} onChange={(value) => update("system", value)} />
+            <label className="field-stack">
+              <span>Quote value</span>
+              <input
+                type="number"
+                value={form.quoteValue}
+                onChange={(event) => update("quoteValue", Number(event.target.value))}
+              />
+            </label>
+            <Field
+              label="Preferred channel"
+              value={form.preferredChannel}
+              onChange={(value) => update("preferredChannel", value)}
+            />
+          </div>
+          <label className="field-stack">
+            <span>Motivation or concern</span>
+            <textarea
+              rows={4}
+              value={form.motivationOrConcern}
+              onChange={(event) => update("motivationOrConcern", event.target.value)}
+              placeholder="e.g. Wants predictable monthly bills, asked about CO2 impact, and worries the roof may need a closer check."
+            />
+          </label>
+          <label className="field-stack">
+            <span>Household / property note</span>
+            <textarea
+              rows={3}
+              value={form.householdNote}
+              onChange={(event) => update("householdNote", event.target.value)}
+              placeholder="e.g. Family with two EVs, south-west roof, partner reviews big purchases."
+            />
+          </label>
+          <label className="field-stack">
+            <span>Initial installer note</span>
+            <textarea
+              rows={3}
+              value={form.initialNote ?? ""}
+              onChange={(event) => update("initialNote", event.target.value)}
+              placeholder="Optional note that should influence the first strategy."
+            />
+          </label>
+          <div className="dialog-actions">
+            <Dialog.Close className="secondary-button">Cancel</Dialog.Close>
+            <button className="primary-button" type="button" onClick={() => void submit()} disabled={saving}>
+              {saving ? "Creating..." : "Create quote"}
+            </button>
+          </div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
+
+function Field({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <label className="field-stack">
+      <span>{label}</span>
+      <input value={value} onChange={(event) => onChange(event.target.value)} />
+    </label>
   );
 }

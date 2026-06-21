@@ -63,7 +63,7 @@ describe("demo flow persistence", () => {
       notes:
         "Visit completed. Roof condition looked fine. This answers Sabine's main concern and she asked for final summary and signature path.",
     });
-    const signed = db.completeAction(finalRecommended.quote.nextAction.actionId!);
+    const signed = await db.completeAction(finalRecommended.quote.nextAction.actionId!);
 
     expect(finalRecommended.quote.nextAction.kind).toBe("send_final_recap");
     expect(signed.quote.columnId).toBe("completed");
@@ -77,5 +77,68 @@ describe("demo flow persistence", () => {
     const detail = db.getQuoteDetail(seed.DEMO_QUOTE_ID);
     expect(detail.quote.strategyStale).toBe(true);
     expect(detail.strategy?.stale).toBe(true);
+  });
+
+  it("creates a fresh quote lead with generate strategy as the next action", () => {
+    const created = db.createQuote({
+      name: "Laura Stein",
+      email: "laura.stein@email.de",
+      phone: "+49 821 445566",
+      address: "Parkweg 4, 86150 Augsburg",
+      system: "Solar + battery",
+      quoteValue: 33600,
+      preferredChannel: "Email first, accepts scheduled calls",
+      motivationOrConcern:
+        "Customer wants predictable monthly bills and asked whether the roof needs a closer check.",
+      householdNote: "Family with two EVs; partner reviews larger purchases.",
+      initialNote: "They dislike pushy follow-ups.",
+    });
+
+    expect(created.quote.nextAction.kind).toBe("generate_strategy");
+    expect(created.customer.buyerProfile.length).toBeGreaterThan(0);
+    expect(created.notes[0]?.body).toContain("predictable monthly bills");
+  });
+
+  it("marks strategies stale after adding a master-data note", async () => {
+    await db.generateStrategy(seed.DEMO_QUOTE_ID);
+    db.addNote(seed.DEMO_CUSTOMER_ID, {
+      type: "text",
+      title: "Customer health note",
+      body: "Sabine is sick this week; use a kind written note and avoid asking for a call.",
+    });
+
+    const detail = db.getQuoteDetail(seed.DEMO_QUOTE_ID);
+    expect(detail.quote.strategyStale).toBe(true);
+    expect(detail.strategy?.stale).toBe(true);
+  });
+
+  it("revision can replace an unlocked call with a sensitive email", async () => {
+    const generated = await db.generateStrategy(seed.DEMO_QUOTE_ID);
+    const oldActionId = generated.quote.nextAction.actionId!;
+
+    const revised = await db.reviseStrategy(seed.DEMO_QUOTE_ID, {
+      instruction:
+        "I just found out the customer is sick. Make the next step an email and include a kind note that I hope she recovered.",
+    });
+
+    expect(revised.quote.nextAction.kind).toBe("send_final_recap");
+    expect(revised.actions.find((action) => action.id === oldActionId)?.status).toBe("superseded");
+    expect(revised.strategy?.steps.find((step) => step.status === "active")?.taskType).toBe("Send Email");
+    expect(
+      revised.strategy?.steps
+        .find((step) => step.status === "active")
+        ?.bullets.join(" ")
+        .toLowerCase(),
+    ).toContain("besser");
+  });
+
+  it("revision can insert a gift before a signature follow-up when safe", async () => {
+    const revised = await db.reviseStrategy("quote_anja", {
+      instruction: "Before sending the contract link, send a small thank-you gift first.",
+    });
+
+    expect(revised.quote.nextAction.kind).toBe("send_gift");
+    expect(db.getAction("action_anja_signature").status).toBe("superseded");
+    expect(revised.strategy?.steps.find((step) => step.status === "active")?.taskType).toBe("Send Gift");
   });
 });

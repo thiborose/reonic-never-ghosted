@@ -2,13 +2,14 @@ import { DatabaseSync } from "node:sqlite";
 import { existsSync, mkdirSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 
-import { requestRecommendation } from "./agentClient.js";
+import { requestRecommendation, requestRecommendationStream } from "./agentClient.js";
 import { buildRecommendationRequest, mapRecommendationToPersistence } from "./agentMapper.js";
 import {
   actionSeeds,
   bootstrapSeed,
   calendarSeeds,
   customerSeeds,
+  fileSeeds,
   noteSeeds,
   quoteSeeds,
   strategySeeds,
@@ -16,8 +17,11 @@ import {
 import type {
   ActionRecord,
   AddNoteInput,
+  AgentTraceEvent,
   BootstrapPayload,
   CalendarEventRecord,
+  CreateQuoteInput,
+  CustomerFileRecord,
   CustomerRecord,
   LogActionInput,
   NoteRecord,
@@ -75,12 +79,14 @@ export function getQuoteDetail(quoteId: string): QuoteDetailPayload {
   const strategy = getStrategyByQuote(quote.id);
   const actions = listActionsForQuote(quote.id);
   const notes = listNotesForCustomer(customer.id);
+  const files = listFilesForCustomer(customer.id);
   return {
     quote,
     customer,
     ...(strategy ? { strategy } : {}),
     actions,
     notes,
+    files,
   };
 }
 
@@ -130,15 +136,20 @@ export function getCalendarEvents(): CalendarEventRecord[] {
   return rows.map((row) => parseJson<CalendarEventRecord>(row.data));
 }
 
-export async function generateStrategy(quoteId: string): Promise<QuoteDetailPayload> {
+export async function generateStrategy(
+  quoteId: string,
+  onTrace?: (event: AgentTraceEvent) => void,
+): Promise<QuoteDetailPayload> {
   return refreshRecommendation(quoteId, {
     triggerType: "strategy_requested",
+    ...(onTrace ? { onTrace } : {}),
   });
 }
 
 export async function reviseStrategy(
   quoteId: string,
   input: ReviseStrategyInput,
+  onTrace?: (event: AgentTraceEvent) => void,
 ): Promise<QuoteDetailPayload> {
   const instruction = input.instruction.trim();
   if (!instruction) {
@@ -150,7 +161,88 @@ export async function reviseStrategy(
   return refreshRecommendation(quoteId, {
     triggerType: "installer_revision_requested",
     installerInstruction: instruction,
+    ...(onTrace ? { onTrace } : {}),
   });
+}
+
+export function createQuote(input: CreateQuoteInput): QuoteDetailPayload {
+  const now = new Date().toISOString();
+  const normalizedValue = Number(input.quoteValue);
+  if (!input.name.trim() || !input.email.trim() || !input.address.trim() || !input.system.trim()) {
+    const error = new Error("Name, email, address, and system are required");
+    Object.assign(error, { statusCode: 400 });
+    throw error;
+  }
+  if (!Number.isFinite(normalizedValue) || normalizedValue <= 0) {
+    const error = new Error("Quote value must be a positive number");
+    Object.assign(error, { statusCode: 400 });
+    throw error;
+  }
+
+  const slug = slugify(input.name);
+  const stamp = Date.now().toString(36);
+  const customerId = `customer_${slug}_${stamp}`;
+  const quoteId = `quote_${slug}_${stamp}`;
+  const customer: CustomerRecord = {
+    id: customerId,
+    initials: initialsFor(input.name),
+    name: input.name.trim(),
+    email: input.email.trim(),
+    phone: input.phone.trim(),
+    address: input.address.trim(),
+    system: input.system.trim(),
+    quoteValue: normalizedValue,
+    leadBadge: "Fresh",
+    leadBadgeTone: "blue",
+    communicationPreference: input.preferredChannel.trim() || "Email",
+    decisionNote: input.motivationOrConcern.trim() || "Fresh quote without a recorded objection yet.",
+    householdNote: input.householdNote.trim() || "No special household note recorded.",
+    updatedAt: now,
+    buyerProfile: inferBuyerProfile(input),
+  };
+  const quote: QuoteRecord = {
+    id: quoteId,
+    customerId,
+    title: customer.name,
+    customerName: customer.name,
+    contactLine: `${customer.name} · ${customer.email}`,
+    address: customer.address,
+    columnId: "waiting_response",
+    ownerName: "Theo",
+    ownerAvatar: "TT",
+    ownerTone: "blue",
+    value: normalizedValue,
+    sentAt: now,
+    lastActionAt: now,
+    quoteAgeDays: 0,
+    daysSinceLastAction: 0,
+    productSummary: customer.system,
+    nextAction: {
+      kind: "generate_strategy",
+      label: "Generate strategy",
+      tone: "blue",
+    },
+    strategyStale: false,
+  };
+
+  putJson("customers", customer.id, customer);
+  putQuoteWithSort(quote, firstQuoteSortOrder() - 1);
+
+  const noteBody = [input.motivationOrConcern, input.initialNote].filter(Boolean).join("\n\n").trim();
+  if (noteBody) {
+    putJson("notes", `note_${quoteId}_intake`, {
+      id: `note_${quoteId}_intake`,
+      customerId,
+      type: "text",
+      title: "New quote intake",
+      body: noteBody,
+      authorName: "Theo Tiral · Installer",
+      authorAvatar: "TT",
+      createdAt: now,
+    } satisfies NoteRecord);
+  }
+
+  return getQuoteDetail(quoteId);
 }
 
 export function scheduleAction(actionId: string, input: ScheduleActionInput): QuoteDetailPayload {
@@ -237,7 +329,7 @@ export async function logAction(actionId: string, input: LogActionInput): Promis
   return getQuoteDetail(quote.id);
 }
 
-export function completeAction(actionId: string): QuoteDetailPayload {
+export async function completeAction(actionId: string): Promise<QuoteDetailPayload> {
   const action = getAction(actionId);
   const quote = getQuote(action.quoteId);
   const completedAt = new Date().toISOString();
@@ -272,6 +364,25 @@ export function completeAction(actionId: string): QuoteDetailPayload {
     }
   }
 
+  if (action.taskType === "Send WhatsApp Video Message" || action.taskType === "Send Gift") {
+    const note: NoteRecord = {
+      id: `note_${action.id}_${Date.now()}`,
+      customerId: action.customerId,
+      type: "text",
+      title: `${action.taskType} sent`,
+      body: action.defaultLogText || `${action.title} was sent. Recommend the next best follow-up.`,
+      authorName: "Theo Tiral · Installer",
+      authorAvatar: "TT",
+      createdAt: completedAt,
+    };
+    putJson("notes", note.id, note);
+    await refreshRecommendation(quote.id, {
+      triggerType: "debrief_added",
+      now: completedAt,
+    });
+    updateQuote(quote.id, { lastActionAt: completedAt, daysSinceLastAction: 0 });
+  }
+
   return getQuoteDetail(quote.id);
 }
 
@@ -289,6 +400,7 @@ export function addNote(customerId: string, input: AddNoteInput): NoteRecord {
     ...(input.type === "audio" ? { duration: "0:42", transcriptStatus: "Transcribed" } : {}),
   };
   putJson("notes", note.id, note);
+  markCustomerStrategiesStale(customerId);
   return note;
 }
 
@@ -304,11 +416,39 @@ export function getAction(actionId: string): ActionRecord {
 
 async function refreshRecommendation(
   quoteId: string,
-  options: Parameters<typeof buildRecommendationRequest>[2],
+  options: Parameters<typeof buildRecommendationRequest>[2] & {
+    onTrace?: (event: AgentTraceEvent) => void;
+  },
 ) {
   const detail = getQuoteDetail(quoteId);
+  options.onTrace?.(
+    makeTrace(
+      "assemble-context",
+      "Assembling CRM context",
+      `${detail.customer.name} · ${detail.notes.length} notes · ${detail.files.length} files`,
+      "running",
+    ),
+  );
   const request = buildRecommendationRequest(detail, getCalendarEvents(), options);
-  const recommendation = await requestRecommendation(request);
+  options.onTrace?.(
+    makeTrace(
+      "assemble-context",
+      "CRM context ready",
+      `${request.history.communications.length} communications · ${request.history.files.length} files`,
+      "success",
+    ),
+  );
+  const recommendation = options.onTrace
+    ? await requestRecommendationStream(request, options.onTrace)
+    : await requestRecommendation(request);
+  options.onTrace?.(
+    makeTrace(
+      "persist",
+      "Persisting recommendation",
+      recommendation.nextBestAction.taskType,
+      "running",
+    ),
+  );
   const persistence = mapRecommendationToPersistence(
     getQuoteDetail(quoteId),
     recommendation,
@@ -317,9 +457,52 @@ async function refreshRecommendation(
 
   putJson("strategies", persistence.strategy.id, persistence.strategy);
   putJson("actions", persistence.action.id, persistence.action);
+  supersedeReplaceableAction(detail, persistence.action.id, options.now ?? new Date().toISOString());
   updateQuote(quoteId, persistence.quotePatch);
+  options.onTrace?.(
+    makeTrace(
+      "persist",
+      "Recommendation saved",
+      persistence.quotePatch.nextAction?.label,
+      "success",
+    ),
+  );
 
   return getQuoteDetail(quoteId);
+}
+
+function makeTrace(
+  phase: string,
+  title: string,
+  detail: string | undefined,
+  status: AgentTraceEvent["status"],
+): AgentTraceEvent {
+  return {
+    id: `web_trace_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+    source: "web",
+    phase,
+    title,
+    ...(detail ? { detail } : {}),
+    status,
+    timestamp: new Date().toISOString(),
+  };
+}
+
+function supersedeReplaceableAction(detail: QuoteDetailPayload, newActionId: string, now: string) {
+  const oldActionId = detail.quote.nextAction.actionId;
+  if (!oldActionId || oldActionId === newActionId) {
+    return;
+  }
+  const oldAction = detail.actions.find((action) => action.id === oldActionId);
+  if (!oldAction || oldAction.status !== "recommended" || oldAction.title === "Generate closing strategy") {
+    return;
+  }
+  putJson("actions", oldAction.id, {
+    ...oldAction,
+    status: "superseded",
+    supersededAt: now,
+    supersededByActionId: newActionId,
+  } satisfies ActionRecord);
 }
 
 function getQuote(quoteId: string): QuoteRecord {
@@ -356,6 +539,13 @@ function listNotesForCustomer(customerId: string) {
     .prepare("select data from notes where customer_id = ? order by json_extract(data, '$.createdAt') desc")
     .all(customerId) as unknown as JsonRow[];
   return rows.map((row) => parseJson<NoteRecord>(row.data));
+}
+
+function listFilesForCustomer(customerId: string) {
+  const rows = getDb()
+    .prepare("select data from customer_files where customer_id = ? order by json_extract(data, '$.uploadedAt') desc")
+    .all(customerId) as unknown as JsonRow[];
+  return rows.map((row) => parseJson<CustomerFileRecord>(row.data));
 }
 
 function createSchema(database: DatabaseSync) {
@@ -408,6 +598,13 @@ function createSchema(database: DatabaseSync) {
       data text not null,
       updated_at text not null
     );
+
+    create table if not exists customer_files (
+      id text primary key,
+      customer_id text not null,
+      data text not null,
+      updated_at text not null
+    );
   `);
 }
 
@@ -415,7 +612,7 @@ function seedIfNeeded(database: DatabaseSync) {
   const row = database.prepare("select value from meta where key = 'seeded'").get() as
     | { value: string }
     | undefined;
-  if (row?.value === "v2") {
+  if (row?.value === "v3") {
     return;
   }
 
@@ -426,6 +623,7 @@ function seedIfNeeded(database: DatabaseSync) {
     delete from actions;
     delete from calendar_events;
     delete from notes;
+    delete from customer_files;
     delete from meta;
   `);
 
@@ -435,10 +633,15 @@ function seedIfNeeded(database: DatabaseSync) {
   actionSeeds.forEach((action) => putJson("actions", action.id, action));
   calendarSeeds.forEach((event) => putJson("calendar_events", event.id, event));
   noteSeeds.forEach((note) => putJson("notes", note.id, note));
-  database.prepare("insert into meta (key, value) values ('seeded', 'v2')").run();
+  fileSeeds.forEach((file) => putJson("customer_files", file.id, file));
+  database.prepare("insert into meta (key, value) values ('seeded', 'v3')").run();
 }
 
 function putQuoteSeed(quote: QuoteRecord, sortOrder: number) {
+  putQuoteWithSort(quote, sortOrder);
+}
+
+function putQuoteWithSort(quote: QuoteRecord, sortOrder: number) {
   getDb()
     .prepare(
       `insert or replace into quotes (id, customer_id, column_id, sort_order, data, updated_at)
@@ -502,7 +705,25 @@ function putJson(table: string, id: string, value: unknown) {
       .run(id, note.customerId, data, now);
     return;
   }
+  if (table === "customer_files") {
+    const file = value as CustomerFileRecord;
+    getDb()
+      .prepare("insert or replace into customer_files (id, customer_id, data, updated_at) values (?, ?, ?, ?)")
+      .run(file.id, file.customerId, data, now);
+    return;
+  }
   throw new Error(`Unsupported table: ${table}`);
+}
+
+function markCustomerStrategiesStale(customerId: string) {
+  const quotes = listQuotes().filter((quote) => quote.customerId === customerId && quote.strategyId);
+  for (const quote of quotes) {
+    updateQuote(quote.id, { strategyStale: true });
+    const strategy = getStrategyByQuote(quote.id);
+    if (strategy) {
+      putJson("strategies", strategy.id, { ...strategy, stale: true });
+    }
+  }
 }
 
 function createDebriefNote(action: ActionRecord, body: string, createdAt: string): NoteRecord {
@@ -516,6 +737,106 @@ function createDebriefNote(action: ActionRecord, body: string, createdAt: string
     authorAvatar: "TT",
     createdAt,
   };
+}
+
+function inferBuyerProfile(input: CreateQuoteInput): CustomerRecord["buyerProfile"] {
+  const text = normalizeText(
+    [input.motivationOrConcern, input.householdNote, input.initialNote, input.system].join(" "),
+  );
+  const signals: CustomerRecord["buyerProfile"] = [];
+
+  if (includesAny(text, ["co2", "klima", "climate", "umwelt", "nachhalt", "green"])) {
+    signals.push({
+      id: "environmentalist",
+      name: "Environmentalist",
+      strength: "Strong",
+      tone: "green",
+      description: "The intake mentions environmental impact, so the first strategy should include concrete impact language.",
+      evidence: [{ label: "Environmental motive in intake", source: "New quote", icon: "leaf" }],
+    });
+  }
+  if (includesAny(text, ["price", "preis", "budget", "monthly", "monat", "payback", "amort", "roi", "teuer"])) {
+    signals.push({
+      id: "value_conscious",
+      name: "Value-conscious",
+      strength: "Strong",
+      tone: "yellow",
+      description: "The intake points to price, monthly payment, or payback, so the strategy should reduce cost anxiety.",
+      evidence: [{ label: "Cost concern in intake", source: "New quote", icon: "clock" }],
+    });
+  }
+  if (includesAny(text, ["roof", "dach", "meter", "zaehler", "zähler", "shade", "shadow", "cable", "technical"])) {
+    signals.push({
+      id: "technical_skeptic",
+      name: "Technical skeptic",
+      strength: "Moderate",
+      tone: "blue",
+      description: "The intake contains house-specific technical questions that may need proof or a visit.",
+      evidence: [{ label: "Property-specific concern", source: "New quote", icon: "home" }],
+    });
+  }
+  if (includesAny(text, ["trust", "vertrauen", "pressure", "pushy", "sick", "krank", "hospital", "recovered"])) {
+    signals.push({
+      id: "trust_sensitive",
+      name: "Trust-sensitive",
+      strength: "Moderate",
+      tone: "blue",
+      description: "The customer context calls for a careful tone and lower-pressure follow-up.",
+      evidence: [{ label: "Sensitive context in notes", source: "New quote", icon: "shield" }],
+    });
+  }
+
+  if (signals.length > 0) {
+    return signals.slice(0, 2);
+  }
+
+  return [
+    {
+      id: "value_conscious",
+      name: "Value-conscious",
+      strength: "Watch",
+      tone: "yellow",
+      description: "Fresh residential quote; start with practical value and a clear next step.",
+      evidence: [{ label: "Fresh quote intake", source: "New quote", icon: "clipboard" }],
+    },
+  ];
+}
+
+function firstQuoteSortOrder() {
+  const row = getDb().prepare("select min(sort_order) as value from quotes").get() as
+    | { value: number | null }
+    | undefined;
+  return row?.value ?? 0;
+}
+
+function initialsFor(name: string) {
+  return name
+    .split(/[\s,-]+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase() ?? "")
+    .join("");
+}
+
+function slugify(value: string) {
+  return (
+    normalizeText(value)
+      .replace(/[^a-z0-9]+/g, "_")
+      .replace(/^_+|_+$/g, "")
+      .slice(0, 36) || "lead"
+  );
+}
+
+function normalizeText(value: string) {
+  return value
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ß/g, "ss");
+}
+
+function includesAny(text: string, terms: string[]) {
+  return terms.some((term) => text.includes(normalizeText(term)));
 }
 
 function defaultSlotFor(taskType: ActionRecord["taskType"]) {

@@ -7,6 +7,7 @@ import { createServer as createViteServer } from "vite";
 import {
   addNote,
   completeAction,
+  createQuote,
   generateStrategy,
   getBootstrap,
   getCalendarEvents,
@@ -47,6 +48,10 @@ app.get("/api/quotes/:id", (req, res) => {
   res.json(getQuoteDetail(req.params.id));
 });
 
+app.post("/api/quotes", (req, res) => {
+  res.json(createQuote(req.body));
+});
+
 app.get("/api/customers/:id", (req, res) => {
   res.json(getCustomer(req.params.id));
 });
@@ -67,6 +72,14 @@ app.post("/api/quotes/:id/revise-strategy", async (req, res) => {
   res.json(await reviseStrategy(req.params.id, req.body));
 });
 
+app.post("/api/quotes/:id/generate-strategy/stream", async (req, res) => {
+  await streamQuoteRecommendation(res, (onTrace) => generateStrategy(req.params.id, onTrace));
+});
+
+app.post("/api/quotes/:id/revise-strategy/stream", async (req, res) => {
+  await streamQuoteRecommendation(res, (onTrace) => reviseStrategy(req.params.id, req.body, onTrace));
+});
+
 app.post("/api/actions/:id/schedule", (req, res) => {
   res.json(scheduleAction(req.params.id, req.body));
 });
@@ -75,8 +88,8 @@ app.post("/api/actions/:id/log", async (req, res) => {
   res.json(await logAction(req.params.id, req.body));
 });
 
-app.post("/api/actions/:id/complete", (req, res) => {
-  res.json(completeAction(req.params.id));
+app.post("/api/actions/:id/complete", async (req, res) => {
+  res.json(await completeAction(req.params.id));
 });
 
 app.post("/api/customers/:id/notes", (req, res) => {
@@ -123,3 +136,29 @@ if (!isProduction) {
 app.listen(port, () => {
   console.log(`Reonic platform demo running at http://localhost:${port}`);
 });
+
+async function streamQuoteRecommendation(
+  res: express.Response,
+  run: (onTrace: Parameters<typeof generateStrategy>[1]) => Promise<unknown>,
+) {
+  res.writeHead(200, {
+    "Content-Type": "text/event-stream; charset=utf-8",
+    "Cache-Control": "no-cache, no-transform",
+    Connection: "keep-alive",
+  });
+
+  const send = (event: string, payload: unknown) => {
+    res.write(`event: ${event}\ndata: ${JSON.stringify(payload)}\n\n`);
+  };
+
+  try {
+    const detail = await run((traceEvent) => send("trace", traceEvent));
+    send("result", detail);
+  } catch (error) {
+    send("error", {
+      error: error instanceof Error ? error.message : "Unexpected strategy stream error",
+    });
+  } finally {
+    res.end();
+  }
+}

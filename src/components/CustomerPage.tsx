@@ -1,9 +1,9 @@
 import * as Dialog from "@radix-ui/react-dialog";
-import { AlertTriangle, FileText, Mic, Pencil, Play, Plus, User, WandSparkles, X } from "lucide-react";
+import { AlertTriangle, Download, FileText, Mic, Pencil, Play, Plus, User, WandSparkles, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 
-import type { CustomerRecord, NoteRecord, QuoteDetailPayload } from "../../server/types.js";
+import type { CustomerFileRecord, CustomerRecord, NoteRecord, QuoteDetailPayload } from "../../server/types.js";
 import { api, formatMoney } from "../lib/api.js";
 import { Avatar, ErrorState, LoadingState, PageHeader } from "./ui.js";
 
@@ -52,7 +52,13 @@ export function CustomerPage() {
 
   return (
     <section className="page master-page">
-      <PageHeader title="Master Data" breadcrumbs={["Requests", detail.customer.name]} />
+      <PageHeader
+        title="Master Data"
+        breadcrumbs={[
+          { label: "Requests", to: "/quotes" },
+          { label: detail.customer.name },
+        ]}
+      />
       {detail.quote.strategyStale ? (
         <div className="warning-banner">
           <AlertTriangle size={18} />
@@ -64,9 +70,7 @@ export function CustomerPage() {
             className="primary-button"
             type="button"
             onClick={() => {
-              void api.generateStrategy(detail.quote.id).then((updated) => {
-                navigate(`/requests/${updated.quote.id}/strategy`);
-              });
+              navigate(`/requests/${detail.quote.id}/strategy?regenerate=1`);
             }}
           >
             <WandSparkles size={16} />
@@ -95,6 +99,30 @@ export function CustomerPage() {
           <ReadOnlyField label="Phone" value={detail.customer.phone} />
           <ReadOnlyField label="System" value={detail.customer.system} />
           <ReadOnlyField label="Quote value" value={formatMoney(detail.customer.quoteValue)} />
+          <ReadOnlyField label="Preferred channel" value={detail.customer.communicationPreference} />
+          <ReadOnlyField label="Decision note" value={detail.customer.decisionNote} />
+          <ReadOnlyField label="Property note" value={detail.customer.householdNote} />
+          <ReadOnlyField label="Quote status" value={detail.quote.statusLabel ?? detail.quote.nextAction.label} />
+        </div>
+      </section>
+      <section className="master-card">
+        <div className="master-card-heading">
+          <div>
+            <h2>
+              <WandSparkles size={18} />
+              Buyer signals
+            </h2>
+            <p>Current profile used by the assistant</p>
+          </div>
+        </div>
+        <div className="master-signal-grid">
+          {detail.customer.buyerProfile.map((signal) => (
+            <article className="master-signal" key={signal.id}>
+              <strong>{signal.name}</strong>
+              <span>{signal.strength}</span>
+              <p>{signal.description}</p>
+            </article>
+          ))}
         </div>
       </section>
       <section className="master-card notes-card">
@@ -121,6 +149,22 @@ export function CustomerPage() {
             <Mic size={15} />
             Record voice
           </button>
+        </div>
+      </section>
+      <section className="master-card files-card">
+        <div className="master-card-heading">
+          <div>
+            <h2>
+              <FileText size={18} />
+              Files <span className="count-badge">{detail.files.length}</span>
+            </h2>
+            <p>Documents parsed as context in the strategy</p>
+          </div>
+        </div>
+        <div className="files-list">
+          {detail.files.map((file) => (
+            <FileCard file={file} key={file.id} />
+          ))}
         </div>
       </section>
       <EditCustomerDialog
@@ -184,6 +228,28 @@ function NoteCard({ note }: { note: NoteRecord }) {
           }).format(new Date(note.createdAt))}
         </span>
       </footer>
+    </article>
+  );
+}
+
+function FileCard({ file }: { file: CustomerFileRecord }) {
+  return (
+    <article className="file-row">
+      <span className={`file-type file-${file.type}`}>{file.type}</span>
+      <div>
+        <strong>{file.name}</strong>
+        <p>{file.summary}</p>
+        <small>
+          {file.sizeLabel} · Uploaded by {file.uploadedBy} ·{" "}
+          {new Intl.DateTimeFormat("en", {
+            month: "short",
+            day: "numeric",
+          }).format(new Date(file.uploadedAt))}
+        </small>
+      </div>
+      <button className="icon-button" type="button" aria-label={`Download ${file.name}`}>
+        <Download size={15} />
+      </button>
     </article>
   );
 }

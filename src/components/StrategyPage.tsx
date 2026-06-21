@@ -1,17 +1,24 @@
 import { ChevronDown, ChevronUp, Clock3, Info, WandSparkles } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useSearchParams } from "react-router-dom";
 
 import { api, formatMoney } from "../lib/api.js";
-import type { ActionRecord, QuoteDetailPayload, StrategyStep } from "../../server/types.js";
+import type { ActionRecord, AgentTraceEvent, QuoteDetailPayload, StrategyStep } from "../../server/types.js";
 import { LogActionDialog } from "./LogActionDialog.js";
 import { AppIcon, Avatar, Badge, EmptyPanel, ErrorState, LoadingState, PageHeader } from "./ui.js";
 
+type StrategyOperation = "generate" | "revise" | null;
+type ActionOperation = { type: "schedule" | "complete"; actionId: string } | null;
+
 export function StrategyPage() {
   const { quoteId } = useParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [detail, setDetail] = useState<QuoteDetailPayload>();
   const [loading, setLoading] = useState(true);
-  const [working, setWorking] = useState(false);
+  const [strategyOperation, setStrategyOperation] = useState<StrategyOperation>(null);
+  const [actionOperation, setActionOperation] = useState<ActionOperation>(null);
+  const [traceEvents, setTraceEvents] = useState<AgentTraceEvent[]>([]);
+  const [autoGenerateQuoteId, setAutoGenerateQuoteId] = useState<string>();
   const [error, setError] = useState<string>();
   const [revision, setRevision] = useState("");
   const [logAction, setLogAction] = useState<ActionRecord>();
@@ -37,6 +44,33 @@ export function StrategyPage() {
     void load();
   }, [quoteId]);
 
+  useEffect(() => {
+    if (
+      searchParams.get("regenerate") !== "1" ||
+      !quoteId ||
+      loading ||
+      !detail ||
+      strategyOperation ||
+      autoGenerateQuoteId === quoteId
+    ) {
+      return;
+    }
+
+    setAutoGenerateQuoteId(quoteId);
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete("regenerate");
+    setSearchParams(nextParams, { replace: true });
+    void generate();
+  }, [
+    autoGenerateQuoteId,
+    detail,
+    loading,
+    quoteId,
+    searchParams,
+    setSearchParams,
+    strategyOperation,
+  ]);
+
   const activeStep = detail?.strategy?.steps.find((step) => step.status === "active");
   const activeAction = useMemo(() => {
     if (!detail?.quote.nextAction.actionId) {
@@ -49,14 +83,19 @@ export function StrategyPage() {
     if (!quoteId) {
       return;
     }
-    setWorking(true);
+    setStrategyOperation("generate");
+    setTraceEvents([]);
     try {
-      setDetail(await api.generateStrategy(quoteId));
+      setDetail(
+        await api.generateStrategyStream(quoteId, (event) => {
+          setTraceEvents((current) => [...current, event]);
+        }),
+      );
       setError(undefined);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not generate strategy");
     } finally {
-      setWorking(false);
+      setStrategyOperation(null);
     }
   }
 
@@ -64,15 +103,20 @@ export function StrategyPage() {
     if (!quoteId || !revision.trim()) {
       return;
     }
-    setWorking(true);
+    setStrategyOperation("revise");
+    setTraceEvents([]);
     try {
-      setDetail(await api.reviseStrategy(quoteId, revision.trim()));
+      setDetail(
+        await api.reviseStrategyStream(quoteId, revision.trim(), (event) => {
+          setTraceEvents((current) => [...current, event]);
+        }),
+      );
       setRevision("");
       setError(undefined);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "Could not revise strategy");
     } finally {
-      setWorking(false);
+      setStrategyOperation(null);
     }
   }
 
@@ -80,7 +124,7 @@ export function StrategyPage() {
     if (!activeAction) {
       return;
     }
-    setWorking(true);
+    setActionOperation({ type: "schedule", actionId: activeAction.id });
     try {
       const updated = await api.scheduleAction(
         activeAction.id,
@@ -89,7 +133,7 @@ export function StrategyPage() {
       setDetail(updated);
       navigate(`/calendar?quote=${updated.quote.id}`);
     } finally {
-      setWorking(false);
+      setActionOperation(null);
     }
   }
 
@@ -97,13 +141,13 @@ export function StrategyPage() {
     if (!activeAction) {
       return;
     }
-    setWorking(true);
+    setActionOperation({ type: "complete", actionId: activeAction.id });
     try {
       const updated = await api.completeAction(activeAction.id);
       setDetail(updated);
       navigate("/quotes");
     } finally {
-      setWorking(false);
+      setActionOperation(null);
     }
   }
 
@@ -125,9 +169,18 @@ export function StrategyPage() {
     <section className="page strategy-page">
       <PageHeader
         title="Closing Strategy"
-        breadcrumbs={["Requests", detail.customer.name]}
+        breadcrumbs={[
+          { label: "Requests", to: "/quotes" },
+          { label: detail.customer.name, to: `/customers/${detail.customer.id}?quote=${detail.quote.id}` },
+        ]}
       />
       <CustomerProfileCard detail={detail} />
+      {strategyOperation ? (
+        <AgentRunPanel
+          title={strategyOperation === "generate" ? "Generating strategy..." : "Reviewing revision..."}
+          events={traceEvents}
+        />
+      ) : null}
       {detail.strategy ? (
         <>
           {detail.strategy.stale || detail.quote.strategyStale ? (
@@ -137,7 +190,12 @@ export function StrategyPage() {
                 <strong>Strategy may be out of date</strong>
                 <span>Master data changed after this strategy was generated.</span>
               </div>
-              <button className="primary-button" type="button" onClick={() => void generate()}>
+              <button
+                className="primary-button"
+                type="button"
+                onClick={() => void generate()}
+                disabled={Boolean(strategyOperation || actionOperation)}
+              >
                 Regenerate strategy
               </button>
             </div>
@@ -160,7 +218,12 @@ export function StrategyPage() {
                   step={step}
                   key={step.id}
                   active={step.id === activeStep?.id}
-                  working={working}
+                  actionBusy={
+                    activeAction && actionOperation?.actionId === activeAction.id
+                      ? actionOperation.type
+                      : undefined
+                  }
+                  strategyBusy={Boolean(strategyOperation)}
                   onSchedule={() => void schedule()}
                   onComplete={() => void complete()}
                   onLog={openLog}
@@ -184,11 +247,11 @@ export function StrategyPage() {
             <button
               className="primary-button"
               type="button"
-              disabled={working || !revision.trim()}
+              disabled={Boolean(strategyOperation || actionOperation) || !revision.trim()}
               onClick={() => void revisePlan()}
             >
               <WandSparkles size={16} />
-              {working ? "Reviewing..." : "Review & update plan"}
+              {strategyOperation === "revise" ? "Reviewing..." : "Review & update plan"}
             </button>
           </section>
         </>
@@ -198,9 +261,14 @@ export function StrategyPage() {
           title="No closing strategy yet"
           description={`Generate a data-backed play for ${detail.customer.name} based on her buyer profile, call notes, and similar past deals.`}
           action={
-            <button className="primary-button" type="button" onClick={() => void generate()} disabled={working}>
+            <button
+              className="primary-button"
+              type="button"
+              onClick={() => void generate()}
+              disabled={Boolean(strategyOperation || actionOperation)}
+            >
               <WandSparkles size={16} />
-              {working ? "Generating..." : "Generate strategy"}
+              {strategyOperation === "generate" ? "Generating..." : "Generate strategy"}
             </button>
           }
         />
@@ -215,6 +283,75 @@ export function StrategyPage() {
       />
     </section>
   );
+}
+
+function AgentRunPanel({ title, events }: { title: string; events: AgentTraceEvent[] }) {
+  const finished = events.some((event) => event.phase === "complete" && event.status === "success");
+  const visibleEvents = compactTraceEvents(events).map((event) =>
+    finished && event.status !== "error" ? { ...event, status: "success" as const } : event,
+  );
+  const completed = visibleEvents.filter((event) => event.status === "success").length;
+  const progress = finished
+    ? 100
+    : Math.min(96, Math.max(12, Math.round((completed / Math.max(visibleEvents.length, 6)) * 100)));
+
+  return (
+    <section className="agent-run-panel">
+      <div className="agent-run-heading">
+        <div>
+          <strong>
+            <WandSparkles size={16} />
+            {title}
+          </strong>
+          <span>{progress}%</span>
+        </div>
+        <div className="agent-progress-track">
+          <span style={{ width: `${progress}%` }} />
+        </div>
+      </div>
+      <div className="agent-run-list">
+        {visibleEvents.length > 0 ? (
+          visibleEvents.map((event) => (
+            <div className={`agent-run-row trace-${event.status}`} key={event.id}>
+              <span className="trace-status-dot" />
+              <div>
+                <strong>{event.title}</strong>
+                {event.detail ? <small>{event.detail}</small> : null}
+              </div>
+              <span>{traceStatusLabel(event.status)}</span>
+            </div>
+          ))
+        ) : (
+          <div className="agent-run-row trace-running">
+            <span className="trace-status-dot" />
+            <div>
+              <strong>Starting run</strong>
+              <small>Opening the agent stream</small>
+            </div>
+            <span>running</span>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function compactTraceEvents(events: AgentTraceEvent[]) {
+  const byPhase = new Map<string, AgentTraceEvent>();
+  for (const event of events) {
+    byPhase.set(`${event.source}:${event.phase}:${event.title}`, event);
+  }
+  return [...byPhase.values()].slice(-8);
+}
+
+function traceStatusLabel(status: AgentTraceEvent["status"]) {
+  if (status === "success") {
+    return "done";
+  }
+  if (status === "error") {
+    return "error";
+  }
+  return "running";
 }
 
 function CustomerProfileCard({ detail }: { detail: QuoteDetailPayload }) {
@@ -272,14 +409,16 @@ function CustomerProfileCard({ detail }: { detail: QuoteDetailPayload }) {
 function StrategyStepView({
   step,
   active,
-  working,
+  actionBusy,
+  strategyBusy,
   nextKind,
   onSchedule,
   onComplete,
 }: {
   step: StrategyStep;
   active: boolean;
-  working: boolean;
+  actionBusy: "schedule" | "complete" | undefined;
+  strategyBusy: boolean;
   nextKind: string;
   onSchedule: () => void;
   onComplete: () => void;
@@ -362,15 +501,25 @@ function StrategyStepView({
                 </div>
                 <div className="time-actions">
                   {canSchedule ? (
-                    <button className="primary-button" type="button" onClick={onSchedule} disabled={working}>
+                    <button
+                      className="primary-button"
+                      type="button"
+                      onClick={onSchedule}
+                      disabled={strategyBusy || Boolean(actionBusy)}
+                    >
                       <AppIcon name={step.taskType === "Meeting in person" ? "calendar" : "phone"} size={15} />
-                      {working ? "Scheduling..." : step.secondaryCta}
+                      {actionBusy === "schedule" ? "Scheduling..." : step.secondaryCta}
                     </button>
                   ) : null}
                   {canSend ? (
-                    <button className="primary-button" type="button" onClick={onComplete} disabled={working}>
+                    <button
+                      className="primary-button"
+                      type="button"
+                      onClick={onComplete}
+                      disabled={strategyBusy || Boolean(actionBusy)}
+                    >
                       <AppIcon name="send" size={15} />
-                      {working ? "Sending..." : step.primaryCta}
+                      {actionBusy === "complete" ? "Sending..." : step.primaryCta}
                     </button>
                   ) : null}
                   <button className="secondary-button" type="button">
