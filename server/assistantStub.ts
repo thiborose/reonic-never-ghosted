@@ -5,28 +5,31 @@ export function createInitialStrategy(params: {
   quote: QuoteRecord;
   now: string;
 }): { strategy: StrategyRecord; action: ActionRecord; quotePatch: Partial<QuoteRecord> } {
-  const steps = baseSteps();
+  const firstName = firstNameFor(params.quote.customerName);
+  const strategyId = strategyIdFor(params.quote);
+  const actionId = actionIdFor(params.quote, "call");
+  const steps = baseSteps(firstName);
   const strategy: StrategyRecord = {
-    id: "strategy_sabine",
+    id: strategyId,
     quoteId: params.quote.id,
     generatedAt: params.now,
     stale: false,
     headline:
-      "Win Sabine by leading with climate impact, then dissolving the price objection before she shops competitors.",
+      `Win ${firstName} by leading with the strongest buyer motive, then dissolving the cost objection before competitors reframe the deal.`,
     summary:
-      "Sabine is an environmentally-driven buyer who is also watching cost closely and actively comparing installers. The play stacks an early trust-builder, a financing move to remove the upfront-cost objection, and an ROI reframe — sequenced to close before she commits elsewhere.",
-    currentActionId: "action_sabine_call",
+      `${firstName} has enough information to engage, but the deal still needs a human trust-builder. The play starts with a short call, confirms the real blocker, and only then moves to a site validation or final recap if the notes support it.`,
+    currentActionId: actionId,
     steps,
   };
 
   const action: ActionRecord = {
-    id: "action_sabine_call",
+    id: actionId,
     quoteId: params.quote.id,
     customerId: params.quote.customerId,
     strategyId: strategy.id,
     stepId: "step_call",
     taskType: "Phone Call",
-    title: "Call Sabine within 24 hours",
+    title: `Call ${firstName} within 24 hours`,
     status: "recommended",
     logPromptTitle: "Log call outcome",
     defaultLogText:
@@ -54,6 +57,7 @@ export function createVisitRecommendation(params: {
   strategy: StrategyRecord;
   now: string;
 }): { strategy: StrategyRecord; action: ActionRecord; quotePatch: Partial<QuoteRecord> } {
+  const firstName = firstNameFor(params.quote.customerName);
   const steps = params.strategy.steps.map((step) => {
     if (step.id === "step_call") {
       return { ...step, status: "completed" as const };
@@ -65,7 +69,7 @@ export function createVisitRecommendation(params: {
   });
 
   const action: ActionRecord = {
-    id: "action_sabine_visit",
+    id: actionIdFor(params.quote, "visit"),
     quoteId: params.quote.id,
     customerId: params.quote.customerId,
     strategyId: params.strategy.id,
@@ -75,7 +79,7 @@ export function createVisitRecommendation(params: {
     status: "recommended",
     logPromptTitle: "Log site visit outcome",
     defaultLogText:
-      "Visit completed. Roof condition looked fine for the proposed mounting method. Meter cabinet has room for the inverter. This answers Sabine's main concern and she asked for a final written summary and signature path.",
+      `Visit completed. Roof condition looked fine for the proposed mounting method. Meter cabinet has room for the inverter. This answers ${firstName}'s main concern and they asked for a final written summary and signature path.`,
   };
 
   return {
@@ -87,7 +91,7 @@ export function createVisitRecommendation(params: {
       headline:
         "Move from trust-building to physical validation: remove the last house-specific risk before asking for signature.",
       summary:
-        "The call surfaced a concrete blocker. Sabine is not asking for another generic explanation; she wants the quote validated against her roof and cable path. A clear visit agenda is the fastest credible way to unlock the final recap.",
+        `The call surfaced a concrete blocker. ${firstName} is not asking for another generic explanation; they want the quote validated against the roof and cable path. A clear visit agenda is the fastest credible way to unlock the final recap.`,
       steps,
     },
     action,
@@ -108,6 +112,7 @@ export function createFinalRecapRecommendation(params: {
   strategy: StrategyRecord;
   now: string;
 }): { strategy: StrategyRecord; action: ActionRecord; quotePatch: Partial<QuoteRecord> } {
+  const firstName = firstNameFor(params.quote.customerName);
   const steps = params.strategy.steps.map((step) => {
     if (step.id === "step_call" || step.id === "step_visit") {
       return { ...step, status: "completed" as const };
@@ -119,7 +124,7 @@ export function createFinalRecapRecommendation(params: {
   });
 
   const action: ActionRecord = {
-    id: "action_sabine_final",
+    id: actionIdFor(params.quote, "final"),
     quoteId: params.quote.id,
     customerId: params.quote.customerId,
     strategyId: params.strategy.id,
@@ -129,7 +134,7 @@ export function createFinalRecapRecommendation(params: {
     status: "recommended",
     logPromptTitle: "Log final recap outcome",
     defaultLogText:
-      "Final recap sent. Sabine confirmed the system scope and signed the contract.",
+      `Final recap sent. ${firstName} confirmed the system scope and signed the contract.`,
   };
 
   return {
@@ -171,21 +176,21 @@ export function shouldRecommendFinalRecap(notes: string) {
   );
 }
 
-function baseSteps(): StrategyStep[] {
+function baseSteps(firstName: string): StrategyStep[] {
   return [
     {
       id: "step_call",
       number: 1,
       phase: "Build trust",
-      title: "Call Sabine within 24 hours",
+      title: `Call ${firstName} within 24 hours`,
       subtitle: "Confirm the real blocker before sending another generic follow-up.",
       taskType: "Phone Call",
       status: "active",
       icon: "phone",
       guideTitle: "Suggested call script",
       bullets: [
-        "Thank Sabine for the time on site and open warmly.",
-        "Tie the system to her goal of cutting her CO2 footprint.",
+        `Thank ${firstName} for the time reviewing the quote and open warmly.`,
+        "Tie the system back to the motive that matters most in the buyer profile.",
         "Offer to walk through payment options and propose two times.",
       ],
       whyChips: [
@@ -251,4 +256,23 @@ function baseSteps(): StrategyStep[] {
 
 export function isSabineQuote(quoteId: string, customerId?: string) {
   return quoteId === DEMO_QUOTE_ID || customerId === DEMO_CUSTOMER_ID;
+}
+
+function strategyIdFor(quote: QuoteRecord) {
+  return isSabineQuote(quote.id, quote.customerId) ? "strategy_sabine" : `strategy_${slugFromQuote(quote)}`;
+}
+
+function actionIdFor(quote: QuoteRecord, suffix: "call" | "visit" | "final") {
+  return isSabineQuote(quote.id, quote.customerId)
+    ? `action_sabine_${suffix}`
+    : `action_${slugFromQuote(quote)}_${suffix}`;
+}
+
+function slugFromQuote(quote: QuoteRecord) {
+  return quote.id.replace(/^quote_/, "").replace(/[^a-z0-9]+/gi, "_").toLowerCase();
+}
+
+function firstNameFor(name: string) {
+  const normalized = name.includes(",") ? name.split(",").at(1)?.trim() : name;
+  return normalized?.split(/\s+/)[0] ?? name;
 }

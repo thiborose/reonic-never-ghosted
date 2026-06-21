@@ -6,7 +6,6 @@ import {
   createFinalRecapRecommendation,
   createInitialStrategy,
   createVisitRecommendation,
-  isSabineQuote,
   shouldRecommendFinalRecap,
   shouldRecommendVisit,
 } from "./assistantStub.js";
@@ -18,6 +17,7 @@ import {
   DEMO_NOW,
   noteSeeds,
   quoteSeeds,
+  strategySeeds,
 } from "./seed.js";
 import type {
   ActionRecord,
@@ -137,10 +137,6 @@ export function getCalendarEvents(): CalendarEventRecord[] {
 
 export function generateStrategy(quoteId: string): QuoteDetailPayload {
   const quote = getQuote(quoteId);
-  if (!isSabineQuote(quote.id, quote.customerId)) {
-    throw badRequest("Only the seeded demo lead has AI strategy generation in this mock.");
-  }
-
   const result = createInitialStrategy({ quote, now: new Date().toISOString() });
   putJson("strategies", result.strategy.id, result.strategy);
   putJson("actions", result.action.id, result.action);
@@ -153,6 +149,7 @@ export function scheduleAction(actionId: string, input: ScheduleActionInput): Qu
   const action = getAction(actionId);
   const quote = getQuote(action.quoteId);
   const customer = getCustomer(action.customerId);
+  const customerFirstName = customer.name.split(/\s+/)[0] ?? customer.name;
   const start = input.slotStart ?? defaultSlotFor(action.taskType);
   const end = addMinutes(start, action.taskType === "Meeting in person" ? 60 : 20);
   const eventId = `cal_${action.id}`;
@@ -161,9 +158,9 @@ export function scheduleAction(actionId: string, input: ScheduleActionInput): Qu
     id: eventId,
     title:
       action.taskType === "Meeting in person"
-        ? `Visit ${customer.name}`
+        ? `Visit ${customerFirstName}`
         : action.taskType === "Phone Call"
-          ? `Call ${customer.name}`
+          ? `Call ${customerFirstName}`
           : action.title,
     start,
     end,
@@ -397,7 +394,7 @@ function seedIfNeeded(database: DatabaseSync) {
   const row = database.prepare("select value from meta where key = 'seeded'").get() as
     | { value: string }
     | undefined;
-  if (row?.value === "v1") {
+  if (row?.value === "v2") {
     return;
   }
 
@@ -413,10 +410,11 @@ function seedIfNeeded(database: DatabaseSync) {
 
   customerSeeds.forEach((customer) => putJson("customers", customer.id, customer));
   quoteSeeds.forEach((quote, index) => putQuoteSeed(quote, index));
+  strategySeeds.forEach((strategy) => putJson("strategies", strategy.id, strategy));
   actionSeeds.forEach((action) => putJson("actions", action.id, action));
   calendarSeeds.forEach((event) => putJson("calendar_events", event.id, event));
   noteSeeds.forEach((note) => putJson("notes", note.id, note));
-  database.prepare("insert into meta (key, value) values ('seeded', 'v1')").run();
+  database.prepare("insert into meta (key, value) values ('seeded', 'v2')").run();
 }
 
 function putQuoteSeed(quote: QuoteRecord, sortOrder: number) {
@@ -520,12 +518,6 @@ function parseJson<T>(value: string): T {
 
 function definedOnly<T extends object>(input: T): Partial<T> {
   return Object.fromEntries(Object.entries(input).filter(([, value]) => value !== undefined)) as Partial<T>;
-}
-
-function badRequest(message: string) {
-  const error = new Error(message);
-  Object.assign(error, { statusCode: 400 });
-  return error;
 }
 
 function notFound(message: string) {

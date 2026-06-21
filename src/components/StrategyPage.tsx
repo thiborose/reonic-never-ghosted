@@ -269,7 +269,7 @@ function StrategyStepView({
   }, [active]);
 
   const canSchedule = active && (nextKind === "schedule_call" || nextKind === "schedule_visit");
-  const canSend = active && nextKind === "send_final_recap";
+  const canSend = active && (nextKind === "send_final_recap" || nextKind === "follow_up_signature");
 
   return (
     <article className={`strategy-step ${active ? "active" : ""} ${step.status}`}>

@@ -7,6 +7,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import type { CalendarEventRecord } from "../../server/types.js";
@@ -112,25 +113,27 @@ export function CalendarPage() {
             </div>
           ))}
         </div>
-        {rows.map((row) => (
-          <div className="calendar-row" key={row.id}>
-            <div className="row-label">
-              {row.id === "theo" ? <Avatar label="TT" tone="green" size="xs" /> : null}
-              <span>{row.label}</span>
-            </div>
-            <div className="row-track">
-              {events
-                .filter((event) => event.row === row.id)
-                .map((event) => (
+        {rows.map((row) => {
+          const rowEvents = events.filter((event) => event.row === row.id);
+          return (
+            <div className="calendar-row" key={row.id}>
+              <div className="row-label">
+                {row.id === "theo" ? <Avatar label="TT" tone="green" size="xs" /> : null}
+                <span>{row.label}</span>
+              </div>
+              <div className="row-track">
+                {rowEvents.map((event, index) => (
                   <CalendarEventPill
                     event={event}
+                    lane={index % 3}
                     highlighted={Boolean(highlightedQuote && event.quoteId === highlightedQuote)}
                     key={event.id}
                   />
                 ))}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
@@ -139,15 +142,23 @@ export function CalendarPage() {
 function CalendarEventPill({
   event,
   highlighted,
+  lane,
 }: {
   event: CalendarEventRecord;
   highlighted: boolean;
+  lane: number;
 }) {
   const position = positionEvent(event);
+  const style = {
+    left: `${position.left}%`,
+    width: `${position.width}%`,
+    "--lane-top": `${14 + lane * 30}px`,
+  } as CSSProperties & { "--lane-top": string };
+
   return (
     <div
       className={`calendar-event calendar-event-${event.color} ${highlighted ? "highlighted" : ""}`}
-      style={{ left: `${position.left}%`, width: `${position.width}%` }}
+      style={style}
       title={`${event.title} ${formatTime(event.start)}-${formatTime(event.end)}`}
     >
       {event.title}
