@@ -24,6 +24,8 @@ import { useRouter, useParams } from "next/navigation";
 import { Sidebar } from "@/components/Sidebar";
 import { InfoTip } from "@/components/InfoTip";
 import { StrategyLoader } from "@/components/StrategyLoader";
+import { QuickActions } from "@/components/QuickActions";
+import { CreativePlays } from "@/components/CreativePlays";
 import { addAppointment, draftStep, generateStrategy, reviseStep } from "@/lib/api";
 import type { RevisionResult, Step, StrategyResult } from "@/lib/types";
 
@@ -152,6 +154,8 @@ export default function StrategyPage() {
           )}
           {strategy && (
             <>
+              <QuickActions />
+
               {/* Buyer profile + personas */}
               <div className="flex w-full flex-col items-start gap-4 rounded-lg border border-solid border-neutral-border bg-default-background px-6 py-5 shadow-sm">
                 <div className="flex w-full items-center gap-2">
@@ -383,6 +387,8 @@ export default function StrategyPage() {
                   </span>
                 </div>
               </div>
+
+              <CreativePlays />
             </>
           )}
         </div>

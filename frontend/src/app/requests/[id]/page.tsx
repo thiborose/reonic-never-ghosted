@@ -45,6 +45,29 @@ function ghostMeta(risk: number): { label: string; variant: "error" | "warning" 
   return { label: "Fresh", variant: "success" };
 }
 
+// Age drives how we reach out: older buyers prefer tactile/personal channels,
+// younger ones are mobile-native. Used to seed the preferred channel + the
+// communication-style hint the strategy leans on.
+function preferredChannel(age: number | null): string {
+  if (age == null) return "E-mail";
+  if (age >= 60) return "Personal letter";
+  if (age >= 45) return "E-mail";
+  if (age >= 32) return "WhatsApp";
+  return "Video message";
+}
+function commsStyle(age: number | null): string {
+  if (age == null) return "Balanced — mix of digital and personal touch";
+  if (age >= 60) return "Formal & personal — letters and calls over digital pings";
+  if (age >= 45) return "Considered — email-first, values a written recap";
+  if (age >= 32) return "Fast & informal — WhatsApp check-ins land best";
+  return "Visual & mobile-native — short video messages cut through";
+}
+function ageBand(age: number | null): string {
+  if (age == null) return "—";
+  const lo = Math.floor(age / 10) * 10;
+  return `${age} · ${lo}–${lo + 9} band`;
+}
+
 export default function LeadMasterDataPage() {
   const router = useRouter();
   const params = useParams();
@@ -99,6 +122,8 @@ export default function LeadMasterDataPage() {
   );
 
   const { customer, quote, deal } = data;
+  const age = (customer.age as number | null) ?? null;
+  const channel = customer.channel_preference ?? preferredChannel(age);
   const system = quote.products.map((p) => p.type).join(" + ") || "—";
   const { risk, days } = ghostFromActivity(deal.last_activity_at);
   const gm = ghostMeta(risk);
@@ -176,8 +201,22 @@ export default function LeadMasterDataPage() {
                 <TextField.Input value={customer.property_type ?? "—"} onChange={() => {}} />
               </TextField>
               <TextField className="h-auto min-w-[240px] grow shrink-0 basis-0" label="Preferred channel" helpText="">
-                <TextField.Input value={customer.channel_preference ?? "—"} onChange={() => {}} />
+                <TextField.Input value={channel} onChange={() => {}} />
               </TextField>
+            </div>
+            <div className="flex w-full flex-wrap items-start gap-4">
+              <TextField className="h-auto min-w-[240px] grow shrink-0 basis-0" label="Age" helpText="">
+                <TextField.Input value={ageBand(age)} onChange={() => {}} />
+              </TextField>
+              <TextField className="h-auto min-w-[240px] grow shrink-0 basis-0" label="Communication style" helpText="">
+                <TextField.Input value={commsStyle(age)} onChange={() => {}} />
+              </TextField>
+            </div>
+            <div className="flex w-full items-center gap-1">
+              <FeatherZap className="text-caption font-caption text-brand-600" />
+              <span className="text-caption font-caption text-subtext-color">
+                Age shapes the channel — older buyers prefer letters and calls, younger ones video and WhatsApp.
+              </span>
             </div>
             <div className="flex w-full flex-wrap items-start gap-4">
               <TextField className="h-auto min-w-[240px] grow shrink-0 basis-0" label="System" helpText="">
