@@ -1,0 +1,120 @@
+{
+  "id": "otovo_trustpilot",
+  "source": {
+    "provider": "Otovo Deutschland",
+    "platform": "Trustpilot",
+    "url": "https://de.trustpilot.com/review/otovo.de",
+    "additional_urls": [
+      "https://de.trustpilot.com/review/otovo.de?page=5"
+    ],
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "residential solar",
+      "installer marketplace",
+      "quote comparison"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "review_count": 326,
+      "trust_score": "4.1/5",
+      "negative_review_response_rate": "47%"
+    }
+  },
+  "observations": [
+    {
+      "topic": "Good advice can still lose on price",
+      "journey_stage": "post_quote",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "am Preis gelegen",
+        "guenstigeres Angebot",
+        "Preis"
+      ],
+      "what_customers_say": "Some customers praise consultation quality but still select another provider because of price or offer terms.",
+      "decision_relevance": "Positive sentiment after a call does not mean the customer is ready to sign if a competing offer exists.",
+      "tags": [
+        "price",
+        "comparison",
+        "competitor",
+        "decision_delay"
+      ]
+    },
+    {
+      "topic": "Referral influence",
+      "journey_stage": "provider_selection",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Empfehlung",
+        "Bekannte",
+        "persoenlich"
+      ],
+      "what_customers_say": "Known referrals can outweigh provider claims or otherwise good consultation.",
+      "decision_relevance": "A customer comparing against a referred installer may need credible local proof, not generic persuasion.",
+      "tags": [
+        "referral",
+        "social_proof",
+        "local_trust"
+      ]
+    },
+    {
+      "topic": "Fast knowledgeable answers",
+      "journey_stage": "quote_questions",
+      "sentiment": "positive",
+      "review_language_de": [
+        "schnell geantwortet",
+        "kompetent",
+        "Fragen"
+      ],
+      "what_customers_say": "Customers value quick and knowledgeable answers while evaluating an offer.",
+      "decision_relevance": "Unanswered questions can turn a warm lead into a stalled lead.",
+      "tags": [
+        "responsiveness",
+        "questions",
+        "trust"
+      ]
+    },
+    {
+      "topic": "Marketplace comparison mindset",
+      "journey_stage": "provider_search",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Angebot",
+        "Vergleich",
+        "Anbieter"
+      ],
+      "what_customers_say": "Marketplace buyers often think in terms of alternatives, comparisons, and provider fit.",
+      "decision_relevance": "The quote follow-up should help the customer compare apples to apples.",
+      "tags": [
+        "marketplace",
+        "comparison",
+        "offer_structure"
+      ]
+    },
+    {
+      "topic": "Advice versus outcome",
+      "journey_stage": "post_quote",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Beratung",
+        "entschieden",
+        "anderer Anbieter"
+      ],
+      "what_customers_say": "Reviewers may separate liking the advice from the final buying decision.",
+      "decision_relevance": "A strategy based only on satisfaction signals can miss the real blocker.",
+      "tags": [
+        "satisfaction",
+        "lost_deal",
+        "blocker"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Price and referral competition appears across multiple public German solar sources.",
+    "Fast answer language aligns with other positive review surfaces."
+  ],
+  "caveats": [
+    "Review text does not reveal full quote scope or competitor terms.",
+    "Use for qualitative buyer language, not price benchmarks."
+  ]
+}

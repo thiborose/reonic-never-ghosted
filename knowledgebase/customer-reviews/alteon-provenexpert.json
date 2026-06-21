@@ -1,0 +1,114 @@
+{
+  "id": "alteon_provenexpert",
+  "source": {
+    "provider": "Alteon",
+    "platform": "ProvenExpert",
+    "url": "https://www.provenexpert.com/de-de/alteon-gmbh/",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "residential solar",
+      "leasing comparison",
+      "consultation",
+      "administrative handling"
+    ],
+    "collected_at": "2026-06-20"
+  },
+  "observations": [
+    {
+      "topic": "No upsell feeling",
+      "journey_stage": "consultation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "ohne aufzuschwatzen",
+        "nicht aufdringlich",
+        "ehrlich"
+      ],
+      "what_customers_say": "Customers value advice that does not feel like the provider is forcing the largest package.",
+      "decision_relevance": "A fit-based proposal can be more trustworthy than an upsell-heavy one.",
+      "tags": [
+        "non_pushy",
+        "fit",
+        "trust",
+        "upsell_risk"
+      ]
+    },
+    {
+      "topic": "Customer-fit logic",
+      "journey_stage": "quote_evaluation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "passend",
+        "Bedarf",
+        "beraten"
+      ],
+      "what_customers_say": "Positive review language suggests customers notice whether advice fits their situation.",
+      "decision_relevance": "Buyers may need to see why a selected package is appropriate, including why alternatives were not chosen.",
+      "tags": [
+        "fit",
+        "needs",
+        "quote_logic"
+      ]
+    },
+    {
+      "topic": "Administrative burden",
+      "journey_stage": "contract_to_installation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Antrags-Wahnsinn",
+        "Anmeldung",
+        "Papierkram"
+      ],
+      "what_customers_say": "Customers value help with applications, forms, and registration complexity.",
+      "decision_relevance": "Paperwork and process friction can be part of the perceived cost of signing.",
+      "tags": [
+        "admin",
+        "paperwork",
+        "convenience"
+      ]
+    },
+    {
+      "topic": "Leasing versus purchase",
+      "journey_stage": "quote_evaluation",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Leasing",
+        "Kauf",
+        "Kosten"
+      ],
+      "what_customers_say": "Leasing or finance comparison raises questions about total cost, obligations, and fit.",
+      "decision_relevance": "A monthly-payment option may solve liquidity but create new questions about value and commitment.",
+      "tags": [
+        "finance",
+        "leasing",
+        "total_cost",
+        "liquidity"
+      ]
+    },
+    {
+      "topic": "Application support as trust signal",
+      "journey_stage": "after_signature",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Antrag",
+        "Unterstuetzung",
+        "Formalitaeten"
+      ],
+      "what_customers_say": "Help with applications and paperwork appears as a concrete service benefit.",
+      "decision_relevance": "A customer may be more willing to proceed if the administrative path feels manageable.",
+      "tags": [
+        "application",
+        "service",
+        "admin_support"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "No-pressure advice appears in damm-solar and other positive review patterns.",
+    "Administrative handling overlaps with Sunvitec and GSMSolar full-service themes."
+  ],
+  "caveats": [
+    "Positive provider-profile reviews may be solicited.",
+    "Administrative promises must be backed by the installer's real process."
+  ]
+}

@@ -1,0 +1,118 @@
+{
+  "id": "m_solar_plus_provenexpert",
+  "source": {
+    "provider": "M-Solar Plus",
+    "platform": "ProvenExpert",
+    "url": "https://www.provenexpert.com/de-de/m-solar-plus/",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "region": "Munich",
+    "market_context": [
+      "residential solar consultation",
+      "offers",
+      "comparison shopping"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "visible_rating_dimensions": [
+        "Beratung",
+        "Preis/Leistung"
+      ]
+    }
+  },
+  "observations": [
+    {
+      "topic": "Understandable consultation",
+      "journey_stage": "consultation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "verstaendliche Beratung",
+        "Beratung",
+        "erklaert"
+      ],
+      "what_customers_say": "Customers value consultation that is understandable and helps them make sense of the offer.",
+      "decision_relevance": "If the customer does not understand the quote, they are unlikely to move confidently to signature.",
+      "tags": [
+        "consultation",
+        "clarity",
+        "education"
+      ]
+    },
+    {
+      "topic": "On-site specificity",
+      "journey_stage": "consultation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "vor Ort",
+        "Haus",
+        "Dach"
+      ],
+      "what_customers_say": "Positive review language connects trust to advice that feels specific to the property.",
+      "decision_relevance": "A site-specific quote explanation can be more credible than generic solar benefits.",
+      "tags": [
+        "site_specific",
+        "roof",
+        "trust"
+      ]
+    },
+    {
+      "topic": "Different offer structures",
+      "journey_stage": "post_quote",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Vergleichsangebote",
+        "Zweit-Angebot",
+        "unterschiedlich"
+      ],
+      "what_customers_say": "Customers can delay when multiple offers are structured differently and are hard to compare.",
+      "decision_relevance": "Comparison support may be more valuable than another persuasion message.",
+      "tags": [
+        "comparison",
+        "proposal_clarity",
+        "price"
+      ]
+    },
+    {
+      "topic": "Value rather than cheapest price",
+      "journey_stage": "quote_evaluation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Preis/Leistung",
+        "Nutzen",
+        "Wert"
+      ],
+      "what_customers_say": "Review language connects good advice with value, not only the lowest absolute price.",
+      "decision_relevance": "A value-conscious buyer may need a scope and quality explanation, not just a discount.",
+      "tags": [
+        "value",
+        "price_performance",
+        "scope"
+      ]
+    },
+    {
+      "topic": "Benefit-oriented but grounded advice",
+      "journey_stage": "consultation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Nutzen",
+        "lohnt sich",
+        "passend"
+      ],
+      "what_customers_say": "Customers respond to advice that links the technical setup to concrete household benefit.",
+      "decision_relevance": "The buyer needs to understand why the proposed system fits their goals.",
+      "tags": [
+        "benefit",
+        "fit",
+        "household_context"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Offer comparison and price/value tension also appear in Otovo and Sunvitec review patterns.",
+    "On-site specificity is relevant for roof, shading, and consumption concerns."
+  ],
+  "caveats": [
+    "ProvenExpert pages may skew positive.",
+    "Use for qualitative comparison and consultation patterns only."
+  ]
+}

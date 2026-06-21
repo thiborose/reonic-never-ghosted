@@ -1,0 +1,133 @@
+{
+  "id": "wechner_waermepumpen_provenexpert",
+  "source": {
+    "provider": "Wechner Waermepumpen",
+    "platform": "ProvenExpert",
+    "url": "https://www.provenexpert.com/de-de/wechner-waermepumpen-gmbh/",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "heat pumps",
+      "old-building retrofits",
+      "subsidy process",
+      "quote delays"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "visible_review_date_range": "2022-08 to 2025-12",
+      "notable_visible_detail": "One visible review reported waiting six months for an offer."
+    }
+  },
+  "observations": [
+    {
+      "topic": "Understandable heat-pump advice",
+      "journey_stage": "consultation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "verstaendliche Beratung",
+        "klarer Ablauf",
+        "Waermepumpe"
+      ],
+      "what_customers_say": "Customers value heat-pump advice that explains both the technical solution and the process.",
+      "decision_relevance": "Heat-pump buyers need plain-language confidence for a complex home upgrade.",
+      "tags": [
+        "heat_pump",
+        "clarity",
+        "process"
+      ]
+    },
+    {
+      "topic": "Subsidy help",
+      "journey_stage": "quote_to_contract",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Foerderung",
+        "Antrag",
+        "Zuschuss"
+      ],
+      "what_customers_say": "Customers value help with subsidy applications and related paperwork.",
+      "decision_relevance": "Uncertainty about support and net cost can slow a heat-pump decision.",
+      "tags": [
+        "subsidy",
+        "admin",
+        "cost"
+      ]
+    },
+    {
+      "topic": "Promise-performance match",
+      "journey_stage": "post_install",
+      "sentiment": "positive",
+      "review_language_de": [
+        "wie versprochen",
+        "Leistung",
+        "Betrieb"
+      ],
+      "what_customers_say": "Positive heat-pump reviews stress that what was promised matches later operation.",
+      "decision_relevance": "For skeptical buyers, post-install proof can make the quote feel less speculative.",
+      "tags": [
+        "performance",
+        "promise",
+        "proof"
+      ]
+    },
+    {
+      "topic": "Clear process",
+      "journey_stage": "implementation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Ablauf",
+        "klar",
+        "koordiniert"
+      ],
+      "what_customers_say": "Customers praise a process that feels clear and coordinated from advice to installation.",
+      "decision_relevance": "Process clarity reduces perceived execution risk.",
+      "tags": [
+        "process",
+        "coordination",
+        "execution"
+      ]
+    },
+    {
+      "topic": "Long wait for offer",
+      "journey_stage": "before_quote",
+      "sentiment": "negative",
+      "review_language_de": [
+        "warte 6 Monate",
+        "Angebot",
+        "Wartezeit"
+      ],
+      "what_customers_say": "A visible review described a long wait for an offer, showing that capacity delays can cool interest.",
+      "decision_relevance": "Silence or unclear timing can weaken intent even when the buyer is interested.",
+      "tags": [
+        "delay",
+        "capacity",
+        "lead_staleness"
+      ]
+    },
+    {
+      "topic": "Old-building retrofit confidence",
+      "journey_stage": "quote_evaluation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Altbau",
+        "Bestand",
+        "Sanierung"
+      ],
+      "what_customers_say": "The review context includes retrofits where buyers need confidence that the solution fits existing buildings.",
+      "decision_relevance": "Building-specific facts can matter more than generic heat-pump claims.",
+      "tags": [
+        "old_building",
+        "retrofit",
+        "technical_fit"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Heat-pump subsidy and operating-cost clarity also appears in public consumer guidance and forum discussions.",
+    "Quote-delay sensitivity maps directly to the PoC's stale-quote board concept."
+  ],
+  "caveats": [
+    "The long-wait example is a single visible review.",
+    "Subsidy information is time-sensitive and must be checked separately before use."
+  ]
+}

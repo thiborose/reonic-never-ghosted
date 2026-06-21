@@ -1,0 +1,133 @@
+{
+  "id": "svea_solar_trustpilot",
+  "source": {
+    "provider": "Svea Solar Deutschland",
+    "platform": "Trustpilot",
+    "url": "https://de.trustpilot.com/review/sveasolar.de",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "residential solar",
+      "battery storage",
+      "smart meters",
+      "handover",
+      "support"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "review_count": 539
+    }
+  },
+  "observations": [
+    {
+      "topic": "Rushed handover",
+      "journey_stage": "handover",
+      "sentiment": "negative",
+      "review_language_de": [
+        "Einweisung sehr schnell",
+        "Handover",
+        "Erklaerung"
+      ],
+      "what_customers_say": "Some reviews point to installation handover or system instruction feeling too rushed.",
+      "decision_relevance": "Buyers may want to know how they will learn to operate and monitor the system after commissioning.",
+      "tags": [
+        "handover",
+        "aftercare",
+        "customer_enablement"
+      ]
+    },
+    {
+      "topic": "Slow response after installation",
+      "journey_stage": "support",
+      "sentiment": "negative",
+      "review_language_de": [
+        "Reaktionszeit",
+        "keine Antwort",
+        "Kundenservice"
+      ],
+      "what_customers_say": "Some customer language focuses on slow support or unresolved post-install issues.",
+      "decision_relevance": "Service reliability can become a pre-contract concern for cautious buyers.",
+      "tags": [
+        "support",
+        "response_time",
+        "aftercare"
+      ]
+    },
+    {
+      "topic": "Property damage",
+      "journey_stage": "installation",
+      "sentiment": "negative",
+      "review_language_de": [
+        "Wasserschaden",
+        "Dach beschaedigt",
+        "Schaden im Gemaeuer"
+      ],
+      "what_customers_say": "Some review language focuses on property damage disputes and installation-risk concerns.",
+      "decision_relevance": "A buyer with roof or building concerns may need specific responsibility, documentation, and warranty details.",
+      "tags": [
+        "roof_risk",
+        "property_damage",
+        "installation"
+      ]
+    },
+    {
+      "topic": "Punctual clean teams",
+      "journey_stage": "installation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "puenktlich",
+        "sauber",
+        "Team"
+      ],
+      "what_customers_say": "Positive review language also praises punctual and clean installation teams.",
+      "decision_relevance": "Installation-day proof can matter for customers concerned about disruption at home.",
+      "tags": [
+        "installation_quality",
+        "punctuality",
+        "clean_work"
+      ]
+    },
+    {
+      "topic": "Meter and registration delays",
+      "journey_stage": "commissioning",
+      "sentiment": "negative",
+      "review_language_de": [
+        "Smart Meter",
+        "Zaehler",
+        "Anmeldung"
+      ],
+      "what_customers_say": "Some reviews mention delays or friction around metering and registration steps.",
+      "decision_relevance": "The customer may need clarity on what happens after panels are mounted but before the system is fully usable.",
+      "tags": [
+        "meter",
+        "registration",
+        "commissioning_delay"
+      ]
+    },
+    {
+      "topic": "Mixed installation outcomes",
+      "journey_stage": "source_interpretation",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "sauber",
+        "Schaden",
+        "Service"
+      ],
+      "what_customers_say": "The source contains both praise for field teams and complaints about damage or support.",
+      "decision_relevance": "The useful pattern is not a verdict on one company, but the categories customers care about after signing.",
+      "tags": [
+        "mixed_reviews",
+        "installation",
+        "guardrail"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Roof/property concerns also appear in public forum discussions.",
+    "Handover and support concerns overlap with broader post-install trust patterns."
+  ],
+  "caveats": [
+    "The source mixes praise and complaints.",
+    "Property-damage concerns should be handled with installer-specific facts, not copied from this provider."
+  ]
+}

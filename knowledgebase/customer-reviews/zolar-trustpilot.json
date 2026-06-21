@@ -1,0 +1,122 @@
+{
+  "id": "zolar_trustpilot",
+  "source": {
+    "provider": "ZOLAR GmbH",
+    "platform": "Trustpilot",
+    "url": "https://de.trustpilot.com/review/zolar.de",
+    "additional_urls": [
+      "https://de.trustpilot.com/review/zolar.de?page=5"
+    ],
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "residential solar",
+      "battery storage",
+      "installation",
+      "post-install support"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "review_count": 533,
+      "trust_score": "2.7/5"
+    }
+  },
+  "observations": [
+    {
+      "topic": "Installation delays",
+      "journey_stage": "after_contract",
+      "sentiment": "negative",
+      "review_language_de": [
+        "Verzoegerungen",
+        "fehlende Komponenten",
+        "Installation"
+      ],
+      "what_customers_say": "Some customers describe frustration with delays, missing components, or slow project movement after signing.",
+      "decision_relevance": "A prospect may hesitate before signing if they fear that the contract starts a long opaque process.",
+      "tags": [
+        "delay",
+        "execution",
+        "post_contract",
+        "trust_risk"
+      ]
+    },
+    {
+      "topic": "Unclear ownership",
+      "journey_stage": "support",
+      "sentiment": "negative",
+      "review_language_de": [
+        "keine Antwort",
+        "mehreren Telefonaten",
+        "Rueckmeldung"
+      ],
+      "what_customers_say": "Customers can lose trust when callbacks, status updates, or responsibility are unclear.",
+      "decision_relevance": "Before signing, customers may want to know who owns issues and how support works.",
+      "tags": [
+        "support",
+        "ownership",
+        "communication",
+        "trust"
+      ]
+    },
+    {
+      "topic": "Compensation and entitlement disputes",
+      "journey_stage": "issue_resolution",
+      "sentiment": "negative",
+      "review_language_de": [
+        "Entschaedigung",
+        "Problem",
+        "Verzug"
+      ],
+      "what_customers_say": "Some negative reviews and responses center on what happens when project expectations are missed.",
+      "decision_relevance": "Customers may care about escalation paths and realistic promises as much as the initial quote.",
+      "tags": [
+        "escalation",
+        "service_failure",
+        "expectations"
+      ]
+    },
+    {
+      "topic": "Fulfillment risk affects pre-contract trust",
+      "journey_stage": "pre_contract_trust",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Installation",
+        "Service",
+        "Ablauf"
+      ],
+      "what_customers_say": "Post-contract complaints can become pre-contract concerns for new buyers reading reviews.",
+      "decision_relevance": "The buyer may need credible process detail before they believe the offer can be delivered.",
+      "tags": [
+        "fulfillment",
+        "process",
+        "risk"
+      ]
+    },
+    {
+      "topic": "Public company responses",
+      "journey_stage": "support",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Antwort",
+        "Klaerung",
+        "Prozess"
+      ],
+      "what_customers_say": "Company responses frame some complaints as process or installation issues.",
+      "decision_relevance": "Public responses can reduce or increase confidence depending on how specific and accountable they are.",
+      "tags": [
+        "public_response",
+        "accountability",
+        "support"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Delay and support concerns also appear in Svea Solar and consumer-complaint sources.",
+    "This source is more useful for fulfillment-risk patterns than for quote-stage motivations."
+  ],
+  "caveats": [
+    "Negative reviews can overrepresent unresolved problems.",
+    "Some visible complaint details may be incomplete without expanded review text.",
+    "Provider-specific complaints should not be used as claims about another installer."
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "id": "onekomma5_trustpilot",
+  "source": {
+    "provider": "1KOMMA5",
+    "platform": "Trustpilot",
+    "url": "https://de.trustpilot.com/review/1komma5.com",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "residential solar",
+      "battery storage",
+      "dynamic energy products"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "review_count": 3663,
+      "negative_review_response_note": "Company answered 90% of negative reviews, usually within 48 hours."
+    }
+  },
+  "observations": [
+    {
+      "topic": "Same contact person",
+      "journey_stage": "consultation_to_installation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "derselbe Ansprechpartner",
+        "immer erreichbar",
+        "Kontakt"
+      ],
+      "what_customers_say": "Customers value continuity when one person stays responsible across questions and handoffs.",
+      "decision_relevance": "A clear owner reduces anxiety during a complex project with many steps.",
+      "tags": [
+        "continuity",
+        "contact_person",
+        "handoff",
+        "trust"
+      ]
+    },
+    {
+      "topic": "Non-pushy follow-up",
+      "journey_stage": "quote_follow_up",
+      "sentiment": "positive",
+      "review_language_de": [
+        "niemals aufdringlich",
+        "professionell",
+        "nicht aufdringlich"
+      ],
+      "what_customers_say": "Customers praise proactive follow-up when it remains professional and does not feel aggressive.",
+      "decision_relevance": "A useful next step can keep momentum without damaging trust.",
+      "tags": [
+        "non_pushy",
+        "follow_up",
+        "sales_tone"
+      ]
+    },
+    {
+      "topic": "Transparent economics",
+      "journey_stage": "quote_evaluation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "transparent",
+        "Wirtschaftlichkeit",
+        "Kosten"
+      ],
+      "what_customers_say": "Financially minded customers respond well when assumptions and product choices are explained clearly.",
+      "decision_relevance": "ROI-oriented buyers need the calculation logic, not only a savings headline.",
+      "tags": [
+        "economics",
+        "roi",
+        "transparency",
+        "costs"
+      ]
+    },
+    {
+      "topic": "Concrete explanations",
+      "journey_stage": "consultation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "erklaert",
+        "verstaendlich",
+        "Details"
+      ],
+      "what_customers_say": "Positive reviews often mention explanations that make product and tariff choices understandable.",
+      "decision_relevance": "Complex energy products need explanation before a customer can confidently sign.",
+      "tags": [
+        "education",
+        "clarity",
+        "complex_product"
+      ]
+    },
+    {
+      "topic": "Fast handling of criticism",
+      "journey_stage": "support",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Antwort",
+        "Reaktion",
+        "48 Stunden"
+      ],
+      "what_customers_say": "The public response behavior indicates visible handling of negative feedback.",
+      "decision_relevance": "Support responsiveness can matter to buyers who worry about what happens after the contract.",
+      "tags": [
+        "support",
+        "response_time",
+        "public_feedback"
+      ]
+    },
+    {
+      "topic": "Battery and tariff complexity",
+      "journey_stage": "quote_evaluation",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Speicher",
+        "Tarif",
+        "Strom"
+      ],
+      "what_customers_say": "Solar plus storage plus energy products creates a more complex buying decision than a simple PV-only quote.",
+      "decision_relevance": "Customers may need options broken down by value driver and assumption.",
+      "tags": [
+        "battery",
+        "tariff",
+        "complexity"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Continuity and responsiveness are common positive trust signals across several review surfaces.",
+    "Transparent economics matters especially when storage or energy tariffs are included."
+  ],
+  "caveats": [
+    "Some reviews may be invited or collected after positive milestones.",
+    "Economic praise is qualitative and does not validate any specific payback claim."
+  ]
+}

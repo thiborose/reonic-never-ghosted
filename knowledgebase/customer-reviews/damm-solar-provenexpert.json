@@ -1,0 +1,132 @@
+{
+  "id": "damm_solar_provenexpert",
+  "source": {
+    "provider": "damm-solar",
+    "platform": "ProvenExpert",
+    "url": "https://www.provenexpert.com/de-de/damm-solar-gmbh/",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "residential solar",
+      "battery storage",
+      "second-offer comparison",
+      "network approval"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "notable_visible_detail": "One visible review cited a three-month wait for network-operator approval."
+    }
+  },
+  "observations": [
+    {
+      "topic": "Second offer",
+      "journey_stage": "post_quote",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Zweit-Angebot",
+        "Vergleich",
+        "anderes Angebot"
+      ],
+      "what_customers_say": "Customers may seek a second offer before deciding and value help comparing options.",
+      "decision_relevance": "A quote-stage buyer may need a structured comparison before committing.",
+      "tags": [
+        "second_offer",
+        "comparison",
+        "decision_support"
+      ]
+    },
+    {
+      "topic": "Storage add-on interest",
+      "journey_stage": "quote_revision",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Speicher",
+        "schnell ein Termin",
+        "Erweiterung"
+      ],
+      "what_customers_say": "Customers can regain momentum when storage questions or add-on interest are handled quickly.",
+      "decision_relevance": "Battery interest may be an opening for a scenario comparison, not simply an upsell.",
+      "tags": [
+        "battery",
+        "addon",
+        "momentum"
+      ]
+    },
+    {
+      "topic": "Network-operator delay",
+      "journey_stage": "implementation",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Netzbetreiber",
+        "Anschlusszusage",
+        "drei Monate"
+      ],
+      "what_customers_say": "Some delays are tied to external approvals rather than installer work.",
+      "decision_relevance": "Buyers may need to know what is controllable and what depends on third parties.",
+      "tags": [
+        "grid",
+        "external_delay",
+        "timeline"
+      ]
+    },
+    {
+      "topic": "No-pressure advice",
+      "journey_stage": "consultation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "nicht aufgedraengt",
+        "beraten",
+        "kein Druck"
+      ],
+      "what_customers_say": "Positive review language values advice that gives the customer room to decide.",
+      "decision_relevance": "High-ticket buyers may need agency and time without losing momentum.",
+      "tags": [
+        "non_pushy",
+        "trust",
+        "sales_tone"
+      ]
+    },
+    {
+      "topic": "Fast appointment after new question",
+      "journey_stage": "follow_up",
+      "sentiment": "positive",
+      "review_language_de": [
+        "schnell ein Termin",
+        "Rueckfrage",
+        "Antwort"
+      ],
+      "what_customers_say": "Positive reviews value quick scheduling when a new need or question appears.",
+      "decision_relevance": "A timely next step can preserve momentum after quote revisions.",
+      "tags": [
+        "speed",
+        "appointment",
+        "follow_up"
+      ]
+    },
+    {
+      "topic": "Installer versus third-party dependency",
+      "journey_stage": "timeline_expectations",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Netzbetreiber",
+        "Freigabe",
+        "Genehmigung"
+      ],
+      "what_customers_say": "Review language separates installer work from external grid or approval steps.",
+      "decision_relevance": "Clear dependency ownership can prevent timeline distrust.",
+      "tags": [
+        "dependency",
+        "grid",
+        "expectations"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Second-offer comparison overlaps with M-Solar Plus and Otovo patterns.",
+    "Network-operator delay language is important for German solar commissioning expectations."
+  ],
+  "caveats": [
+    "Positive review pages are not representative of all customers.",
+    "Network-operator timing varies by location and date."
+  ]
+}

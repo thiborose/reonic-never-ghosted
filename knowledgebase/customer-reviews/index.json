@@ -1,0 +1,34 @@
+{
+  "collection": "customer_reviews",
+  "version": "2026-06-21",
+  "purpose": "Qualitative public customer-review data for the Reonic PoC. Each file summarizes one public review surface as standalone data for buyer concerns, review language, trust signals, and quote-stage hesitation patterns.",
+  "observation_format": {
+    "topic": "Short human-readable theme.",
+    "journey_stage": "Where the theme appears in the buyer journey.",
+    "sentiment": "positive, negative, or mixed.",
+    "review_language_de": "Short German fragments or normalized German terms observed in the source.",
+    "what_customers_say": "Plain-language summary of the observed review pattern.",
+    "decision_relevance": "Why this can matter before a customer signs.",
+    "tags": "Retrieval tags for matching buyer concerns."
+  },
+  "important_limits": [
+    "Use these as qualitative examples, not as market-size or frequency data.",
+    "Do not quote review fragments in customer-facing messages.",
+    "Do not imply that one provider's reviews describe another installer."
+  ],
+  "files": [
+    "enpal-trustpilot.json",
+    "otovo-trustpilot.json",
+    "onekomma5-trustpilot.json",
+    "zolar-trustpilot.json",
+    "enerix-trustpilot.json",
+    "svea-solar-trustpilot.json",
+    "m-solar-plus-provenexpert.json",
+    "sunvitec-provenexpert.json",
+    "green-vision-germany-provenexpert.json",
+    "alteon-provenexpert.json",
+    "wechner-waermepumpen-provenexpert.json",
+    "gsmsolar-provenexpert.json",
+    "damm-solar-provenexpert.json"
+  ]
+}

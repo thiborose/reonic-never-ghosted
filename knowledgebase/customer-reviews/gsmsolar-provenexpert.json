@@ -1,0 +1,112 @@
+{
+  "id": "gsmsolar_provenexpert",
+  "source": {
+    "provider": "GSMSolar",
+    "platform": "ProvenExpert",
+    "url": "https://www.provenexpert.com/de-de/gsmsolar-solaranlagen-photovoltaik-solarstrom/",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "residential solar",
+      "installation",
+      "commissioning",
+      "full-service package"
+    ],
+    "collected_at": "2026-06-20"
+  },
+  "observations": [
+    {
+      "topic": "Full-service package",
+      "journey_stage": "quote_to_commissioning",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Rundum-Sorglos-Paket",
+        "alles aus einer Hand",
+        "komplett"
+      ],
+      "what_customers_say": "Some customers use full-service language positively when coordination is concrete and delivered.",
+      "decision_relevance": "Convenience can be a decision driver if it is backed by specific responsibilities.",
+      "tags": [
+        "convenience",
+        "full_service",
+        "coordination"
+      ]
+    },
+    {
+      "topic": "Commissioning and registration",
+      "journey_stage": "after_installation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Inbetriebnahme",
+        "Anmeldung",
+        "Formalitaeten"
+      ],
+      "what_customers_say": "The positive experience extends beyond panel installation to commissioning and registration work.",
+      "decision_relevance": "Customers may need clarity on the parts of the process that happen after physical installation.",
+      "tags": [
+        "registration",
+        "commissioning",
+        "handover"
+      ]
+    },
+    {
+      "topic": "Carefree wording",
+      "journey_stage": "message_quality",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Sorglos",
+        "Paket",
+        "Rundum"
+      ],
+      "what_customers_say": "Carefree-package language works only when the specific included responsibilities are clear.",
+      "decision_relevance": "Vague all-in language can create expectations that are hard to meet.",
+      "tags": [
+        "promise_clarity",
+        "convenience",
+        "trust"
+      ]
+    },
+    {
+      "topic": "Solar electricity framing",
+      "journey_stage": "quote_evaluation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Photovoltaik",
+        "Solarstrom",
+        "Eigenverbrauch"
+      ],
+      "what_customers_say": "The source context is residential PV where customers connect the project to using solar power at home.",
+      "decision_relevance": "Self-consumption value should be explained in household terms.",
+      "tags": [
+        "self_consumption",
+        "solar",
+        "household_value"
+      ]
+    },
+    {
+      "topic": "One-provider simplicity",
+      "journey_stage": "contract_to_installation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "eine Hand",
+        "koordiniert",
+        "ein Ansprechpartner"
+      ],
+      "what_customers_say": "Customers can value not having to coordinate multiple parties themselves.",
+      "decision_relevance": "Reducing coordination burden can be a stronger message than adding more technical detail.",
+      "tags": [
+        "single_owner",
+        "coordination",
+        "convenience"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Full-service language is positive here but risky when unsupported; consumer warning sources caution against vague broad promises.",
+    "Registration and commissioning themes overlap with Sunvitec and damm-solar."
+  ],
+  "caveats": [
+    "This is a positive review page slice.",
+    "Broad full-service claims should be replaced with concrete included tasks."
+  ]
+}

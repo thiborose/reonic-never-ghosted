@@ -1,0 +1,116 @@
+{
+  "id": "sunvitec_provenexpert",
+  "source": {
+    "provider": "Sunvitec",
+    "platform": "ProvenExpert",
+    "url": "https://www.provenexpert.com/de-de/sunvitec-gmbh-der-solar-energie-experte-in-thueringen/",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "region": "Thuringia",
+    "market_context": [
+      "residential solar",
+      "self-consumption",
+      "provider selection",
+      "administrative handling"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "notable_visible_detail": "One visible review described comparing five offers."
+    }
+  },
+  "observations": [
+    {
+      "topic": "Several offers before choosing",
+      "journey_stage": "provider_selection",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "fuenf Angebote",
+        "Vergleich",
+        "Anbieter"
+      ],
+      "what_customers_say": "A visible customer review described comparing several offers before choosing a provider.",
+      "decision_relevance": "Customers may already be evaluating a shortlist and need decision clarity.",
+      "tags": [
+        "comparison",
+        "shortlist",
+        "provider_selection"
+      ]
+    },
+    {
+      "topic": "Referral trust",
+      "journey_stage": "provider_selection",
+      "sentiment": "positive",
+      "review_language_de": [
+        "persoenliche Empfehlung",
+        "Empfehlung",
+        "Vertrauen"
+      ],
+      "what_customers_say": "Personal referral appeared as an important trust input in the visible review.",
+      "decision_relevance": "A buyer may trust comparable local proof more than generic brand claims.",
+      "tags": [
+        "referral",
+        "local_trust",
+        "proof"
+      ]
+    },
+    {
+      "topic": "All-in-one coordination",
+      "journey_stage": "contract_to_implementation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "alles aus einer Hand",
+        "koordiniert",
+        "Ablauf"
+      ],
+      "what_customers_say": "The customer valued having coordination handled across the process.",
+      "decision_relevance": "Convenience can be a real value driver if the responsibilities are specific.",
+      "tags": [
+        "coordination",
+        "convenience",
+        "process"
+      ]
+    },
+    {
+      "topic": "Registration formalities",
+      "journey_stage": "after_signature",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Anmeldeformalitaeten",
+        "Anmeldung",
+        "Formalitaeten"
+      ],
+      "what_customers_say": "Customers value help with registration and administrative tasks.",
+      "decision_relevance": "Paperwork relief can reduce perceived friction in signing.",
+      "tags": [
+        "admin",
+        "registration",
+        "paperwork"
+      ]
+    },
+    {
+      "topic": "Self-consumption goal",
+      "journey_stage": "quote_evaluation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Eigenverbrauch",
+        "Solarstrom",
+        "Verbrauch"
+      ],
+      "what_customers_say": "The review context centers on residential PV for own electricity use.",
+      "decision_relevance": "Savings and autonomy framing should be tied to actual household consumption patterns.",
+      "tags": [
+        "self_consumption",
+        "autonomy",
+        "solar"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Referral and comparison signals also appear in Otovo and broader consumer guidance.",
+    "Administrative handling connects to full-service package expectations in GSMSolar and Alteon patterns."
+  ],
+  "caveats": [
+    "This is a visible page slice, not a representative sample.",
+    "Local proof must come from permissioned installer assets."
+  ]
+}

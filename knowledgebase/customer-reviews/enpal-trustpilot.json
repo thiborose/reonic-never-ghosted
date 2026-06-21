@@ -1,0 +1,140 @@
+{
+  "id": "enpal_trustpilot",
+  "source": {
+    "provider": "Enpal",
+    "platform": "Trustpilot",
+    "url": "https://de.trustpilot.com/review/enpal.de",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "residential solar",
+      "battery storage",
+      "energy services",
+      "rental and service packages"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "review_count": 27710,
+      "trust_score": "4.2/5",
+      "recent_review_count": 6165,
+      "five_star_share": "63%",
+      "one_star_share": "16%",
+      "review_invitation_note": "Trustpilot indicated that the company asks customers for reviews."
+    }
+  },
+  "observations": [
+    {
+      "topic": "Sales pressure and urgency",
+      "journey_stage": "consultation_to_quote",
+      "sentiment": "negative",
+      "review_language_de": [
+        "Abschluss draengen",
+        "aufdringlich",
+        "Druck"
+      ],
+      "what_customers_say": "Some reviewers describe the sales process as too focused on closing or creating urgency before they feel ready.",
+      "decision_relevance": "A hesitant buyer may interpret another strong closing push as pressure rather than help.",
+      "tags": [
+        "pressure",
+        "urgency",
+        "sales_tone",
+        "trust_risk"
+      ]
+    },
+    {
+      "topic": "Formality and respectful tone",
+      "journey_stage": "first_contact",
+      "sentiment": "negative",
+      "review_language_de": [
+        "beim Sie bleiben",
+        "unprofessionell",
+        "Umgangston"
+      ],
+      "what_customers_say": "A subset of customers reacts to the interpersonal tone of the conversation, including whether the interaction feels appropriately formal.",
+      "decision_relevance": "For German homeowners, tone can influence trust before the technical quote is evaluated.",
+      "tags": [
+        "formality",
+        "respect",
+        "germany",
+        "trust"
+      ]
+    },
+    {
+      "topic": "Provider identity and intent",
+      "journey_stage": "outreach",
+      "sentiment": "negative",
+      "review_language_de": [
+        "wer ruft an",
+        "Beratung",
+        "Verkauf"
+      ],
+      "what_customers_say": "Trust drops when customers are unsure who is contacting them or whether a conversation is neutral advice or sales.",
+      "decision_relevance": "A follow-up after the quote should make the sender, purpose, and next step obvious.",
+      "tags": [
+        "identity",
+        "outreach",
+        "transparency",
+        "trust"
+      ]
+    },
+    {
+      "topic": "Reliability praise",
+      "journey_stage": "whole_journey",
+      "sentiment": "positive",
+      "review_language_de": [
+        "zuverlaessig",
+        "kompetent",
+        "reibungslos"
+      ],
+      "what_customers_say": "Positive reviewers often use broad reliability language when the process feels organized and predictable.",
+      "decision_relevance": "Reliability proof can matter for buyers who worry about handoffs after signing.",
+      "tags": [
+        "reliability",
+        "process",
+        "trust_signal"
+      ]
+    },
+    {
+      "topic": "Polarized review distribution",
+      "journey_stage": "source_interpretation",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "zuverlaessig",
+        "aufdringlich"
+      ],
+      "what_customers_say": "The same source contains strong praise and strong criticism, with both five-star and one-star experiences visible.",
+      "decision_relevance": "The data is useful for identifying possible buyer concerns, but not for ranking how common those concerns are.",
+      "tags": [
+        "mixed_reviews",
+        "qualitative_only",
+        "guardrail"
+      ]
+    },
+    {
+      "topic": "Service-package expectation",
+      "journey_stage": "quote_to_contract",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Rundum",
+        "Service",
+        "Paket"
+      ],
+      "what_customers_say": "Full-service solar propositions create expectations that the provider will coordinate many steps after signature.",
+      "decision_relevance": "Buyers may need clear boundaries on what is included before they trust a package offer.",
+      "tags": [
+        "service_package",
+        "expectations",
+        "coordination"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Pressure and tone concerns also appear in other German solar review surfaces.",
+    "The source is large enough to show varied language, but still self-selected."
+  ],
+  "caveats": [
+    "Trustpilot reviews are self-selected and may be invited.",
+    "Public review metrics change over time.",
+    "Provider-specific feedback should not be generalized to another installer."
+  ]
+}

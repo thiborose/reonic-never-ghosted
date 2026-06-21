@@ -1,0 +1,115 @@
+{
+  "id": "green_vision_germany_provenexpert",
+  "source": {
+    "provider": "Green Vision Germany",
+    "platform": "ProvenExpert",
+    "url": "https://www.provenexpert.com/de-de/green-vision-germany-gmbh/",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "heat pump retrofit",
+      "older home",
+      "winter operation",
+      "performance proof"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "notable_visible_detail": "One visible review reported observed seasonal performance near JAZ 6.0 versus a forecast of 4.6."
+    }
+  },
+  "observations": [
+    {
+      "topic": "Heat pump in older home",
+      "journey_stage": "quote",
+      "sentiment": "positive",
+      "review_language_de": [
+        "altes Haus",
+        "detailliertes Angebot",
+        "Waermepumpe"
+      ],
+      "what_customers_say": "A visible review connects confidence to a detailed, house-specific heat-pump plan for an older building.",
+      "decision_relevance": "Older-home buyers may need building-specific reasoning before trusting a heat-pump quote.",
+      "tags": [
+        "heat_pump",
+        "old_building",
+        "technical_fit"
+      ]
+    },
+    {
+      "topic": "Staged technical explanation",
+      "journey_stage": "consultation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "detailliert",
+        "Planung",
+        "Schritte"
+      ],
+      "what_customers_say": "The positive review pattern emphasizes a staged and detailed explanation rather than a generic equipment pitch.",
+      "decision_relevance": "Complex retrofit decisions may require process and technical sequencing clarity.",
+      "tags": [
+        "planning",
+        "technical_detail",
+        "retrofit"
+      ]
+    },
+    {
+      "topic": "Winter performance",
+      "journey_stage": "post_install",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Winter",
+        "JAZ",
+        "Prognose"
+      ],
+      "what_customers_say": "The review ties trust to observed winter operation compared with the forecast.",
+      "decision_relevance": "Seasonal-performance evidence can address skepticism about heat pumps in winter.",
+      "tags": [
+        "winter",
+        "performance",
+        "forecast"
+      ]
+    },
+    {
+      "topic": "Forecast versus observed result",
+      "journey_stage": "proof",
+      "sentiment": "mixed",
+      "review_language_de": [
+        "Ist-Wert",
+        "Prognose",
+        "JAZ"
+      ],
+      "what_customers_say": "A customer-reported performance number is useful as an example of the kind of proof buyers value.",
+      "decision_relevance": "Performance proof must be comparable to the customer's home and should not be reused as a generic claim.",
+      "tags": [
+        "proof_limit",
+        "measurement",
+        "comparability"
+      ]
+    },
+    {
+      "topic": "Specific proof beats broad reassurance",
+      "journey_stage": "pre_contract_trust",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Prognose",
+        "Ergebnis",
+        "Verbrauch"
+      ],
+      "what_customers_say": "The review pattern suggests buyers value proof tied to forecast, operation, and consumption.",
+      "decision_relevance": "A skeptical buyer may need data or a comparable case rather than general reassurance.",
+      "tags": [
+        "proof",
+        "skepticism",
+        "operating_cost"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Winter-performance concerns overlap with public forum discussions about PV, shade, heat pumps, and seasonal output.",
+    "This source is especially relevant to multi-technology or heat-pump quotes."
+  ],
+  "caveats": [
+    "The performance detail is a single customer-reported claim.",
+    "Do not reuse numeric performance claims without installer-owned comparable data."
+  ]
+}

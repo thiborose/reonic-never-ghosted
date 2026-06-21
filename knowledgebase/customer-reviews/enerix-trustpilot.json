@@ -1,0 +1,117 @@
+{
+  "id": "enerix_trustpilot",
+  "source": {
+    "provider": "enerix",
+    "platform": "Trustpilot",
+    "url": "https://de.trustpilot.com/review/enerix.de?page=4",
+    "source_type": "public_customer_reviews",
+    "country": "Germany",
+    "market_context": [
+      "regional solar installers",
+      "battery storage",
+      "planning",
+      "installation"
+    ],
+    "collected_at": "2026-06-20",
+    "public_metrics": {
+      "review_count": 313,
+      "rating_note": "Search result showed a five-star aggregate at collection time."
+    }
+  },
+  "observations": [
+    {
+      "topic": "Honest and fair advice",
+      "journey_stage": "consultation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "ehrlich",
+        "fair",
+        "Beratung"
+      ],
+      "what_customers_say": "Customers praise advice that feels honest, fair, and not optimized for the largest possible sale.",
+      "decision_relevance": "Trust-sensitive buyers may respond better to tradeoffs than to one-sided benefit claims.",
+      "tags": [
+        "fair_advice",
+        "trust",
+        "consultation"
+      ]
+    },
+    {
+      "topic": "Reachability during questions",
+      "journey_stage": "quote_questions",
+      "sentiment": "positive",
+      "review_language_de": [
+        "immer ansprechbar",
+        "schnell geantwortet",
+        "Fragen"
+      ],
+      "what_customers_say": "Customers repeatedly value being able to reach someone and get timely answers.",
+      "decision_relevance": "A stalled quote may only need a concrete answer, not a broader marketing sequence.",
+      "tags": [
+        "responsiveness",
+        "questions",
+        "service",
+        "trust"
+      ]
+    },
+    {
+      "topic": "Promises kept",
+      "journey_stage": "quote_to_installation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Versprechen gehalten",
+        "zuverlaessig",
+        "termingerecht"
+      ],
+      "what_customers_say": "Positive reviews link satisfaction to promises being met across the project.",
+      "decision_relevance": "Pre-contract trust can improve when commitments are specific and later verifiable.",
+      "tags": [
+        "promises",
+        "reliability",
+        "timeline"
+      ]
+    },
+    {
+      "topic": "Clean installation work",
+      "journey_stage": "installation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "sauber",
+        "puenktlich",
+        "Hand in Hand"
+      ],
+      "what_customers_say": "Positive reviews use practical language about clean, punctual, coordinated installation work.",
+      "decision_relevance": "Some buyers worry about disruption and craftsmanship more than abstract ROI.",
+      "tags": [
+        "installation_quality",
+        "clean_work",
+        "punctuality"
+      ]
+    },
+    {
+      "topic": "Operations support after install",
+      "journey_stage": "after_installation",
+      "sentiment": "positive",
+      "review_language_de": [
+        "Support",
+        "Betrieb",
+        "Ansprechpartner"
+      ],
+      "what_customers_say": "Some positive review language extends into operation and post-install help.",
+      "decision_relevance": "Aftercare can be part of the buyer's trust calculation before signing.",
+      "tags": [
+        "aftercare",
+        "support",
+        "operations"
+      ]
+    }
+  ],
+  "cross_source_notes": [
+    "Fair advice and responsiveness are recurring positive themes across multiple review platforms.",
+    "Clean installation language can support risk-sensitive buyer patterns, but only with installer-owned proof."
+  ],
+  "caveats": [
+    "The visible page slice is mainly positive.",
+    "Use the themes as proof categories, not as claims about any other installer."
+  ]
+}
