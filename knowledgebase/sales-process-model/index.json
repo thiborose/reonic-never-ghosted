@@ -1,0 +1,11 @@
+{
+  "collection": "sales_process_model",
+  "version": "2026-06-21",
+  "purpose": "Flexible process and decision rules for post-quote next-best-action recommendations. This is not a fixed happy path; it defines stages, events, inputs, scoring factors, and debrief updates that let the demo flow emerge from customer state.",
+  "files": [
+    "stages-and-events.json",
+    "decision-policy.json",
+    "debrief-rules.json",
+    "demo-scenarios.json"
+  ]
+}

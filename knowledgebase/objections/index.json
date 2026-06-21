@@ -1,0 +1,19 @@
+{
+  "collection": "objections",
+  "version": "2026-06-21",
+  "purpose": "Common post-quote blockers for German residential solar and adjacent home-energy offers. These records help a sales assistant explain what is blocking the customer and what proof or task type can resolve it.",
+  "objection_format": {
+    "id": "Stable blocker name.",
+    "name": "Human-readable objection.",
+    "customer_wording": "Example wording or fragments from reviews, forums, debriefs, and sales notes.",
+    "underlying_concern": "What the customer likely needs resolved.",
+    "proof_that_helps": "Evidence or artifact that can reduce uncertainty.",
+    "best_task_types": "Fit among Phone Call, Send Email, Meeting in person, Send WhatsApp Video Message, Send Gift.",
+    "what_not_to_say": "Unsafe or counterproductive claims.",
+    "missing_data_to_check": "Inputs needed before making strong claims.",
+    "related_buyer_signals": "Signals commonly connected to the objection."
+  },
+  "files": [
+    "solar-objections-germany.json"
+  ]
+}

@@ -1,0 +1,183 @@
+{
+  "id": "debrief_rules",
+  "purpose": "Rules for converting completed task outcomes into updated buyer signals, objections, and next action inputs.",
+  "required_debrief_fields": [
+    "action_completed",
+    "what_customer_said",
+    "customer_language",
+    "new_facts",
+    "resolved_objections",
+    "remaining_objections",
+    "new_objections",
+    "next_commitment",
+    "due_date",
+    "outcome_label"
+  ],
+  "optional_debrief_fields": [
+    "competitor_mentioned",
+    "competitor_price_anchor",
+    "decision_maker_or_advisor_mentioned",
+    "site_visit_requested",
+    "missing_data_requested",
+    "proof_asset_requested",
+    "lost_reason",
+    "installer_override_reason"
+  ],
+  "outcome_labels": [
+    "signed",
+    "still_evaluating",
+    "needs_data",
+    "blocker_resolved",
+    "competitor_risk",
+    "lost_price",
+    "lost_trust",
+    "not_interested",
+    "no_response",
+    "paused"
+  ],
+  "update_rules": [
+    {
+      "id": "site_visit_requested_after_call",
+      "if_debrief_contains": [
+        "customer wants someone to look at house",
+        "site visit",
+        "vor Ort",
+        "roof inspection",
+        "house inspection"
+      ],
+      "set_or_boost": {
+        "buyer_signals": [
+          "site_visit_needed",
+          "technical_skeptic",
+          "trust_sensitive"
+        ],
+        "objections": [
+          "needs_site_visit"
+        ],
+        "task_type": "Meeting in person"
+      },
+      "next_step_note": "Schedule an in-person meeting with a clear inspection agenda."
+    },
+    {
+      "id": "competitor_mentioned",
+      "if_debrief_contains": [
+        "competitor",
+        "another quote",
+        "cheaper offer",
+        "recommendation",
+        "Vergleich"
+      ],
+      "set_or_boost": {
+        "buyer_signals": [
+          "comparison_shopper",
+          "price_shock"
+        ],
+        "objections": [
+          "competitor_offer_comparison"
+        ],
+        "task_type": "Send Email"
+      },
+      "next_step_note": "Prepare a neutral comparison matrix and optionally offer a call."
+    },
+    {
+      "id": "price_or_roi_still_active",
+      "if_debrief_contains": [
+        "too expensive",
+        "payback",
+        "lohnt sich",
+        "amortization",
+        "ROI",
+        "Strompreis"
+      ],
+      "set_or_boost": {
+        "buyer_signals": [
+          "roi_focused",
+          "price_shock"
+        ],
+        "objections": [
+          "roi_payback_distrust",
+          "upfront_price_shock"
+        ],
+        "task_type": "Phone Call"
+      },
+      "next_step_note": "Use assumptions review and written recap; do not claim guaranteed payback."
+    },
+    {
+      "id": "partner_or_advisor_added",
+      "if_debrief_contains": [
+        "partner",
+        "spouse",
+        "advisor",
+        "parents",
+        "family",
+        "needs to review"
+      ],
+      "set_or_boost": {
+        "buyer_signals": [
+          "stakeholder_review"
+        ],
+        "objections": [
+          "stakeholder_or_advisor_review"
+        ],
+        "task_type": "Send Email"
+      },
+      "next_step_note": "Create a shareable summary and invite joint review if appropriate."
+    },
+    {
+      "id": "concerns_resolved_ready_for_recap",
+      "if_debrief_contains": [
+        "concerns resolved",
+        "looks good",
+        "send recap",
+        "next step",
+        "contract",
+        "signature"
+      ],
+      "set_or_boost": {
+        "buyer_signals": [
+          "ready_to_close"
+        ],
+        "objections": [],
+        "task_type": "Send Email"
+      },
+      "next_step_note": "Send a concise final recap and signature path."
+    },
+    {
+      "id": "customer_needs_time",
+      "if_debrief_contains": [
+        "needs time",
+        "review later",
+        "will get back",
+        "not ready",
+        "pause"
+      ],
+      "set_or_boost": {
+        "buyer_signals": [
+          "ghosting_risk"
+        ],
+        "objections": [
+          "no_response_or_ghosting"
+        ],
+        "task_type": "Send Email"
+      },
+      "next_step_note": "Ask one useful question or set a resume date; avoid repeated pressure."
+    },
+    {
+      "id": "customer_signed",
+      "if_debrief_contains": [
+        "signed",
+        "contract signed",
+        "unterschrieben"
+      ],
+      "set_stage": "signed",
+      "next_step_note": "Stop sales follow-up and hand off to implementation."
+    }
+  ],
+  "debrief_quality_rules": [
+    "Capture exact customer wording when available.",
+    "Separate resolved objection from remaining objection.",
+    "Record new facts that change quote, proof, or task choice.",
+    "Record a next commitment or explicit pause condition.",
+    "If the installer overrides the assistant, capture the reason so the strategy can adapt."
+  ]
+}

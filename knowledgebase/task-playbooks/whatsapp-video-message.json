@@ -1,0 +1,115 @@
+{
+  "task_type": "Send WhatsApp Video Message",
+  "primary_job": "Give a short, personal, visual explanation with less scheduling friction than a live call.",
+  "best_for": [
+    "Personalized quote walkthrough",
+    "Battery now versus later explanation",
+    "Seasonal output or roof/shade visual explanation",
+    "Partner-shareable summary",
+    "Post-call recap",
+    "Light logistics when WhatsApp opt-in exists"
+  ],
+  "bad_for": [
+    "No WhatsApp consent or opt-out",
+    "Long or legally sensitive explanations",
+    "Complex finance terms",
+    "Customer has requested written documents only",
+    "Trust is damaged by perceived informality",
+    "Claims requiring detailed sources and tables"
+  ],
+  "buyer_signals_it_fits": [
+    "technical_skeptic",
+    "independence_motivated",
+    "stakeholder_review",
+    "comparison_shopper",
+    "convenience_seeker",
+    "ready_to_close"
+  ],
+  "objections_it_can_resolve": [
+    "battery_value_or_sizing",
+    "winter_or_shade_performance",
+    "stakeholder_or_advisor_review",
+    "proposal_clarity_or_bundle_suspicion",
+    "paperwork_grid_or_admin_uncertainty"
+  ],
+  "timing_guidance": [
+    "Use when a visual explanation can replace a scheduling-heavy call.",
+    "Keep under 90 seconds for the demo.",
+    "Use after the customer asks a specific question or after a call/visit recap.",
+    "Do not use for repeated no-response unless there is a strong value-add and opt-in."
+  ],
+  "prep_needed": [
+    "WhatsApp consent status",
+    "Single point to explain",
+    "Visual artifact to show",
+    "Customer-specific quote fact",
+    "Claim checks for any numbers mentioned",
+    "Short call to action"
+  ],
+  "output_artifacts": [
+    "Video script",
+    "Thumbnail or title",
+    "Attached PDF/chart if needed",
+    "WhatsApp message text",
+    "Debrief or reply-capture prompt"
+  ],
+  "tone_guidance": [
+    "Personal and specific.",
+    "Use simple language.",
+    "Show the exact part of the quote or chart being discussed.",
+    "End with a simple reply option.",
+    "Keep it helpful, not salesy."
+  ],
+  "video_structures": [
+    {
+      "name": "Battery now vs later",
+      "beats": [
+        "State the customer's question.",
+        "Show current battery option.",
+        "Explain when it helps and when later-ready is enough.",
+        "Name the one missing decision input.",
+        "Invite reply with preference."
+      ]
+    },
+    {
+      "name": "Partner-shareable recap",
+      "beats": [
+        "Say this is a short recap for both decision-makers.",
+        "Summarize quote scope.",
+        "Summarize top financial or impact assumption.",
+        "Name open decision.",
+        "Offer a joint call."
+      ]
+    },
+    {
+      "name": "Seasonal output explanation",
+      "beats": [
+        "Acknowledge winter or shade concern.",
+        "Show monthly pattern.",
+        "Explain limits honestly.",
+        "State what data would improve confidence.",
+        "Offer call or visit if needed."
+      ]
+    }
+  ],
+  "success_indicators": [
+    "Customer replies with a preference",
+    "Customer forwards/shares with stakeholder",
+    "Customer books a call or visit",
+    "Customer asks for final recap or contract",
+    "Customer provides missing data"
+  ],
+  "debrief_questions": [
+    "Was the video sent?",
+    "What exact question did it answer?",
+    "Did the customer reply?",
+    "Was it shared with another stakeholder?",
+    "What is the next commitment?"
+  ],
+  "guardrails": [
+    "Do not use WhatsApp without opt-in.",
+    "Do not include sensitive finance or legal claims casually in video.",
+    "Do not rely on video views unless tracking consent exists.",
+    "Do not make the video generic; it must reference the customer's situation."
+  ]
+}

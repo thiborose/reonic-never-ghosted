@@ -1,0 +1,191 @@
+{
+  "id": "demo_scenarios",
+  "purpose": "Compact scenario set for testing the knowledgebase-driven recommendation flow. These are prototype scenarios, not real customer records.",
+  "scenarios": [
+    {
+      "id": "demo_happy_path_start",
+      "name": "Brand-new quote, trust-sensitive high-value residential solar lead",
+      "starting_state": {
+        "stage": "quote_sent_strategy_needed",
+        "quote_age_days": 1,
+        "days_since_last_action": 1,
+        "quote_scope": "PV plus battery",
+        "known_objections": [],
+        "known_buyer_signals": [
+          "trust_sensitive",
+          "roi_focused"
+        ],
+        "consent": {
+          "email": true,
+          "phone": true,
+          "whatsapp": false,
+          "tracking": true
+        }
+      },
+      "expected_recommendation": {
+        "task_type": "Phone Call",
+        "reason": "No explicit blocker yet, but quote is fresh and high-value; a low-pressure human call can identify whether price, trust, or comparison is blocking the customer.",
+        "proof_to_prepare": [
+          "quote recap",
+          "top assumptions",
+          "open question list"
+        ]
+      }
+    },
+    {
+      "id": "demo_after_call_site_visit_requested",
+      "name": "Call completed and customer wants someone to see the house",
+      "starting_state": {
+        "stage": "strategy_update_needed",
+        "latest_debrief": "Customer said the price may be okay, but they want someone to come look at the roof and cable path before they trust the final quote.",
+        "quote_age_days": 2,
+        "days_since_last_action": 0,
+        "known_objections": [
+          "needs_site_visit",
+          "roof_or_property_risk"
+        ],
+        "known_buyer_signals": [
+          "site_visit_needed",
+          "trust_sensitive",
+          "technical_skeptic"
+        ],
+        "consent": {
+          "email": true,
+          "phone": true,
+          "whatsapp": false,
+          "tracking": true
+        }
+      },
+      "expected_recommendation": {
+        "task_type": "Meeting in person",
+        "reason": "The active blocker is physical validation, so another email would not resolve it.",
+        "proof_to_prepare": [
+          "visit agenda",
+          "roof and meter inspection checklist",
+          "calendar slots"
+        ]
+      }
+    },
+    {
+      "id": "demo_after_visit_ready_for_recap",
+      "name": "Site visit completed and concerns resolved",
+      "starting_state": {
+        "stage": "strategy_update_needed",
+        "latest_debrief": "Visit completed. Roof condition looked fine for the proposed mounting method. Customer said this answers their main concern and asked for the final summary to review tonight.",
+        "quote_age_days": 4,
+        "days_since_last_action": 0,
+        "known_objections": [],
+        "known_buyer_signals": [
+          "ready_to_close",
+          "trust_sensitive"
+        ],
+        "consent": {
+          "email": true,
+          "phone": true,
+          "whatsapp": false,
+          "tracking": true
+        }
+      },
+      "expected_recommendation": {
+        "task_type": "Send Email",
+        "reason": "The blocker is resolved and the customer requested a final written recap.",
+        "proof_to_prepare": [
+          "post-visit recap",
+          "final quote summary",
+          "signature path"
+        ]
+      }
+    },
+    {
+      "id": "roi_competitor_scenario",
+      "name": "ROI buyer with competitor offers",
+      "starting_state": {
+        "stage": "active_followup",
+        "quote_age_days": 3,
+        "known_objections": [
+          "roi_payback_distrust",
+          "competitor_offer_comparison"
+        ],
+        "known_buyer_signals": [
+          "roi_focused",
+          "comparison_shopper"
+        ],
+        "consent": {
+          "email": true,
+          "phone": true,
+          "whatsapp": false,
+          "tracking": true
+        }
+      },
+      "expected_recommendation": {
+        "task_type": "Phone Call",
+        "secondary_task_type": "Send Email",
+        "reason": "Live assumptions review plus written comparison matrix is stronger than a generic follow-up.",
+        "proof_to_prepare": [
+          "assumptions table",
+          "comparison matrix"
+        ]
+      }
+    },
+    {
+      "id": "battery_whatsapp_scenario",
+      "name": "Autarky buyer with battery doubt and WhatsApp opt-in",
+      "starting_state": {
+        "stage": "active_followup",
+        "quote_age_days": 2,
+        "known_objections": [
+          "battery_value_or_sizing"
+        ],
+        "known_buyer_signals": [
+          "independence_motivated",
+          "technical_skeptic"
+        ],
+        "consent": {
+          "email": true,
+          "phone": false,
+          "whatsapp": true,
+          "tracking": false
+        }
+      },
+      "expected_recommendation": {
+        "task_type": "Send WhatsApp Video Message",
+        "secondary_task_type": "Send Email",
+        "reason": "A short visual battery-now versus later walkthrough fits the question and channel consent.",
+        "proof_to_prepare": [
+          "battery now vs later scenario",
+          "realistic autarky caveat"
+        ]
+      }
+    },
+    {
+      "id": "stale_no_response_scenario",
+      "name": "Stale no-response with no tracking consent",
+      "starting_state": {
+        "stage": "active_followup",
+        "quote_age_days": 12,
+        "days_since_last_action": 8,
+        "known_objections": [
+          "no_response_or_ghosting"
+        ],
+        "known_buyer_signals": [
+          "ghosting_risk"
+        ],
+        "consent": {
+          "email": true,
+          "phone": false,
+          "whatsapp": false,
+          "tracking": false
+        }
+      },
+      "expected_recommendation": {
+        "task_type": "Send Email",
+        "policy": "one_value_add_question_then_pause",
+        "reason": "No tracking consent and no known blocker; one useful question is safer than repeated pressure.",
+        "proof_to_prepare": [
+          "short choice-based question",
+          "pause condition"
+        ]
+      }
+    }
+  ]
+}

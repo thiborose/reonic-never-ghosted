@@ -1,0 +1,720 @@
+{
+  "id": "solar_objections_germany",
+  "source_basis": [
+    "German public PV and heat-pump reviews",
+    "homeowner quote-discussion forums",
+    "consumer guidance on PV offers, rental models, heat pumps, and sales practices",
+    "prototype post-quote sales-flow requirements"
+  ],
+  "objections": [
+    {
+      "id": "upfront_price_shock",
+      "name": "Upfront price shock",
+      "customer_wording": [
+        "zu teuer",
+        "das ist viel",
+        "Schock",
+        "geht da noch was am Preis",
+        "anderes Angebot ist guenstiger"
+      ],
+      "underlying_concern": "The customer may not understand the scope, may be comparing non-equivalent offers, or may have a real budget ceiling.",
+      "proof_that_helps": [
+        "Itemized scope and value breakdown",
+        "Must-have versus optional components",
+        "Comparison of included and excluded services",
+        "Alternative package or phased option if scope is flexible"
+      ],
+      "best_task_types": {
+        "Phone Call": "High for live clarification when price shock is emotionally charged or competitor comparison exists.",
+        "Send Email": "High for written scope breakdown and revised option recap.",
+        "Meeting in person": "Medium only if price depends on site-specific uncertainties.",
+        "Send WhatsApp Video Message": "Medium for a short personalized explanation of what changed or what is included.",
+        "Send Gift": "Very low; does not solve price shock."
+      },
+      "what_not_to_say": [
+        "Do not discount before explaining scope.",
+        "Do not imply the quote is cheap without context.",
+        "Do not dismiss a competitor offer."
+      ],
+      "missing_data_to_check": [
+        "Quote line items",
+        "Optional add-ons",
+        "Known competitor scope",
+        "Customer budget ceiling if stated",
+        "Financing or phased alternatives"
+      ],
+      "related_buyer_signals": [
+        "price_shock",
+        "roi_focused",
+        "comparison_shopper"
+      ]
+    },
+    {
+      "id": "liquidity_or_financing",
+      "name": "Liquidity or financing concern",
+      "customer_wording": [
+        "monatliche Rate",
+        "finanziell schwer umsetzbar",
+        "Kredit",
+        "Miete",
+        "KfW",
+        "Eigenkapital"
+      ],
+      "underlying_concern": "The customer may like the system but cannot or does not want to pay the full amount upfront.",
+      "proof_that_helps": [
+        "Monthly payment and total-cost comparison",
+        "Clear term length and obligations",
+        "Buy versus finance versus phased-scope view",
+        "Finance caveats and approval boundaries"
+      ],
+      "best_task_types": {
+        "Phone Call": "Medium when the customer needs a confidential budget discussion.",
+        "Send Email": "High for a clear finance explainer and total-cost comparison.",
+        "Meeting in person": "Low unless financing is tied to broader household planning.",
+        "Send WhatsApp Video Message": "Low to medium for logistics, not detailed finance terms.",
+        "Send Gift": "Very low."
+      },
+      "what_not_to_say": [
+        "Do not imply finance approval.",
+        "Do not use stale rates.",
+        "Do not make monthly cost look lower by hiding total cost or obligations."
+      ],
+      "missing_data_to_check": [
+        "Available finance products",
+        "Term length",
+        "Total cost",
+        "Service inclusions",
+        "Current rate validity",
+        "Customer preference for purchase versus finance"
+      ],
+      "related_buyer_signals": [
+        "roi_focused",
+        "price_shock"
+      ]
+    },
+    {
+      "id": "roi_payback_distrust",
+      "name": "ROI or payback distrust",
+      "customer_wording": [
+        "lohnt sich das",
+        "Amortisation",
+        "schoen gerechnet",
+        "Rendite",
+        "Strompreisannahme",
+        "Payback"
+      ],
+      "underlying_concern": "The customer does not trust the calculation or does not understand which assumptions drive it.",
+      "proof_that_helps": [
+        "Assumptions table",
+        "Self-consumption estimate",
+        "Feed-in tariff and tariff source",
+        "Sensitivity range",
+        "Comparison against no-battery or battery-later option"
+      ],
+      "best_task_types": {
+        "Phone Call": "High for a 10-20 minute assumptions review.",
+        "Send Email": "High for the assumptions table and recap.",
+        "Meeting in person": "Medium if assumptions depend on roof or consumption data not yet validated.",
+        "Send WhatsApp Video Message": "Medium for a personal screen-recorded walkthrough if consent exists.",
+        "Send Gift": "Very low."
+      },
+      "what_not_to_say": [
+        "Do not guarantee payback.",
+        "Do not imply electricity prices will rise by a fixed amount without source.",
+        "Do not hide uncertainty."
+      ],
+      "missing_data_to_check": [
+        "Current electricity tariff",
+        "Annual consumption",
+        "Feed-in tariff source and date",
+        "Yield assumptions",
+        "Self-consumption assumptions",
+        "Battery assumptions",
+        "Financing assumptions"
+      ],
+      "related_buyer_signals": [
+        "roi_focused",
+        "technical_skeptic",
+        "comparison_shopper"
+      ]
+    },
+    {
+      "id": "competitor_offer_comparison",
+      "name": "Competing offer comparison",
+      "customer_wording": [
+        "wir haben noch ein Angebot",
+        "anderer Anbieter",
+        "Empfehlung",
+        "Vergleich",
+        "warum seid ihr teurer",
+        "was ist der Unterschied"
+      ],
+      "underlying_concern": "The customer needs to compare scope, quality, risk, assumptions, and price without being forced into a yes/no decision.",
+      "proof_that_helps": [
+        "Neutral comparison matrix",
+        "Scope differences",
+        "Excluded items",
+        "Warranty and aftercare differences",
+        "Timeline and admin responsibility differences"
+      ],
+      "best_task_types": {
+        "Phone Call": "High for walking through differences.",
+        "Send Email": "High for a comparison matrix.",
+        "Meeting in person": "Medium when comparison depends on site condition.",
+        "Send WhatsApp Video Message": "Medium for quick personalized comparison summary.",
+        "Send Gift": "Low; can feel like a distraction."
+      },
+      "what_not_to_say": [
+        "Do not badmouth competitors.",
+        "Do not assume competitor offer is incomplete without evidence.",
+        "Do not pressure the customer to stop comparing."
+      ],
+      "missing_data_to_check": [
+        "Competitor quote if provided",
+        "Known price gap",
+        "Component and service scope",
+        "Exclusions",
+        "Customer's top comparison priority"
+      ],
+      "related_buyer_signals": [
+        "comparison_shopper",
+        "price_shock",
+        "roi_focused"
+      ]
+    },
+    {
+      "id": "proposal_clarity_or_bundle_suspicion",
+      "name": "Proposal clarity or bundle suspicion",
+      "customer_wording": [
+        "was ist enthalten",
+        "Mischung",
+        "Positionen",
+        "nicht transparent",
+        "wofuer zahle ich",
+        "Paket"
+      ],
+      "underlying_concern": "The customer suspects that bundled pricing hides assumptions, unnecessary add-ons, or missing services.",
+      "proof_that_helps": [
+        "Itemized addendum",
+        "Component, labor, scaffolding, grid/admin, and optional add-on breakdown",
+        "Included versus excluded responsibilities",
+        "Variant comparison"
+      ],
+      "best_task_types": {
+        "Phone Call": "Medium for clarifying confusion.",
+        "Send Email": "Very high for itemized written addendum.",
+        "Meeting in person": "Low unless physical inspection is part of the missing clarity.",
+        "Send WhatsApp Video Message": "Medium for annotated quote walkthrough.",
+        "Send Gift": "Low."
+      },
+      "what_not_to_say": [
+        "Do not say all included without naming what is included.",
+        "Do not avoid line-item questions.",
+        "Do not present too many variants without a recommended path."
+      ],
+      "missing_data_to_check": [
+        "Quote line items",
+        "Inclusions",
+        "Exclusions",
+        "Optional add-ons",
+        "Admin tasks",
+        "Warranty and service terms"
+      ],
+      "related_buyer_signals": [
+        "comparison_shopper",
+        "technical_skeptic",
+        "trust_sensitive",
+        "convenience_seeker"
+      ]
+    },
+    {
+      "id": "installer_trust_or_pressure",
+      "name": "Installer trust or pressure concern",
+      "customer_wording": [
+        "aufdringlich",
+        "Druck",
+        "nicht serioes",
+        "wer ist mein Ansprechpartner",
+        "keine Antwort",
+        "Vertrauen"
+      ],
+      "underlying_concern": "The buyer is judging whether the installer is respectful, accountable, and reliable.",
+      "proof_that_helps": [
+        "Named responsible contact",
+        "Clear low-pressure agenda",
+        "Responsibility matrix",
+        "Local proof or permissioned reference",
+        "Specific answer to the customer's last question"
+      ],
+      "best_task_types": {
+        "Phone Call": "High if consent exists and the buyer needs a human trust repair.",
+        "Send Email": "High for written agenda and responsibility proof.",
+        "Meeting in person": "High if trust concern is tied to house-specific risk.",
+        "Send WhatsApp Video Message": "Medium if personal human presence helps.",
+        "Send Gift": "Low before trust is repaired."
+      },
+      "what_not_to_say": [
+        "Do not manufacture urgency.",
+        "Do not ignore the tone issue.",
+        "Do not switch contacts without explanation."
+      ],
+      "missing_data_to_check": [
+        "Last customer sentiment",
+        "Prior promises",
+        "Open unanswered questions",
+        "Consent status",
+        "Named owner",
+        "Proof asset availability"
+      ],
+      "related_buyer_signals": [
+        "trust_sensitive",
+        "ghosting_risk"
+      ]
+    },
+    {
+      "id": "responsiveness_or_continuity_gap",
+      "name": "Responsiveness or continuity gap",
+      "customer_wording": [
+        "keine Rueckmeldung",
+        "wer kuemmert sich",
+        "immer jemand anderes",
+        "warte auf Antwort",
+        "Rueckruf"
+      ],
+      "underlying_concern": "The customer fears that questions and post-signature issues will not be owned.",
+      "proof_that_helps": [
+        "Prompt answer to open question",
+        "Named owner",
+        "Next commitment with due date",
+        "Support path and handover expectation"
+      ],
+      "best_task_types": {
+        "Phone Call": "High for urgent unresolved questions if consent exists.",
+        "Send Email": "High for written answer and owner confirmation.",
+        "Meeting in person": "Medium if gap concerns field visit or technical proof.",
+        "Send WhatsApp Video Message": "Medium for quick personal answer if opted in.",
+        "Send Gift": "Very low."
+      },
+      "what_not_to_say": [
+        "Do not send a marketing message before answering the open question.",
+        "Do not promise response times the installer cannot meet.",
+        "Do not make ownership ambiguous."
+      ],
+      "missing_data_to_check": [
+        "Open questions",
+        "Last promised response",
+        "Assigned owner",
+        "Action history",
+        "Support route"
+      ],
+      "related_buyer_signals": [
+        "trust_sensitive",
+        "convenience_seeker",
+        "ghosting_risk"
+      ]
+    },
+    {
+      "id": "battery_value_or_sizing",
+      "name": "Battery value or sizing doubt",
+      "customer_wording": [
+        "Speicher lohnt sich",
+        "Akku zu gross",
+        "Batterie spaeter",
+        "Autarkie",
+        "Winter",
+        "100 Prozent unabhaengig"
+      ],
+      "underlying_concern": "The customer likes independence but doubts whether the battery size, timing, or economics fit their actual usage.",
+      "proof_that_helps": [
+        "Battery now versus battery-ready-later scenario",
+        "Self-consumption and autarky range",
+        "Future EV or heat-pump load scenario",
+        "Winter limitation explanation",
+        "Battery size rationale"
+      ],
+      "best_task_types": {
+        "Phone Call": "Medium to high for scenario discussion.",
+        "Send Email": "High for scenario comparison.",
+        "Meeting in person": "Medium if site or load data is missing.",
+        "Send WhatsApp Video Message": "High for visual scenario walkthrough if opted in.",
+        "Send Gift": "Low."
+      },
+      "what_not_to_say": [
+        "Do not claim 100% independence.",
+        "Do not claim battery payback without assumptions.",
+        "Do not treat autonomy and ROI as the same motive."
+      ],
+      "missing_data_to_check": [
+        "Battery size and cost",
+        "Night load",
+        "Annual consumption",
+        "EV or heat-pump plan",
+        "Self-consumption estimate",
+        "Tariff assumptions"
+      ],
+      "related_buyer_signals": [
+        "independence_motivated",
+        "roi_focused",
+        "technical_skeptic"
+      ]
+    },
+    {
+      "id": "winter_or_shade_performance",
+      "name": "Winter, cloud, or shade performance concern",
+      "customer_wording": [
+        "Winter",
+        "bewoelkt",
+        "Verschattung",
+        "bringt das was",
+        "Waermepumpe im Winter",
+        "Ertrag"
+      ],
+      "underlying_concern": "The customer worries that the system will underperform during the months or conditions that matter most.",
+      "proof_that_helps": [
+        "Seasonal production chart",
+        "Monthly self-consumption estimate",
+        "Shade assumptions",
+        "Heat-pump winter load explanation",
+        "Explicit limitation statement"
+      ],
+      "best_task_types": {
+        "Phone Call": "High for technical questions.",
+        "Send Email": "High for seasonal chart and assumptions.",
+        "Meeting in person": "High if shade or roof conditions need inspection.",
+        "Send WhatsApp Video Message": "High for visual explanation of monthly output.",
+        "Send Gift": "Low."
+      },
+      "what_not_to_say": [
+        "Do not say panels simply work in winter without explaining lower output.",
+        "Do not imply full heat-pump coverage in winter.",
+        "Do not ignore site-specific shade."
+      ],
+      "missing_data_to_check": [
+        "Roof orientation",
+        "Roof pitch",
+        "Shade",
+        "Monthly consumption",
+        "Heat-pump load",
+        "Production model output"
+      ],
+      "related_buyer_signals": [
+        "technical_skeptic",
+        "independence_motivated",
+        "site_visit_needed"
+      ]
+    },
+    {
+      "id": "heat_pump_monthly_burden_or_building_fit",
+      "name": "Heat-pump monthly burden or building fit",
+      "customer_wording": [
+        "Stromverbrauch steigt",
+        "monatliche Belastung",
+        "Altbau",
+        "JAZ",
+        "Gas",
+        "Waermepumpe zu teuer"
+      ],
+      "underlying_concern": "The buyer is uncertain whether the heat pump fits the building and what it will do to monthly energy costs.",
+      "proof_that_helps": [
+        "Heat-load status",
+        "Current heating cost baseline",
+        "Expected COP or JAZ assumptions",
+        "Monthly burden scenario",
+        "Building-specific fit explanation",
+        "Data request for missing inputs"
+      ],
+      "best_task_types": {
+        "Phone Call": "High after key data is available.",
+        "Send Email": "High for missing-data request and scenario recap.",
+        "Meeting in person": "High if building fit cannot be assessed remotely.",
+        "Send WhatsApp Video Message": "Medium for visual summary.",
+        "Send Gift": "Low."
+      },
+      "what_not_to_say": [
+        "Do not send generic heat-pump savings claims.",
+        "Do not ignore missing heat-load data.",
+        "Do not claim a subsidy or tariff without checking current conditions."
+      ],
+      "missing_data_to_check": [
+        "Current heating fuel and cost",
+        "Heat demand",
+        "Building age and insulation",
+        "Expected COP or JAZ",
+        "Electricity tariff",
+        "Subsidy status",
+        "PV offset estimate"
+      ],
+      "related_buyer_signals": [
+        "technical_skeptic",
+        "roi_focused",
+        "site_visit_needed"
+      ]
+    },
+    {
+      "id": "roof_or_property_risk",
+      "name": "Roof or property damage risk",
+      "customer_wording": [
+        "Dach undicht",
+        "Ziegel brechen",
+        "Wasserschaden",
+        "wer haftet",
+        "altes Dach",
+        "Montage"
+      ],
+      "underlying_concern": "The customer fears that installation will damage the home or create warranty/insurance disputes.",
+      "proof_that_helps": [
+        "Inspection checklist",
+        "Mounting method explanation",
+        "Roof-photo review",
+        "Warranty and insurance boundaries",
+        "On-site inspection when needed"
+      ],
+      "best_task_types": {
+        "Phone Call": "Medium if consent exists and concern needs explanation.",
+        "Send Email": "High for checklist and written boundaries.",
+        "Meeting in person": "Very high if physical validation is needed.",
+        "Send WhatsApp Video Message": "Medium for pre-visit roof-photo explanation.",
+        "Send Gift": "Low."
+      },
+      "what_not_to_say": [
+        "Do not say there is no risk.",
+        "Do not give vague reassurance.",
+        "Do not skip inspection when the physical concern is central."
+      ],
+      "missing_data_to_check": [
+        "Roof age",
+        "Roof type",
+        "Roof condition",
+        "Roof photos",
+        "Mounting method",
+        "Warranty terms",
+        "Insurance boundaries"
+      ],
+      "related_buyer_signals": [
+        "trust_sensitive",
+        "technical_skeptic",
+        "site_visit_needed"
+      ]
+    },
+    {
+      "id": "paperwork_grid_or_admin_uncertainty",
+      "name": "Paperwork, grid, or admin uncertainty",
+      "customer_wording": [
+        "Anmeldung",
+        "Netzbetreiber",
+        "Zaehler",
+        "MaStR",
+        "Formalitaeten",
+        "wer macht das"
+      ],
+      "underlying_concern": "The customer wants to know who handles administrative steps and which delays are external.",
+      "proof_that_helps": [
+        "Responsibility checklist",
+        "Grid and meter process map",
+        "Realistic dependency timeline",
+        "Customer-required actions",
+        "Status owner for each step"
+      ],
+      "best_task_types": {
+        "Phone Call": "Medium for process walkthrough.",
+        "Send Email": "Very high for checklist/process map.",
+        "Meeting in person": "Low unless combined with site visit.",
+        "Send WhatsApp Video Message": "Medium for short process overview.",
+        "Send Gift": "Low."
+      },
+      "what_not_to_say": [
+        "Do not promise exact external approval dates.",
+        "Do not hide customer-required steps.",
+        "Do not use vague all-in promises."
+      ],
+      "missing_data_to_check": [
+        "Network operator",
+        "Meter status",
+        "Registration owner",
+        "Installer responsibilities",
+        "Customer responsibilities",
+        "External dependency status"
+      ],
+      "related_buyer_signals": [
+        "convenience_seeker",
+        "trust_sensitive",
+        "ready_to_close"
+      ]
+    },
+    {
+      "id": "aftercare_or_support_concern",
+      "name": "Aftercare or support concern",
+      "customer_wording": [
+        "Einweisung",
+        "Support",
+        "Monitoring",
+        "Garantie",
+        "was passiert danach",
+        "Rueckruf"
+      ],
+      "underlying_concern": "The buyer wants to know what support, handover, monitoring, and warranty look like after installation.",
+      "proof_that_helps": [
+        "Handover checklist",
+        "Support path",
+        "Monitoring setup explanation",
+        "Warranty scope",
+        "Named support contact or escalation route"
+      ],
+      "best_task_types": {
+        "Phone Call": "Medium for trust-sensitive buyers.",
+        "Send Email": "High for written support and handover explanation.",
+        "Meeting in person": "Medium if combined with site visit or final review.",
+        "Send WhatsApp Video Message": "Medium for personal handover preview.",
+        "Send Gift": "Low before signing."
+      },
+      "what_not_to_say": [
+        "Do not use vague all-in reassurance.",
+        "Do not promise support speed that is not real.",
+        "Do not confuse installation proof with aftercare proof."
+      ],
+      "missing_data_to_check": [
+        "Support contact",
+        "Warranty terms",
+        "Monitoring setup",
+        "Handover process",
+        "Service response expectations"
+      ],
+      "related_buyer_signals": [
+        "trust_sensitive",
+        "convenience_seeker"
+      ]
+    },
+    {
+      "id": "stakeholder_or_advisor_review",
+      "name": "Stakeholder or advisor review",
+      "customer_wording": [
+        "mit Partner besprechen",
+        "mein Vater schaut drueber",
+        "Berater",
+        "wir melden uns",
+        "gemeinsam ansehen",
+        "zweite Meinung"
+      ],
+      "underlying_concern": "The customer needs another decision-maker or advisor to understand and approve the offer.",
+      "proof_that_helps": [
+        "Shareable decision summary",
+        "Plain-language quote recap",
+        "ROI and impact summary if motives differ",
+        "Joint call invitation",
+        "Short personalized video recap"
+      ],
+      "best_task_types": {
+        "Phone Call": "High for joint review if consent and availability exist.",
+        "Send Email": "Very high for shareable summary.",
+        "Meeting in person": "Medium if household or physical inspection matters.",
+        "Send WhatsApp Video Message": "High for partner-shareable recap if opted in.",
+        "Send Gift": "Low."
+      },
+      "what_not_to_say": [
+        "Do not infer family status without explicit mention.",
+        "Do not pressure one person to decide alone.",
+        "Do not overload the second stakeholder with raw proposal detail."
+      ],
+      "missing_data_to_check": [
+        "Who needs to review",
+        "Their main concern",
+        "Preferred shareable format",
+        "Consent for additional participant contact",
+        "Unresolved proof needs"
+      ],
+      "related_buyer_signals": [
+        "stakeholder_review",
+        "roi_focused",
+        "climate_motivated",
+        "comparison_shopper"
+      ]
+    },
+    {
+      "id": "needs_site_visit",
+      "name": "Needs site visit",
+      "customer_wording": [
+        "jemand soll vorbeikommen",
+        "vor Ort anschauen",
+        "Dach pruefen",
+        "Haus anschauen",
+        "passt das bei uns"
+      ],
+      "underlying_concern": "The customer does not trust remote assumptions enough and wants the house-specific facts validated.",
+      "proof_that_helps": [
+        "Site-visit agenda",
+        "Inspection checklist",
+        "Photos or measurements needed",
+        "Clear outcome from visit",
+        "Travel-aware scheduling"
+      ],
+      "best_task_types": {
+        "Phone Call": "Medium as scheduling and agenda setup.",
+        "Send Email": "Medium for confirming visit prep.",
+        "Meeting in person": "Very high.",
+        "Send WhatsApp Video Message": "Low to medium for pre-visit context.",
+        "Send Gift": "Low."
+      },
+      "what_not_to_say": [
+        "Do not keep sending remote reassurance if the customer requested inspection.",
+        "Do not schedule without a purpose.",
+        "Do not use a visit for low-readiness leads with no physical blocker."
+      ],
+      "missing_data_to_check": [
+        "Reason for visit",
+        "Roof or building concern",
+        "Installer calendar",
+        "Travel distance",
+        "Materials needed for visit",
+        "Decision-maker availability"
+      ],
+      "related_buyer_signals": [
+        "site_visit_needed",
+        "trust_sensitive",
+        "technical_skeptic"
+      ]
+    },
+    {
+      "id": "no_response_or_ghosting",
+      "name": "No response or ghosting risk",
+      "customer_wording": [
+        "brauchen Zeit",
+        "melden uns",
+        "noch nicht entschieden",
+        "keine Antwort"
+      ],
+      "underlying_concern": "The blocker is unknown; the customer may be comparing, waiting for another stakeholder, overwhelmed, or no longer interested.",
+      "proof_that_helps": [
+        "One useful question",
+        "Short recap of unresolved choices",
+        "Clear option to pause",
+        "Resume condition",
+        "No repeated generic follow-up"
+      ],
+      "best_task_types": {
+        "Phone Call": "Low unless requested or clearly consented and high value.",
+        "Send Email": "Medium for one value-add question.",
+        "Meeting in person": "Very low unless requested.",
+        "Send WhatsApp Video Message": "Low unless opted in and specific value exists.",
+        "Send Gift": "Very low."
+      },
+      "what_not_to_say": [
+        "Do not use artificial deadlines.",
+        "Do not send repeated generic nudges.",
+        "Do not use opens or views without tracking consent."
+      ],
+      "missing_data_to_check": [
+        "Quote age",
+        "Days since last action",
+        "Last customer request",
+        "Known stakeholder review",
+        "Known competitor comparison",
+        "Consent and opt-out status"
+      ],
+      "related_buyer_signals": [
+        "ghosting_risk",
+        "comparison_shopper",
+        "stakeholder_review"
+      ]
+    }
+  ]
+}

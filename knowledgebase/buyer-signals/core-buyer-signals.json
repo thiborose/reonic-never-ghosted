@@ -1,0 +1,490 @@
+{
+  "id": "core_buyer_signals",
+  "source_basis": [
+    "German public solar and heat-pump review patterns",
+    "public homeowner quote discussions",
+    "consumer guidance on PV and heat-pump offer evaluation",
+    "prototype sales-process requirements for post-quote follow-up"
+  ],
+  "signals": [
+    {
+      "id": "roi_focused",
+      "name": "ROI and cost-control planner",
+      "definition": "The buyer is evaluating the quote as an investment and needs assumptions, payback logic, and comparison context.",
+      "language_clues": [
+        "lohnt sich",
+        "Amortisation",
+        "payback",
+        "Rendite",
+        "Strompreis",
+        "Einspeiseverguetung",
+        "zu teuer",
+        "was spare ich wirklich"
+      ],
+      "behavior_clues": [
+        "Uploaded electricity bill or tariff details",
+        "Mentions competing prices",
+        "Asks for payback period or total cost",
+        "Engages with finance or ROI sections of a proposal",
+        "Delays after seeing final quote value"
+      ],
+      "what_it_usually_means": "The buyer is not necessarily cold; they may need a transparent assumptions review before signing.",
+      "confidence_notes": "High when explicit ROI or payback language is present. Medium when inferred only from price sensitivity.",
+      "related_objections": [
+        "upfront_price_shock",
+        "roi_payback_distrust",
+        "competitor_offer_comparison",
+        "liquidity_or_financing",
+        "battery_value_or_sizing"
+      ],
+      "task_fit": {
+        "Phone Call": "High when assumptions are complex or competitor comparison is active.",
+        "Send Email": "High for assumptions table, comparison recap, and written decision summary.",
+        "Meeting in person": "Medium only if ROI depends on site-specific facts or roof inspection.",
+        "Send WhatsApp Video Message": "Medium for short personalized walkthrough if consent exists.",
+        "Send Gift": "Low; does not resolve an analytical blocker."
+      },
+      "mistakes_to_avoid": [
+        "Do not claim guaranteed payback.",
+        "Do not hide assumptions behind simplified savings copy.",
+        "Do not discount before clarifying scope and value."
+      ]
+    },
+    {
+      "id": "price_shock",
+      "name": "Price shock",
+      "definition": "The buyer is reacting to the absolute quote amount or a perceived price gap.",
+      "language_clues": [
+        "zu teuer",
+        "Schock",
+        "das ist viel",
+        "anderes Angebot ist guenstiger",
+        "Rabatt",
+        "Preis passt nicht"
+      ],
+      "behavior_clues": [
+        "Silence immediately after quote sent",
+        "Asks for discount without discussing scope",
+        "Mentions another provider's lower quote",
+        "Skips technical questions and focuses only on total amount"
+      ],
+      "what_it_usually_means": "The buyer may need the quote decomposed into scope, alternatives, must-have versus optional items, and what is excluded.",
+      "confidence_notes": "High with explicit price language. Medium with quote-age silence after a high total.",
+      "related_objections": [
+        "upfront_price_shock",
+        "competitor_offer_comparison",
+        "proposal_clarity_or_bundle_suspicion",
+        "liquidity_or_financing"
+      ],
+      "task_fit": {
+        "Phone Call": "High if the buyer is actively comparing or confused.",
+        "Send Email": "High for itemized recap and option comparison.",
+        "Meeting in person": "Low unless price concern is tied to physical uncertainty.",
+        "Send WhatsApp Video Message": "Medium for a short scope walkthrough if consent exists.",
+        "Send Gift": "Very low; may look tone-deaf or manipulative."
+      },
+      "mistakes_to_avoid": [
+        "Do not treat all price shock as a liquidity problem.",
+        "Do not defend the price before clarifying scope.",
+        "Do not badmouth competitors."
+      ]
+    },
+    {
+      "id": "comparison_shopper",
+      "name": "Comparison shopper",
+      "definition": "The buyer is comparing multiple providers, scopes, or recommendations before deciding.",
+      "language_clues": [
+        "Vergleichsangebot",
+        "zweites Angebot",
+        "anderer Anbieter",
+        "Empfehlung",
+        "was ist der Unterschied",
+        "Positionen vergleichen"
+      ],
+      "behavior_clues": [
+        "Mentions competitor or referral",
+        "Asks whether quote is fair",
+        "Requests line-item explanation",
+        "Provides another offer",
+        "Delays after receiving several proposals"
+      ],
+      "what_it_usually_means": "The buyer needs help comparing scope, assumptions, exclusions, service, and risk, not a generic follow-up.",
+      "confidence_notes": "High when another offer or referral is explicit. Medium when the buyer asks broad fairness questions.",
+      "related_objections": [
+        "competitor_offer_comparison",
+        "proposal_clarity_or_bundle_suspicion",
+        "upfront_price_shock",
+        "installer_trust_or_pressure"
+      ],
+      "task_fit": {
+        "Phone Call": "High for live comparison walkthrough.",
+        "Send Email": "High for comparison matrix and scope recap.",
+        "Meeting in person": "Medium if comparison depends on roof/building inspection.",
+        "Send WhatsApp Video Message": "Medium for quick personalized explanation.",
+        "Send Gift": "Low; may distract from the comparison problem."
+      },
+      "mistakes_to_avoid": [
+        "Do not attack the competitor.",
+        "Do not assume the cheapest quote is equivalent.",
+        "Do not ignore excluded items, admin tasks, warranty, or installation quality."
+      ]
+    },
+    {
+      "id": "trust_sensitive",
+      "name": "Risk and trust skeptic",
+      "definition": "The buyer is deciding whether the installer is reliable, respectful, and safe to trust with a high-ticket home project.",
+      "language_clues": [
+        "aufdringlich",
+        "wer ist verantwortlich",
+        "keine Antwort",
+        "Garantie",
+        "was passiert wenn",
+        "Dach beschaedigt",
+        "Versprechen"
+      ],
+      "behavior_clues": [
+        "Asks about warranty, insurance, or aftercare",
+        "Mentions bad experiences or reviews",
+        "Reacts negatively to pressure",
+        "Requests named contact",
+        "Avoids committing until process is clear"
+      ],
+      "what_it_usually_means": "The blocker is credibility and risk reduction; the next action should feel human, specific, and low pressure.",
+      "confidence_notes": "High when trust, pressure, damage, support, or warranty concerns are explicit.",
+      "related_objections": [
+        "installer_trust_or_pressure",
+        "roof_or_property_risk",
+        "aftercare_or_support_concern",
+        "timeline_uncertainty",
+        "paperwork_grid_or_admin_uncertainty"
+      ],
+      "task_fit": {
+        "Phone Call": "High if consent exists and a named human can answer concerns.",
+        "Send Email": "High for responsibility map, checklist, and written proof.",
+        "Meeting in person": "High if physical risk or house-specific trust concern exists.",
+        "Send WhatsApp Video Message": "Medium if personal explanation would lower friction.",
+        "Send Gift": "Low before trust is repaired; can feel like pressure."
+      },
+      "mistakes_to_avoid": [
+        "Do not use artificial urgency.",
+        "Do not say there is no risk.",
+        "Do not add another generic campaign before answering the concern."
+      ]
+    },
+    {
+      "id": "technical_skeptic",
+      "name": "Technical-control optimizer",
+      "definition": "The buyer needs to understand system design, component choices, yield assumptions, or building fit before signing.",
+      "language_clues": [
+        "Dachneigung",
+        "Verschattung",
+        "Winter",
+        "Speicher groesse",
+        "Waermepumpe",
+        "JAZ",
+        "Ertrag",
+        "Komponenten"
+      ],
+      "behavior_clues": [
+        "Asks detailed system questions",
+        "Requests drawings, charts, or calculations",
+        "Questions battery size or heat-pump fit",
+        "Mentions roof/shade/winter performance",
+        "Has future EV or heat-pump load"
+      ],
+      "what_it_usually_means": "The buyer needs a technical proof asset or expert explanation, not emotional reassurance.",
+      "confidence_notes": "High with explicit design, winter, battery, or heat-pump technical language.",
+      "related_objections": [
+        "winter_or_shade_performance",
+        "battery_value_or_sizing",
+        "heat_pump_monthly_burden_or_building_fit",
+        "roof_or_property_risk",
+        "proposal_clarity_or_bundle_suspicion"
+      ],
+      "task_fit": {
+        "Phone Call": "High for technical Q&A.",
+        "Send Email": "High for chart, assumptions, and diagrams.",
+        "Meeting in person": "High if physical inspection is needed.",
+        "Send WhatsApp Video Message": "High for visual walkthrough of roof, chart, or quote change.",
+        "Send Gift": "Low; not a proof asset."
+      },
+      "mistakes_to_avoid": [
+        "Do not use blanket reassurance like panels work in winter without numbers.",
+        "Do not make claims when roof, load, or tariff inputs are missing.",
+        "Do not oversimplify technical tradeoffs."
+      ]
+    },
+    {
+      "id": "independence_motivated",
+      "name": "Independence and autarky optimizer",
+      "definition": "The buyer is motivated by using their own power, reducing supplier dependence, and planning future energy loads.",
+      "language_clues": [
+        "autark",
+        "unabhaengig",
+        "eigener Strom",
+        "Speicher",
+        "Wallbox",
+        "EV",
+        "Waermepumpe"
+      ],
+      "behavior_clues": [
+        "Interested in battery or wallbox",
+        "Mentions EV or future heat pump",
+        "Asks whether battery is oversized",
+        "Wants a phased system roadmap"
+      ],
+      "what_it_usually_means": "The buyer values autonomy but still needs realistic limits, especially seasonal limits and battery economics.",
+      "confidence_notes": "High with explicit independence/autarky language; medium when inferred from battery/EV interest.",
+      "related_objections": [
+        "battery_value_or_sizing",
+        "winter_or_shade_performance",
+        "roi_payback_distrust",
+        "proposal_clarity_or_bundle_suspicion"
+      ],
+      "task_fit": {
+        "Phone Call": "Medium for discussing tradeoffs.",
+        "Send Email": "High for battery now-vs-later comparison.",
+        "Meeting in person": "Medium if future loads require site inspection.",
+        "Send WhatsApp Video Message": "High for visual roadmap or battery scenario explanation.",
+        "Send Gift": "Low."
+      },
+      "mistakes_to_avoid": [
+        "Do not claim 100% independence.",
+        "Do not imply winter self-sufficiency without monthly data.",
+        "Do not frame battery only as ROI if autonomy is explicit."
+      ]
+    },
+    {
+      "id": "climate_motivated",
+      "name": "Climate impact confirmer",
+      "definition": "The buyer explicitly values emissions reduction, sustainability, renewable heating, or green power.",
+      "language_clues": [
+        "CO2",
+        "Klima",
+        "nachhaltig",
+        "erneuerbar",
+        "Umwelt",
+        "gruener Strom"
+      ],
+      "behavior_clues": [
+        "Asks about environmental impact",
+        "Responds to impact framing",
+        "Pairs PV with heat pump or green energy goals",
+        "Wants a shareable summary for another stakeholder"
+      ],
+      "what_it_usually_means": "Impact framing can help, but should usually be paired with economics unless climate is the only explicit blocker.",
+      "confidence_notes": "High only when climate or CO2 language is explicit. Do not infer from demographics.",
+      "related_objections": [
+        "stakeholder_or_advisor_review",
+        "roi_payback_distrust",
+        "proposal_clarity_or_bundle_suspicion"
+      ],
+      "task_fit": {
+        "Phone Call": "Medium when another stakeholder needs numbers.",
+        "Send Email": "High for shareable climate plus assumptions summary.",
+        "Meeting in person": "Low unless other technical blockers exist.",
+        "Send WhatsApp Video Message": "Medium for personal impact recap.",
+        "Send Gift": "Medium only if it is useful and low-value, not a signing inducement."
+      },
+      "mistakes_to_avoid": [
+        "Do not rely on impact language if the partner is asking for payback.",
+        "Do not invent CO2 numbers without assumptions.",
+        "Do not infer environmental values from location or demographics."
+      ]
+    },
+    {
+      "id": "stakeholder_review",
+      "name": "Stakeholder or advisor review",
+      "definition": "Another person must review or approve the decision before signature.",
+      "language_clues": [
+        "mit Partner besprechen",
+        "meine Eltern",
+        "Berater",
+        "Freund schaut drueber",
+        "wir melden uns",
+        "gemeinsam anschauen"
+      ],
+      "behavior_clues": [
+        "Proposal forwarded or shared if tracking is permitted",
+        "Customer asks for a PDF summary",
+        "Customer delays after saying they need to discuss it",
+        "Another person joins calls or asks questions"
+      ],
+      "what_it_usually_means": "The primary buyer may not be stuck; the decision group needs a shareable explanation.",
+      "confidence_notes": "High only when another stakeholder is explicitly mentioned.",
+      "related_objections": [
+        "stakeholder_or_advisor_review",
+        "roi_payback_distrust",
+        "competitor_offer_comparison",
+        "proposal_clarity_or_bundle_suspicion"
+      ],
+      "task_fit": {
+        "Phone Call": "High for joint review if consent and availability exist.",
+        "Send Email": "High for shareable decision summary.",
+        "Meeting in person": "Medium if household alignment requires physical walkthrough.",
+        "Send WhatsApp Video Message": "High for short partner-shareable walkthrough.",
+        "Send Gift": "Low before decision alignment."
+      },
+      "mistakes_to_avoid": [
+        "Do not infer family status without explicit evidence.",
+        "Do not push the first contact to decide alone.",
+        "Do not send overly technical detail if the stakeholder needs an executive summary."
+      ]
+    },
+    {
+      "id": "convenience_seeker",
+      "name": "Convenience and process-relief seeker",
+      "definition": "The buyer values someone handling paperwork, registration, coordination, and handoffs.",
+      "language_clues": [
+        "alles aus einer Hand",
+        "Rundum-Sorglos",
+        "Anmeldung",
+        "Formalitaeten",
+        "Papierkram",
+        "Ablauf"
+      ],
+      "behavior_clues": [
+        "Asks who handles grid or meter registration",
+        "Values full-service package",
+        "Mentions lack of time",
+        "Asks for clear next steps and responsibilities"
+      ],
+      "what_it_usually_means": "The buyer may be persuaded by clarity and reduced effort, but vague all-in promises are risky.",
+      "confidence_notes": "High with explicit paperwork/process language.",
+      "related_objections": [
+        "paperwork_grid_or_admin_uncertainty",
+        "timeline_uncertainty",
+        "aftercare_or_support_concern",
+        "proposal_clarity_or_bundle_suspicion"
+      ],
+      "task_fit": {
+        "Phone Call": "Medium for process walkthrough.",
+        "Send Email": "High for responsibility map and checklist.",
+        "Meeting in person": "Medium for high-value trust or physical process questions.",
+        "Send WhatsApp Video Message": "Medium for short process recap.",
+        "Send Gift": "Medium after a meeting if useful and clearly non-conditional."
+      },
+      "mistakes_to_avoid": [
+        "Do not use vague carefree claims.",
+        "Do not promise external timeline control.",
+        "Do not hide customer-required steps."
+      ]
+    },
+    {
+      "id": "site_visit_needed",
+      "name": "Site-specific decision blocker",
+      "definition": "The buyer needs someone to inspect or validate the home before they can trust the quote.",
+      "language_clues": [
+        "jemand soll sich das Haus anschauen",
+        "vor Ort",
+        "Dach",
+        "alte Ziegel",
+        "Verschattung",
+        "passt das bei uns"
+      ],
+      "behavior_clues": [
+        "Requests in-person visit",
+        "Raises roof condition, shade, building fit, or heat-load uncertainty",
+        "Does not accept virtual explanation as sufficient",
+        "Has old roof or complex building notes"
+      ],
+      "what_it_usually_means": "A remote message will not resolve the blocker; the buyer needs physical validation or inspection.",
+      "confidence_notes": "High when customer explicitly requests a visit or physical concern is active.",
+      "related_objections": [
+        "needs_site_visit",
+        "roof_or_property_risk",
+        "winter_or_shade_performance",
+        "heat_pump_monthly_burden_or_building_fit"
+      ],
+      "task_fit": {
+        "Phone Call": "Medium as a bridge to schedule and define visit agenda.",
+        "Send Email": "Medium for confirming agenda and prep.",
+        "Meeting in person": "Very high.",
+        "Send WhatsApp Video Message": "Low to medium only for pre-visit context.",
+        "Send Gift": "Low."
+      },
+      "mistakes_to_avoid": [
+        "Do not keep sending generic emails if the customer wants physical validation.",
+        "Do not schedule a visit without a clear purpose.",
+        "Do not use travel-heavy visits for low-readiness stale leads."
+      ]
+    },
+    {
+      "id": "ready_to_close",
+      "name": "Ready-to-close hypothesis",
+      "definition": "The buyer has resolved major blockers and needs a clear final step to sign.",
+      "language_clues": [
+        "passt",
+        "machen wir",
+        "was ist der naechste Schritt",
+        "Vertrag",
+        "Unterschrift",
+        "Starttermin"
+      ],
+      "behavior_clues": [
+        "Asked final logistical question",
+        "Confirmed budget and scope",
+        "Accepted visit outcome",
+        "Asked for contract or installation slot",
+        "No unresolved objection in latest debrief"
+      ],
+      "what_it_usually_means": "The customer may need a concise recap and signature path, not more persuasion.",
+      "confidence_notes": "Treat as a hypothesis until signed; avoid overconfident labels.",
+      "related_objections": [
+        "timeline_uncertainty",
+        "paperwork_grid_or_admin_uncertainty",
+        "stakeholder_or_advisor_review"
+      ],
+      "task_fit": {
+        "Phone Call": "Medium for final confirmation if preferred.",
+        "Send Email": "High for signature recap and next steps.",
+        "Meeting in person": "Low unless final review is requested.",
+        "Send WhatsApp Video Message": "Medium as a personal recap if consent exists.",
+        "Send Gift": "Low before signing; avoid anything that looks like inducement."
+      },
+      "mistakes_to_avoid": [
+        "Do not add complexity when the buyer asks for next steps.",
+        "Do not ignore any unresolved stakeholder approval.",
+        "Do not label as certain until contract is signed."
+      ]
+    },
+    {
+      "id": "ghosting_risk",
+      "name": "Stale or ghosting risk",
+      "definition": "The quote is aging without a clear blocker or next commitment.",
+      "language_clues": [
+        "brauchen noch Zeit",
+        "melden uns",
+        "schauen wir uns an",
+        "keine Antwort"
+      ],
+      "behavior_clues": [
+        "Many days since quote sent",
+        "No reply after a promised follow-up",
+        "No valid tracking consent but no visible customer response",
+        "Repeated touches without new value",
+        "No next commitment"
+      ],
+      "what_it_usually_means": "The lead may still be evaluating, but repeated generic follow-up can create pressure and reduce trust.",
+      "confidence_notes": "Medium unless customer explicitly disengaged. Lack of tracking consent means do not infer from opens/views.",
+      "related_objections": [
+        "no_response_or_ghosting",
+        "competitor_offer_comparison",
+        "stakeholder_or_advisor_review",
+        "proposal_clarity_or_bundle_suspicion"
+      ],
+      "task_fit": {
+        "Phone Call": "Low unless requested or consented and high-value.",
+        "Send Email": "Medium for one value-add question or recap.",
+        "Meeting in person": "Very low unless requested.",
+        "Send WhatsApp Video Message": "Low unless opted in and a specific value-add exists.",
+        "Send Gift": "Very low; can look like pressure."
+      },
+      "mistakes_to_avoid": [
+        "Do not use tracking-derived assumptions without consent.",
+        "Do not send repeated generic follow-ups.",
+        "Do not manufacture urgency to revive a stale lead."
+      ]
+    }
+  ]
+}

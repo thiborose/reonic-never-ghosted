@@ -1,0 +1,114 @@
+{
+  "task_type": "Phone Call",
+  "primary_job": "Resolve ambiguity, trust, or complex decision friction through a named human conversation.",
+  "best_for": [
+    "New quote follow-up when there is no known blocker but quote value is high",
+    "ROI and assumptions questions",
+    "Competitor offer comparison",
+    "Trust repair when a human owner matters",
+    "Stakeholder or partner review when a joint conversation is possible",
+    "Clarifying whether a site visit is actually needed"
+  ],
+  "bad_for": [
+    "No phone consent or opt-out",
+    "Customer explicitly asked for written information only",
+    "Repeated no-response with no new value",
+    "Simple logistics that can be handled asynchronously",
+    "Physical inspection concerns that clearly require an in-person visit"
+  ],
+  "buyer_signals_it_fits": [
+    "roi_focused",
+    "price_shock",
+    "comparison_shopper",
+    "trust_sensitive",
+    "technical_skeptic",
+    "stakeholder_review",
+    "site_visit_needed"
+  ],
+  "objections_it_can_resolve": [
+    "upfront_price_shock",
+    "roi_payback_distrust",
+    "competitor_offer_comparison",
+    "installer_trust_or_pressure",
+    "responsiveness_or_continuity_gap",
+    "stakeholder_or_advisor_review",
+    "needs_site_visit"
+  ],
+  "timing_guidance": [
+    "Use within 24-48 hours after a high-value quote if consent exists and the customer has open questions.",
+    "Use quickly after a customer-initiated question or promised callback.",
+    "Keep the default slot short: 10-20 minutes.",
+    "If the customer is stale and no blocker is known, use one value-add email before trying another call."
+  ],
+  "prep_needed": [
+    "Clear call purpose",
+    "Named responsible contact",
+    "Last customer question or concern",
+    "Quote summary",
+    "Known objections and buyer signals",
+    "Consent status",
+    "Specific decision the call should unlock",
+    "Calendar slots"
+  ],
+  "output_artifacts": [
+    "Scheduled call event",
+    "Call agenda",
+    "Short prep brief for installer",
+    "Debrief prompt after call",
+    "Follow-up task based on call outcome"
+  ],
+  "tone_guidance": [
+    "Specific, calm, and low pressure.",
+    "Open with the customer's known concern rather than a closing ask.",
+    "Ask permission to compare options or walk through assumptions.",
+    "End with a concrete next commitment."
+  ],
+  "example_agendas": [
+    {
+      "scenario": "ROI buyer with competitor offers",
+      "agenda": [
+        "Confirm the customer's comparison priority.",
+        "Walk through tariff, self-consumption, feed-in, and battery assumptions.",
+        "Identify scope differences versus competing offers.",
+        "Agree whether an updated comparison recap is needed."
+      ]
+    },
+    {
+      "scenario": "Brand-new quote with trust-sensitive buyer",
+      "agenda": [
+        "Ask what would make the decision easier.",
+        "Confirm the customer's biggest uncertainty.",
+        "Answer open quote questions.",
+        "Offer either a written recap, site visit, or pause."
+      ]
+    },
+    {
+      "scenario": "Partner needs to review",
+      "agenda": [
+        "Confirm who else should be included.",
+        "Ask what that person cares about most.",
+        "Offer a shareable summary or joint call.",
+        "Set a concrete review time."
+      ]
+    }
+  ],
+  "success_indicators": [
+    "Customer states the real blocker",
+    "A next commitment is agreed",
+    "A proof asset is requested or accepted",
+    "Customer books a follow-up task",
+    "Customer confirms no further questions before signature"
+  ],
+  "debrief_questions": [
+    "Did the call happen?",
+    "What did the customer say was the main blocker?",
+    "Was a competitor, partner, price ceiling, roof concern, or site visit request mentioned?",
+    "Which objection is resolved, changed, or still active?",
+    "What is the next commitment and due date?"
+  ],
+  "guardrails": [
+    "Do not call without consent.",
+    "Do not use the call to pressure for immediate signature if the purpose is trust repair.",
+    "Do not make ROI, tariff, finance, subsidy, or timeline claims without checked assumptions."
+  ]
+}

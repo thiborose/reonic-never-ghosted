@@ -1,0 +1,25 @@
+{
+  "collection": "task_playbooks",
+  "version": "2026-06-21",
+  "purpose": "Playbooks for the five task types considered in the Reonic PoC. These records help the sales assistant choose and prepare a next best action without hardcoding a single demo path.",
+  "task_types": [
+    "Phone Call",
+    "Send Email",
+    "Meeting in person",
+    "Send WhatsApp Video Message",
+    "Send Gift"
+  ],
+  "files": [
+    "phone-call.json",
+    "send-email.json",
+    "in-person-meeting.json",
+    "whatsapp-video-message.json",
+    "send-gift.json"
+  ],
+  "global_guardrails": [
+    "Respect consent and opt-out before recommending a channel.",
+    "Use decision support, not pressure.",
+    "Every task should have a purpose, proof asset, and debrief question.",
+    "Do not use artificial urgency, fabricated social proof, guaranteed payback, or unsupported finance/subsidy/timeline claims."
+  ]
+}

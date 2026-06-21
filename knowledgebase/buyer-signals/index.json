@@ -1,0 +1,20 @@
+{
+  "collection": "buyer_signals",
+  "version": "2026-06-21",
+  "purpose": "Signals the sales assistant can infer from quote data, customer notes, transcripts, debriefs, and prior actions. These are not fixed personas; multiple signals can be active at once.",
+  "signal_format": {
+    "id": "Stable signal name.",
+    "name": "Human-readable label.",
+    "definition": "What the signal means.",
+    "language_clues": "Customer words or paraphrases that may indicate the signal.",
+    "behavior_clues": "Timing or workflow clues that may indicate the signal.",
+    "what_it_usually_means": "Decision interpretation for post-quote follow-up.",
+    "confidence_notes": "How strongly the signal can be inferred.",
+    "related_objections": "Objections commonly connected to this signal.",
+    "task_fit": "Relative fit of the five demo task types.",
+    "mistakes_to_avoid": "How the assistant can misuse the signal."
+  },
+  "files": [
+    "core-buyer-signals.json"
+  ]
+}

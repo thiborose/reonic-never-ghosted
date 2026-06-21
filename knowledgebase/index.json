@@ -1,0 +1,71 @@
+{
+  "collection": "reonic_marketing_knowledgebase",
+  "version": "2026-06-21",
+  "purpose": "Knowledgebase for a Reonic-style AI marketing and sales assistant that recommends the next best post-quote action from customer data, quote context, debriefs, and grounded evidence.",
+  "folders": [
+    {
+      "path": "customer-reviews/",
+      "use_for": [
+        "Real public customer language",
+        "Trust signals",
+        "Review-derived hesitation patterns",
+        "Examples of praise and complaint themes"
+      ],
+      "primary_question_answered": "What do real customers praise, fear, or complain about?"
+    },
+    {
+      "path": "buyer-signals/",
+      "use_for": [
+        "Inferring motivations",
+        "Inferring risk signals",
+        "Connecting customer language and behavior to likely decision needs"
+      ],
+      "primary_question_answered": "What kind of buyer state are we seeing?"
+    },
+    {
+      "path": "objections/",
+      "use_for": [
+        "Classifying quote-stage blockers",
+        "Finding proof that resolves each blocker",
+        "Avoiding unsafe or counterproductive claims"
+      ],
+      "primary_question_answered": "What is blocking the customer from signing?"
+    },
+    {
+      "path": "task-playbooks/",
+      "use_for": [
+        "Choosing among Phone Call, Send Email, Meeting in person, Send WhatsApp Video Message, and Send Gift",
+        "Preparing the selected task",
+        "Generating task-specific agenda, artifact, tone, and debrief prompts"
+      ],
+      "primary_question_answered": "Which task type fits this customer state right now?"
+    },
+    {
+      "path": "sales-process-model/",
+      "use_for": [
+        "Sales stage interpretation",
+        "Event handling",
+        "Task scoring",
+        "Debrief updates",
+        "Demo scenario testing"
+      ],
+      "primary_question_answered": "How do we move from the current state to a justified next action without hardcoding a happy path?"
+    }
+  ],
+  "recommended_retrieval_order": [
+    "sales-process-model/stages-and-events.json",
+    "buyer-signals/core-buyer-signals.json",
+    "objections/solar-objections-germany.json",
+    "task-playbooks/index.json",
+    "sales-process-model/decision-policy.json",
+    "customer-reviews/",
+    "sales-process-model/debrief-rules.json"
+  ],
+  "global_guardrails": [
+    "Treat buyer signals and readiness as hypotheses until confirmed by customer response or signed/lost outcome.",
+    "Respect channel consent and opt-out.",
+    "Do not use tracking-derived behavior without tracking consent.",
+    "Do not make unsupported claims about ROI, tariffs, finance, subsidies, tax, timeline, warranty, or urgency.",
+    "Use proof and decision support rather than pressure."
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "task_type": "Send Email",
+  "primary_job": "Provide written proof, structured recap, comparison, or a clear next step that the customer can review and share.",
+  "best_for": [
+    "Quote recap",
+    "Comparison matrix",
+    "ROI assumptions table",
+    "Finance or total-cost explainer",
+    "Shareable partner/advisor summary",
+    "Inspection checklist",
+    "Process and responsibility map",
+    "Signature-ready recap",
+    "One value-add touch for stale leads"
+  ],
+  "bad_for": [
+    "Urgent emotional trust repair that needs a human conversation",
+    "Physical uncertainty that requires site inspection",
+    "Long generic nurture with no new value",
+    "Unsupported claims about savings, subsidies, or timelines",
+    "Cases where email consent is missing or opt-out exists"
+  ],
+  "buyer_signals_it_fits": [
+    "roi_focused",
+    "price_shock",
+    "comparison_shopper",
+    "technical_skeptic",
+    "stakeholder_review",
+    "convenience_seeker",
+    "ready_to_close",
+    "ghosting_risk"
+  ],
+  "objections_it_can_resolve": [
+    "upfront_price_shock",
+    "liquidity_or_financing",
+    "roi_payback_distrust",
+    "competitor_offer_comparison",
+    "proposal_clarity_or_bundle_suspicion",
+    "paperwork_grid_or_admin_uncertainty",
+    "aftercare_or_support_concern",
+    "stakeholder_or_advisor_review",
+    "no_response_or_ghosting"
+  ],
+  "timing_guidance": [
+    "Use immediately after a call or visit to preserve the decision record.",
+    "Use before a call when the customer needs a structured artifact to review.",
+    "Use for promised replies and factual clarifications.",
+    "For stale leads, send one useful question or recap, then pause if there is no response."
+  ],
+  "prep_needed": [
+    "Purpose of email",
+    "One primary customer concern",
+    "Relevant quote facts",
+    "Proof artifact or attachment",
+    "Assumptions and checked dates for factual claims",
+    "Clear next action",
+    "Consent status"
+  ],
+  "output_artifacts": [
+    "Email subject",
+    "Email body",
+    "Attachment or proof asset list",
+    "Suggested follow-up due date",
+    "Debrief or reply-capture prompt"
+  ],
+  "tone_guidance": [
+    "Concise and structured.",
+    "Use the customer's own concern as the reason for writing.",
+    "State assumptions plainly.",
+    "Offer one clear next step and one easy alternative.",
+    "Avoid promotional language when the buyer is evaluating risk."
+  ],
+  "email_formats": [
+    {
+      "name": "Quote comparison recap",
+      "sections": [
+        "Why this recap",
+        "What is included",
+        "What is optional",
+        "What may differ from other offers",
+        "Open question",
+        "Suggested next step"
+      ]
+    },
+    {
+      "name": "ROI assumptions email",
+      "sections": [
+        "Assumptions used",
+        "What changes the result",
+        "Battery or no-battery scenario",
+        "What needs confirmation",
+        "Offer to review together"
+      ]
+    },
+    {
+      "name": "Post-visit recap",
+      "sections": [
+        "What we checked",
+        "What changed",
+        "Remaining decisions",
+        "Signature path",
+        "Next date"
+      ]
+    },
+    {
+      "name": "Low-pressure stale lead question",
+      "sections": [
+        "Short acknowledgement",
+        "One useful question",
+        "Three options the customer can choose from",
+        "Pause note if now is not the right time"
+      ]
+    }
+  ],
+  "success_indicators": [
+    "Customer replies with a specific blocker",
+    "Customer forwards or shares summary with stakeholder",
+    "Customer accepts a call or visit",
+    "Customer asks for contract/signature step",
+    "Customer explicitly asks to pause"
+  ],
+  "debrief_questions": [
+    "Did the email go out?",
+    "Did the customer reply?",
+    "Which proof asset was included?",
+    "Did the reply create a new objection or next commitment?",
+    "Should follow-up continue, pause, or change channel?"
+  ],
+  "guardrails": [
+    "Do not rely on open or click tracking unless tracking consent exists.",
+    "Do not include unsupported ROI, tariff, subsidy, finance, tax, or timeline claims.",
+    "Do not send repeated generic follow-ups after no response."
+  ]
+}

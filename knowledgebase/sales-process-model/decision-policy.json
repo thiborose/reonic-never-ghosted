@@ -1,0 +1,332 @@
+{
+  "id": "decision_policy",
+  "decision_inputs": [
+    "current_stage",
+    "quote_age_days",
+    "days_since_last_action",
+    "last_customer_response",
+    "active_buyer_signals",
+    "active_objections",
+    "missing_data",
+    "customer_requested_action",
+    "consent_by_channel",
+    "installer_calendar",
+    "travel_time_or_route_fit",
+    "quote_value",
+    "proof_assets_available",
+    "open_questions",
+    "next_commitment",
+    "tracking_consent"
+  ],
+  "scoring_model": {
+    "description": "Rule-based scoring for the PoC. Scores are explainable factor chips, not a calibrated prediction model.",
+    "base_task_scores": {
+      "Phone Call": 0,
+      "Send Email": 0,
+      "Meeting in person": 0,
+      "Send WhatsApp Video Message": 0,
+      "Send Gift": 0
+    },
+    "global_positive_factors": [
+      {
+        "factor": "customer_initiated_or_promised_next_step",
+        "score_boost": 20,
+        "applies_to": [
+          "Phone Call",
+          "Send Email",
+          "Meeting in person",
+          "Send WhatsApp Video Message"
+        ]
+      },
+      {
+        "factor": "blocker_can_be_resolved_now",
+        "score_boost": 20,
+        "applies_to": [
+          "Phone Call",
+          "Send Email",
+          "Meeting in person",
+          "Send WhatsApp Video Message"
+        ]
+      },
+      {
+        "factor": "high_quote_value_or_high_intent",
+        "score_boost": 10,
+        "applies_to": [
+          "Phone Call",
+          "Meeting in person"
+        ]
+      },
+      {
+        "factor": "proof_asset_available",
+        "score_boost": 10,
+        "applies_to": [
+          "Send Email",
+          "Send WhatsApp Video Message"
+        ]
+      }
+    ],
+    "global_negative_factors": [
+      {
+        "factor": "channel_not_consented",
+        "score_set_to": -999,
+        "applies_to": [
+          "Phone Call",
+          "Send Email",
+          "Send WhatsApp Video Message"
+        ]
+      },
+      {
+        "factor": "customer_opted_out",
+        "score_set_to": -999,
+        "applies_to": [
+          "Phone Call",
+          "Send Email",
+          "Send WhatsApp Video Message"
+        ]
+      },
+      {
+        "factor": "missing_claim_data",
+        "score_penalty": 25,
+        "applies_to": [
+          "Phone Call",
+          "Send Email",
+          "Send WhatsApp Video Message"
+        ]
+      },
+      {
+        "factor": "repeated_no_response_no_value_add",
+        "score_penalty": 40,
+        "applies_to": [
+          "Phone Call",
+          "Send Email",
+          "Meeting in person",
+          "Send WhatsApp Video Message",
+          "Send Gift"
+        ]
+      },
+      {
+        "factor": "travel_time_high_low_readiness",
+        "score_penalty": 50,
+        "applies_to": [
+          "Meeting in person"
+        ]
+      },
+      {
+        "factor": "gift_could_look_like_pressure",
+        "score_set_to": -999,
+        "applies_to": [
+          "Send Gift"
+        ]
+      }
+    ]
+  },
+  "decision_rules": [
+    {
+      "id": "diagnose_before_drafting",
+      "if": {
+        "current_stage": "quote_sent_strategy_needed",
+        "known_primary_blocker": false
+      },
+      "then": {
+        "required_step": "create_diagnosis",
+        "do_not_choose_task_until": [
+          "active_buyer_signals_estimated",
+          "active_objections_estimated",
+          "missing_data_identified"
+        ]
+      },
+      "rationale": "A quote follow-up should start from buyer state, not a generic template."
+    },
+    {
+      "id": "roi_or_competitor",
+      "if": {
+        "active_objections_any": [
+          "roi_payback_distrust",
+          "competitor_offer_comparison"
+        ]
+      },
+      "score_adjustments": {
+        "Phone Call": 35,
+        "Send Email": 35,
+        "Send WhatsApp Video Message": 15,
+        "Meeting in person": 5,
+        "Send Gift": -50
+      },
+      "required_proof": [
+        "assumptions table",
+        "comparison matrix or scope recap"
+      ],
+      "rationale": "ROI and comparison blockers need structured proof and often benefit from live explanation."
+    },
+    {
+      "id": "proposal_clarity_low",
+      "if": {
+        "active_objections_any": [
+          "proposal_clarity_or_bundle_suspicion",
+          "upfront_price_shock"
+        ]
+      },
+      "score_adjustments": {
+        "Send Email": 40,
+        "Phone Call": 20,
+        "Send WhatsApp Video Message": 15,
+        "Meeting in person": 0,
+        "Send Gift": -50
+      },
+      "required_proof": [
+        "itemized addendum",
+        "included versus excluded services"
+      ],
+      "rationale": "Clarity should be fixed before persuasion."
+    },
+    {
+      "id": "site_visit_requested_or_physical_blocker",
+      "if": {
+        "active_objections_any": [
+          "needs_site_visit",
+          "roof_or_property_risk"
+        ]
+      },
+      "score_adjustments": {
+        "Meeting in person": 60,
+        "Phone Call": 20,
+        "Send Email": 20,
+        "Send WhatsApp Video Message": 5,
+        "Send Gift": -50
+      },
+      "required_proof": [
+        "visit agenda",
+        "inspection checklist"
+      ],
+      "rationale": "Physical uncertainty usually requires physical validation or a clearly scoped inspection."
+    },
+    {
+      "id": "winter_heat_pump_or_shade",
+      "if": {
+        "active_objections_any": [
+          "winter_or_shade_performance",
+          "heat_pump_monthly_burden_or_building_fit"
+        ]
+      },
+      "score_adjustments": {
+        "Phone Call": 30,
+        "Send Email": 30,
+        "Send WhatsApp Video Message": 25,
+        "Meeting in person": 25,
+        "Send Gift": -50
+      },
+      "required_proof": [
+        "seasonal chart or missing-data request",
+        "explicit limitation statement"
+      ],
+      "rationale": "Technical performance doubts need data, visuals, and sometimes inspection."
+    },
+    {
+      "id": "partner_or_advisor_review",
+      "if": {
+        "active_objections_any": [
+          "stakeholder_or_advisor_review"
+        ]
+      },
+      "score_adjustments": {
+        "Send Email": 45,
+        "Phone Call": 30,
+        "Send WhatsApp Video Message": 30,
+        "Meeting in person": 10,
+        "Send Gift": -30
+      },
+      "required_proof": [
+        "shareable decision summary"
+      ],
+      "rationale": "The blocker is internal alignment; shareable artifacts are valuable."
+    },
+    {
+      "id": "paperwork_or_aftercare",
+      "if": {
+        "active_objections_any": [
+          "paperwork_grid_or_admin_uncertainty",
+          "aftercare_or_support_concern"
+        ]
+      },
+      "score_adjustments": {
+        "Send Email": 45,
+        "Phone Call": 15,
+        "Send WhatsApp Video Message": 15,
+        "Meeting in person": 5,
+        "Send Gift": -20
+      },
+      "required_proof": [
+        "responsibility map",
+        "process or handover checklist"
+      ],
+      "rationale": "Process uncertainty is best reduced with a written owner/status map."
+    },
+    {
+      "id": "ready_to_close",
+      "if": {
+        "active_buyer_signals_any": [
+          "ready_to_close"
+        ],
+        "active_unresolved_objections_count": 0
+      },
+      "score_adjustments": {
+        "Send Email": 45,
+        "Phone Call": 20,
+        "Send WhatsApp Video Message": 15,
+        "Meeting in person": -10,
+        "Send Gift": -50
+      },
+      "required_proof": [
+        "final recap",
+        "signature path"
+      ],
+      "rationale": "Do not add friction when the customer needs the final step."
+    },
+    {
+      "id": "stale_no_response",
+      "if": {
+        "active_objections_any": [
+          "no_response_or_ghosting"
+        ],
+        "new_value_add_available": false
+      },
+      "score_adjustments": {
+        "Send Email": 10,
+        "Phone Call": -30,
+        "Send WhatsApp Video Message": -30,
+        "Meeting in person": -80,
+        "Send Gift": -999
+      },
+      "recommended_policy": "one_value_add_question_then_pause",
+      "rationale": "Repeated generic follow-up creates pressure and teaches the customer to ignore outreach."
+    },
+    {
+      "id": "gift_only_after_meaningful_interaction",
+      "if": {
+        "candidate_task": "Send Gift"
+      },
+      "must_satisfy": [
+        "meaningful_prior_interaction",
+        "gift_is_low_value",
+        "gift_is_useful_to_decision",
+        "gift_not_conditional_on_signing",
+        "no_active_price_objection",
+        "no_repeated_no_response_pressure"
+      ],
+      "rationale": "Gift is a relationship gesture, not an objection-resolution task."
+    }
+  ],
+  "tie_breakers": [
+    "Prefer the task that directly resolves the primary objection.",
+    "Prefer customer-requested or promised next steps over new outbound ideas.",
+    "Prefer written proof when another stakeholder must review.",
+    "Prefer a human call for trust repair if consent exists.",
+    "Prefer in-person meeting only when physical validation matters.",
+    "If no task adds value, pause with a resume condition."
+  ],
+  "claim_safety": [
+    "ROI, savings, payback, tariffs, feed-in rates, finance, subsidy, tax, timeline, warranty, and urgency claims require source and checked date.",
+    "If source or customer-specific input is missing, recommend a data request or internal preparation task instead of customer-facing copy.",
+    "Treat ghosting risk and close readiness as hypotheses until validated by customer response or signed/lost outcome."
+  ]
+}

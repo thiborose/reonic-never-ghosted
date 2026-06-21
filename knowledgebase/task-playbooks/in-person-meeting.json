@@ -1,0 +1,114 @@
+{
+  "task_type": "Meeting in person",
+  "primary_job": "Resolve house-specific uncertainty, physical risk, or high-trust decision friction that cannot be settled remotely.",
+  "best_for": [
+    "Customer explicitly wants someone to look at the house",
+    "Older roof or property damage concern",
+    "Shade, roof geometry, mounting, or access uncertainty",
+    "Heat-pump building-fit concern",
+    "High-value buyer close to signing but blocked by trust or site proof",
+    "Multiple decision-makers want to review the home-specific plan"
+  ],
+  "bad_for": [
+    "Stale lead with no response and no physical blocker",
+    "Simple ROI or paperwork question that can be handled remotely",
+    "No clear agenda",
+    "Travel-heavy visit with low close readiness",
+    "Customer only needs a written recap"
+  ],
+  "buyer_signals_it_fits": [
+    "site_visit_needed",
+    "trust_sensitive",
+    "technical_skeptic",
+    "convenience_seeker",
+    "stakeholder_review",
+    "ready_to_close"
+  ],
+  "objections_it_can_resolve": [
+    "needs_site_visit",
+    "roof_or_property_risk",
+    "winter_or_shade_performance",
+    "heat_pump_monthly_burden_or_building_fit",
+    "installer_trust_or_pressure",
+    "proposal_clarity_or_bundle_suspicion"
+  ],
+  "timing_guidance": [
+    "Schedule after a call or message confirms the physical reason for the visit.",
+    "Prefer route-clustered slots when possible.",
+    "Use a clear agenda and expected outcome.",
+    "If visit is requested by the customer and value is high, prioritize over generic follow-up tasks."
+  ],
+  "prep_needed": [
+    "Visit purpose",
+    "Customer address and access notes",
+    "Known roof/building concern",
+    "Quote summary",
+    "Photos or documents to review on site",
+    "Decision-makers attending",
+    "Installer calendar and travel time",
+    "Post-visit artifact to produce"
+  ],
+  "output_artifacts": [
+    "Scheduled visit",
+    "Visit agenda",
+    "Installer prep brief",
+    "Checklist of what to inspect",
+    "Post-visit recap task",
+    "Debrief prompt"
+  ],
+  "tone_guidance": [
+    "Treat the visit as verification, not a closing ambush.",
+    "Tell the customer what will be checked.",
+    "Explain what the visit can and cannot decide.",
+    "Leave with a clear next step."
+  ],
+  "visit_agendas": [
+    {
+      "scenario": "Roof risk",
+      "agenda": [
+        "Inspect roof condition and access.",
+        "Discuss mounting method and risk boundaries.",
+        "Identify whether roof photos or specialist review are needed.",
+        "Agree what changes in the quote or proof package."
+      ]
+    },
+    {
+      "scenario": "Customer requested house-specific validation",
+      "agenda": [
+        "Walk through roof, meter, inverter location, and cable path.",
+        "Confirm assumptions that affect quote confidence.",
+        "Review open customer concerns.",
+        "Agree final recap and signature path."
+      ]
+    },
+    {
+      "scenario": "Heat-pump building fit",
+      "agenda": [
+        "Review existing heating setup.",
+        "Check visible building constraints.",
+        "Identify missing heat-load or consumption data.",
+        "Agree whether proposal can be updated."
+      ]
+    }
+  ],
+  "success_indicators": [
+    "Physical concern resolved or clearly scoped",
+    "Customer agrees to updated quote or recap",
+    "Decision-makers align on next step",
+    "Customer asks for contract or final summary",
+    "Missing technical data is collected"
+  ],
+  "debrief_questions": [
+    "Did the meeting happen?",
+    "What was checked in person?",
+    "Which concern was resolved?",
+    "What new facts or measurements were found?",
+    "Does the quote need to change?",
+    "What did the customer commit to next?"
+  ],
+  "guardrails": [
+    "Do not use in-person visits as a pressure tactic.",
+    "Do not claim risk is zero.",
+    "Do not schedule without a clear agenda and likely decision value."
+  ]
+}

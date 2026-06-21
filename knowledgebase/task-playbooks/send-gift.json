@@ -1,0 +1,118 @@
+{
+  "task_type": "Send Gift",
+  "primary_job": "Create a thoughtful, low-value, non-conditional relationship gesture that supports the decision process without pressuring or bribing the customer.",
+  "best_for": [
+    "After an in-person meeting as a thank-you or useful follow-up",
+    "When the gift is directly useful to the home-energy decision",
+    "Longer-cycle relationship nurturing for high-trust local installers",
+    "A small educational or practical item paired with a recap",
+    "Customer has engaged respectfully but needs time"
+  ],
+  "bad_for": [
+    "Before trust is established",
+    "As a response to price objection",
+    "As a signing inducement",
+    "When customer is silent and may feel pressured",
+    "When it could look like a bribe",
+    "When the installer cannot explain why it helps the customer"
+  ],
+  "buyer_signals_it_fits": [
+    "convenience_seeker",
+    "climate_motivated",
+    "trust_sensitive"
+  ],
+  "objections_it_can_resolve": [
+    "none_directly"
+  ],
+  "objections_it_can_support_indirectly": [
+    "aftercare_or_support_concern",
+    "stakeholder_or_advisor_review",
+    "installer_trust_or_pressure"
+  ],
+  "timing_guidance": [
+    "Use only after a meaningful interaction, never as the first follow-up.",
+    "Use after a site visit when paired with a useful recap.",
+    "Do not use while an unresolved price objection is active.",
+    "Keep value low and clearly non-conditional."
+  ],
+  "prep_needed": [
+    "Reason for gift",
+    "Gift type",
+    "Estimated value",
+    "Customer relevance",
+    "Delivery method",
+    "Message text",
+    "Internal approval if needed"
+  ],
+  "safe_gift_examples": [
+    {
+      "name": "Printed personalized solar roadmap",
+      "why_it_fits": "It is a decision-support artifact rather than a perk.",
+      "best_after": "Site visit or strategy call"
+    },
+    {
+      "name": "Home energy checklist pack",
+      "why_it_fits": "It helps the household prepare documents and questions.",
+      "best_after": "Customer requests time to review"
+    },
+    {
+      "name": "Low-value local coffee card after site visit",
+      "why_it_fits": "It is a thank-you gesture, not tied to signing.",
+      "best_after": "Completed in-person meeting"
+    },
+    {
+      "name": "Printed roof/installation photo summary",
+      "why_it_fits": "It documents the site-specific visit and supports stakeholder review.",
+      "best_after": "Roof or site inspection"
+    }
+  ],
+  "unsafe_gift_examples": [
+    "Large-value gift before signature",
+    "Gift framed as available only if they sign soon",
+    "Gift sent after repeated no-response",
+    "Gift that distracts from an unresolved price or trust objection",
+    "Gift that implies special treatment not offered transparently"
+  ],
+  "output_artifacts": [
+    "Gift recommendation",
+    "Reasoning for why it is appropriate",
+    "Message card text",
+    "Follow-up reminder",
+    "Debrief prompt"
+  ],
+  "tone_guidance": [
+    "Warm but not transactional.",
+    "Explicitly non-conditional.",
+    "Tie it to usefulness, not persuasion.",
+    "Keep the message short."
+  ],
+  "message_examples": [
+    {
+      "scenario": "After site visit",
+      "message": "Thank you for taking the time today. I included a short printed summary of what we checked and the two remaining decisions so you can review it calmly."
+    },
+    {
+      "scenario": "Partner review",
+      "message": "Here is a small decision pack with the key assumptions and questions for your review at home. No rush from our side; it is meant to make the comparison easier."
+    }
+  ],
+  "success_indicators": [
+    "Customer acknowledges the recap or decision artifact",
+    "Customer shares it with another stakeholder",
+    "Customer asks a clearer follow-up question",
+    "Customer books next review step"
+  ],
+  "debrief_questions": [
+    "Why was the gift appropriate?",
+    "Was it clearly non-conditional?",
+    "Did the customer respond?",
+    "Did it create or clarify a next step?",
+    "Should future gifts be avoided for this customer?"
+  ],
+  "guardrails": [
+    "Do not use gifts as pressure.",
+    "Do not use gifts to overcome price objections.",
+    "Do not send anything high-value.",
+    "Do not represent a gift as proof of product value."
+  ]
+}

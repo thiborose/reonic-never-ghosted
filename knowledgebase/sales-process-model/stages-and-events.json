@@ -1,0 +1,184 @@
+{
+  "id": "stages_and_events",
+  "stages": [
+    {
+      "id": "quote_created_not_sent",
+      "name": "Quote created, not sent",
+      "description": "Installer has prepared or is preparing quote, but the post-quote follow-up flow has not started.",
+      "valid_next_outcomes": [
+        "quote_sent"
+      ]
+    },
+    {
+      "id": "quote_sent_strategy_needed",
+      "name": "Quote sent, strategy needed",
+      "description": "Customer has received a quote and no closing strategy exists yet.",
+      "valid_next_outcomes": [
+        "strategy_generated",
+        "missing_data_requested",
+        "pause"
+      ]
+    },
+    {
+      "id": "active_followup",
+      "name": "Active follow-up",
+      "description": "The assistant has a current hypothesis about blocker and next best action.",
+      "valid_next_outcomes": [
+        "task_scheduled",
+        "task_sent",
+        "customer_replied",
+        "missing_data_requested",
+        "pause",
+        "signed",
+        "lost"
+      ]
+    },
+    {
+      "id": "task_scheduled",
+      "name": "Task scheduled",
+      "description": "A call, visit, or other action is scheduled but not completed.",
+      "valid_next_outcomes": [
+        "task_completed",
+        "task_missed",
+        "reschedule",
+        "customer_replied",
+        "signed",
+        "lost"
+      ]
+    },
+    {
+      "id": "post_action_debrief_needed",
+      "name": "Post-action debrief needed",
+      "description": "An action happened or was skipped and needs a debrief before strategy is updated.",
+      "valid_next_outcomes": [
+        "debrief_logged",
+        "debrief_skipped_with_reason"
+      ]
+    },
+    {
+      "id": "strategy_update_needed",
+      "name": "Strategy update needed",
+      "description": "New information from a debrief, customer reply, or missing-data upload should update buyer signals, objections, and task recommendation.",
+      "valid_next_outcomes": [
+        "active_followup",
+        "missing_data_requested",
+        "contract_ready",
+        "pause",
+        "lost"
+      ]
+    },
+    {
+      "id": "contract_ready",
+      "name": "Contract ready",
+      "description": "Major blockers appear resolved and the customer needs final recap, signature path, or scheduling confirmation.",
+      "valid_next_outcomes": [
+        "signature_followup_sent",
+        "signed",
+        "customer_replied",
+        "pause",
+        "lost"
+      ]
+    },
+    {
+      "id": "paused",
+      "name": "Paused",
+      "description": "Further outreach would add little value or the customer requested review time. Resume only on defined condition.",
+      "valid_next_outcomes": [
+        "customer_replied",
+        "resume_date_reached",
+        "new_value_available",
+        "lost"
+      ]
+    },
+    {
+      "id": "signed",
+      "name": "Signed",
+      "description": "Customer signed the contract.",
+      "valid_next_outcomes": [
+        "handoff_to_installation"
+      ]
+    },
+    {
+      "id": "lost",
+      "name": "Lost",
+      "description": "Customer declined, chose another provider, opted out, or is no longer qualified.",
+      "valid_next_outcomes": [
+        "lost_reason_logged"
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": "quote_sent",
+      "description": "Quote has been sent to customer.",
+      "typical_stage_after": "quote_sent_strategy_needed"
+    },
+    {
+      "id": "strategy_generated",
+      "description": "Assistant generated buyer signal and objection hypothesis.",
+      "typical_stage_after": "active_followup"
+    },
+    {
+      "id": "task_scheduled",
+      "description": "A call, visit, or meeting has been scheduled.",
+      "typical_stage_after": "task_scheduled"
+    },
+    {
+      "id": "task_sent",
+      "description": "An email, WhatsApp video, gift, or other async task has been sent.",
+      "typical_stage_after": "active_followup"
+    },
+    {
+      "id": "task_completed",
+      "description": "A call, meeting, or other scheduled action happened.",
+      "typical_stage_after": "post_action_debrief_needed"
+    },
+    {
+      "id": "task_missed",
+      "description": "Scheduled task did not happen.",
+      "typical_stage_after": "strategy_update_needed"
+    },
+    {
+      "id": "debrief_logged",
+      "description": "Installer logged outcome, customer language, blockers, new facts, and next commitment.",
+      "typical_stage_after": "strategy_update_needed"
+    },
+    {
+      "id": "customer_requested_site_visit",
+      "description": "Customer asked for someone to inspect or look at the house.",
+      "typical_stage_after": "active_followup"
+    },
+    {
+      "id": "customer_mentioned_competitor",
+      "description": "Customer mentioned another provider, referral, quote, or price comparison.",
+      "typical_stage_after": "active_followup"
+    },
+    {
+      "id": "missing_data_uploaded",
+      "description": "Customer or installer uploaded bill, photos, tariff, competitor quote, heat-load data, or similar proof input.",
+      "typical_stage_after": "strategy_update_needed"
+    },
+    {
+      "id": "signature_requested",
+      "description": "Customer asked for contract/signature step or signable document.",
+      "typical_stage_after": "contract_ready"
+    },
+    {
+      "id": "contract_signed",
+      "description": "Contract has been signed.",
+      "typical_stage_after": "signed"
+    }
+  ],
+  "state_facts_to_display": [
+    "quote_sent_date",
+    "quote_age_days",
+    "last_action_date",
+    "days_since_last_action",
+    "current_stage",
+    "primary_blocker",
+    "active_buyer_signals",
+    "next_commitment",
+    "missing_data",
+    "channel_consent_summary"
+  ]
+}
