@@ -482,7 +482,7 @@ export const noteSeeds: NoteRecord[] = [
     id: "note_sabine_site",
     customerId: DEMO_CUSTOMER_ID,
     type: "text",
-    title: "Site visit notes",
+    title: "Property intake notes",
     body:
       "Existing oil heating is 18 years old and due for replacement — strong urgency. Meter cabinet has room for the inverter. Customer asked about hold-time on the quote; said she'd decide within two weeks.",
     authorName: "Jonas Krüger · Installer",

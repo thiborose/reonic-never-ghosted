@@ -1,4 +1,4 @@
-import { CalendarDays, Clock3, Edit3, MoreVertical, Search, WandSparkles } from "lucide-react";
+import { CalendarDays, Clock3, Edit3, Gift, MoreVertical, Search, Send, WandSparkles } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -77,7 +77,7 @@ export function QuotesBoard() {
             <div className="column-title">
               <h2>{column.title}</h2>
               <span className={`column-count column-count-${column.countTone}`}>
-                {column.countLabel}
+                {(grouped.get(column.id) ?? []).length}x
               </span>
             </div>
             <div className="quote-list">
@@ -107,6 +107,10 @@ function QuoteCard({ quote, onNext }: { quote: QuoteRecord; onNext: () => void }
       <WandSparkles size={14} />
     ) : quote.nextAction.kind.includes("schedule") ? (
       <CalendarDays size={14} />
+    ) : quote.nextAction.kind === "send_gift" ? (
+      <Gift size={14} />
+    ) : quote.nextAction.kind.startsWith("send") || quote.nextAction.kind === "follow_up_signature" ? (
+      <Send size={14} />
     ) : (
       <Clock3 size={14} />
     );

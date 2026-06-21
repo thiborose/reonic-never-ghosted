@@ -12,6 +12,8 @@ export type QuoteNextKind =
   | "log_visit"
   | "send_final_recap"
   | "follow_up_signature"
+  | "send_whatsapp_video"
+  | "send_gift"
   | "none";
 
 export type ActionTaskType =
@@ -56,16 +58,16 @@ export interface QuoteRecord {
   contactLine: string;
   address: string;
   columnId: BoardColumnId;
-  statusLabel?: string;
-  statusTone?: "blue" | "yellow" | "green";
+  statusLabel?: string | undefined;
+  statusTone?: "blue" | "yellow" | "green" | undefined;
   ownerName: string;
   ownerAvatar: string;
   ownerTone: "green" | "blue" | "yellow" | "red";
   value: number;
-  sentAt?: string;
-  lastActionAt?: string;
-  quoteAgeDays?: number;
-  daysSinceLastAction?: number;
+  sentAt?: string | undefined;
+  lastActionAt?: string | undefined;
+  quoteAgeDays?: number | undefined;
+  daysSinceLastAction?: number | undefined;
   productSummary: string;
   nextAction: {
     kind: QuoteNextKind;
@@ -73,7 +75,7 @@ export interface QuoteRecord {
     actionId?: string;
     tone: "blue" | "yellow" | "green" | "gray";
   };
-  strategyId?: string;
+  strategyId?: string | undefined;
   strategyStale: boolean;
 }
 
@@ -95,6 +97,13 @@ export interface StrategyStep {
   secondaryCta: string;
 }
 
+export interface GenerationMetadata {
+  mode: "deterministic" | "llm" | "deterministic_fallback";
+  model: string;
+  latencyMs: number;
+  fallbackReason?: string | undefined;
+}
+
 export interface StrategyRecord {
   id: string;
   quoteId: string;
@@ -104,6 +113,7 @@ export interface StrategyRecord {
   summary: string;
   currentActionId?: string;
   steps: StrategyStep[];
+  generation?: GenerationMetadata;
 }
 
 export interface ActionRecord {
@@ -172,6 +182,10 @@ export interface ScheduleActionInput {
 
 export interface LogActionInput {
   notes: string;
+}
+
+export interface ReviseStrategyInput {
+  instruction: string;
 }
 
 export interface UpdateCustomerInput {

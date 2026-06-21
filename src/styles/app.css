@@ -730,11 +730,33 @@ a {
   align-items: center;
   gap: 10px;
   color: var(--blue);
+  flex-wrap: wrap;
 }
 
 .strategy-title h2 {
   margin: 0;
   color: var(--text);
+}
+
+.generation-pill {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 5px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.generation-llm {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.generation-deterministic,
+.generation-deterministic_fallback {
+  background: #fef3c7;
+  color: #8a5a00;
 }
 
 .strategy-card > h3 {

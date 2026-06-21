@@ -34,6 +34,11 @@ export const api = {
       method: "POST",
       body: "{}",
     }),
+  reviseStrategy: (quoteId: string, instruction: string) =>
+    request<QuoteDetailPayload>(`/api/quotes/${quoteId}/revise-strategy`, {
+      method: "POST",
+      body: JSON.stringify({ instruction }),
+    }),
   scheduleAction: (actionId: string, input: ScheduleActionInput = {}) =>
     request<QuoteDetailPayload>(`/api/actions/${actionId}/schedule`, {
       method: "POST",

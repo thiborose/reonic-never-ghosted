@@ -16,6 +16,7 @@ import {
   listQuotes,
   logAction,
   resetDatabase,
+  reviseStrategy,
   scheduleAction,
   updateCustomer,
 } from "./db.js";
@@ -58,16 +59,20 @@ app.get("/api/calendar", (_req, res) => {
   res.json({ events: getCalendarEvents() });
 });
 
-app.post("/api/quotes/:id/generate-strategy", (req, res) => {
-  res.json(generateStrategy(req.params.id));
+app.post("/api/quotes/:id/generate-strategy", async (req, res) => {
+  res.json(await generateStrategy(req.params.id));
+});
+
+app.post("/api/quotes/:id/revise-strategy", async (req, res) => {
+  res.json(await reviseStrategy(req.params.id, req.body));
 });
 
 app.post("/api/actions/:id/schedule", (req, res) => {
   res.json(scheduleAction(req.params.id, req.body));
 });
 
-app.post("/api/actions/:id/log", (req, res) => {
-  res.json(logAction(req.params.id, req.body));
+app.post("/api/actions/:id/log", async (req, res) => {
+  res.json(await logAction(req.params.id, req.body));
 });
 
 app.post("/api/actions/:id/complete", (req, res) => {

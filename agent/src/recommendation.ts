@@ -169,8 +169,11 @@ const KEYWORD_RULES: Array<{
   {
     id: "roof_property_risk",
     terms: [
-      "roof",
-      "dach",
+      "roof condition",
+      "roof risk",
+      "roof damage",
+      "dachzustand",
+      "dachschaden",
       "ziegel",
       "tile",
       "undicht",
@@ -216,9 +219,10 @@ const KEYWORD_RULES: Array<{
       "cloud",
       "monthly output",
       "ertrag",
-      "warmepumpe",
-      "waermepumpe",
-      "heat pump",
+      "waermepumpe monat",
+      "warmepumpe monat",
+      "heat pump monthly",
+      "heat pump burden",
       "jaz",
       "altbau",
     ],
@@ -257,8 +261,9 @@ const KEYWORD_RULES: Array<{
       "registration",
       "anmeldung",
       "netzbetreiber",
-      "grid",
-      "meter",
+      "grid connection",
+      "meter registration",
+      "meter change",
       "zahler",
       "zaehler",
       "handover",
@@ -632,6 +637,20 @@ function scoreTasks(
       factor: "high_quote_value",
       impact: "positive",
       detail: "High-value home energy decisions benefit from a human or site-specific step when blockers are unclear.",
+    });
+  }
+
+  if (
+    diagnosis.stage === "quote_sent_strategy_needed" &&
+    input.consent.phone &&
+    !input.consent.writtenOnly
+  ) {
+    addScores(scorecard, ["Phone Call"], 30);
+    factors.push({
+      factor: "fresh_quote_diagnosis",
+      impact: "positive",
+      detail:
+        "For a brand-new high-context quote, a short scheduled call validates the real blocker before more written material is produced.",
     });
   }
 
@@ -1592,12 +1611,23 @@ function termsFound(text: string, terms: string[]) {
   return unique(
     terms
       .map((term) => normalizeText(term))
-      .filter((term) => term.length > 0 && normalizedText.includes(term)),
+      .filter((term) => term.length > 0 && termMatches(normalizedText, term)),
   );
 }
 
 function textHas(text: string, terms: string[]) {
   return termsFound(text, terms).length > 0;
+}
+
+function termMatches(text: string, term: string) {
+  if (/^[a-z0-9]{1,3}$/.test(term)) {
+    return new RegExp(`\\b${escapeRegExp(term)}\\b`).test(text);
+  }
+  return text.includes(term);
+}
+
+function escapeRegExp(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 function unique<T>(values: T[]) {

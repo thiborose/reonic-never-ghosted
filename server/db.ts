@@ -2,19 +2,13 @@ import { DatabaseSync } from "node:sqlite";
 import { existsSync, mkdirSync, rmSync } from "node:fs";
 import { dirname, join } from "node:path";
 
-import {
-  createFinalRecapRecommendation,
-  createInitialStrategy,
-  createVisitRecommendation,
-  shouldRecommendFinalRecap,
-  shouldRecommendVisit,
-} from "./assistantStub.js";
+import { requestRecommendation } from "./agentClient.js";
+import { buildRecommendationRequest, mapRecommendationToPersistence } from "./agentMapper.js";
 import {
   actionSeeds,
   bootstrapSeed,
   calendarSeeds,
   customerSeeds,
-  DEMO_NOW,
   noteSeeds,
   quoteSeeds,
   strategySeeds,
@@ -29,6 +23,7 @@ import type {
   NoteRecord,
   QuoteDetailPayload,
   QuoteRecord,
+  ReviseStrategyInput,
   ScheduleActionInput,
   StrategyRecord,
   UpdateCustomerInput,
@@ -135,14 +130,27 @@ export function getCalendarEvents(): CalendarEventRecord[] {
   return rows.map((row) => parseJson<CalendarEventRecord>(row.data));
 }
 
-export function generateStrategy(quoteId: string): QuoteDetailPayload {
-  const quote = getQuote(quoteId);
-  const result = createInitialStrategy({ quote, now: new Date().toISOString() });
-  putJson("strategies", result.strategy.id, result.strategy);
-  putJson("actions", result.action.id, result.action);
-  updateQuote(quote.id, result.quotePatch);
+export async function generateStrategy(quoteId: string): Promise<QuoteDetailPayload> {
+  return refreshRecommendation(quoteId, {
+    triggerType: "strategy_requested",
+  });
+}
 
-  return getQuoteDetail(quote.id);
+export async function reviseStrategy(
+  quoteId: string,
+  input: ReviseStrategyInput,
+): Promise<QuoteDetailPayload> {
+  const instruction = input.instruction.trim();
+  if (!instruction) {
+    const error = new Error("Revision instruction is required");
+    Object.assign(error, { statusCode: 400 });
+    throw error;
+  }
+
+  return refreshRecommendation(quoteId, {
+    triggerType: "installer_revision_requested",
+    installerInstruction: instruction,
+  });
 }
 
 export function scheduleAction(actionId: string, input: ScheduleActionInput): QuoteDetailPayload {
@@ -206,7 +214,7 @@ export function scheduleAction(actionId: string, input: ScheduleActionInput): Qu
   return getQuoteDetail(quote.id);
 }
 
-export function logAction(actionId: string, input: LogActionInput): QuoteDetailPayload {
+export async function logAction(actionId: string, input: LogActionInput): Promise<QuoteDetailPayload> {
   const action = getAction(actionId);
   const quote = getQuote(action.quoteId);
   const completedAt = new Date().toISOString();
@@ -220,18 +228,11 @@ export function logAction(actionId: string, input: LogActionInput): QuoteDetailP
   const note = createDebriefNote(action, input.notes, completedAt);
   putJson("notes", note.id, note);
 
-  const strategy = getStrategyByQuote(quote.id);
-  if (strategy && action.taskType === "Phone Call" && shouldRecommendVisit(input.notes)) {
-    const result = createVisitRecommendation({ quote, strategy, now: completedAt });
-    putJson("strategies", result.strategy.id, result.strategy);
-    putJson("actions", result.action.id, result.action);
-    updateQuote(quote.id, { ...result.quotePatch, lastActionAt: completedAt, daysSinceLastAction: 0 });
-  } else if (strategy && action.taskType === "Meeting in person" && shouldRecommendFinalRecap(input.notes)) {
-    const result = createFinalRecapRecommendation({ quote, strategy, now: completedAt });
-    putJson("strategies", result.strategy.id, result.strategy);
-    putJson("actions", result.action.id, result.action);
-    updateQuote(quote.id, { ...result.quotePatch, lastActionAt: completedAt, daysSinceLastAction: 0 });
-  }
+  await refreshRecommendation(quote.id, {
+    triggerType: "debrief_added",
+    now: completedAt,
+  });
+  updateQuote(quote.id, { lastActionAt: completedAt, daysSinceLastAction: 0 });
 
   return getQuoteDetail(quote.id);
 }
@@ -299,6 +300,26 @@ export function getAction(actionId: string): ActionRecord {
     throw notFound(`Action ${actionId} not found`);
   }
   return parseJson<ActionRecord>(row.data);
+}
+
+async function refreshRecommendation(
+  quoteId: string,
+  options: Parameters<typeof buildRecommendationRequest>[2],
+) {
+  const detail = getQuoteDetail(quoteId);
+  const request = buildRecommendationRequest(detail, getCalendarEvents(), options);
+  const recommendation = await requestRecommendation(request);
+  const persistence = mapRecommendationToPersistence(
+    getQuoteDetail(quoteId),
+    recommendation,
+    options.now ?? new Date().toISOString(),
+  );
+
+  putJson("strategies", persistence.strategy.id, persistence.strategy);
+  putJson("actions", persistence.action.id, persistence.action);
+  updateQuote(quoteId, persistence.quotePatch);
+
+  return getQuoteDetail(quoteId);
 }
 
 function getQuote(quoteId: string): QuoteRecord {

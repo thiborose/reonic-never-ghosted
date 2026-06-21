@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "NODE_OPTIONS=--no-warnings tsx server/index.ts",
     "start": "NODE_ENV=production NODE_OPTIONS=--no-warnings tsx server/index.ts",
+    "agent:start": "cd agent && npm run start",
+    "agent:dev": "cd agent && npm run dev",
+    "agent:smoke": "NODE_OPTIONS=--no-warnings tsx scripts/agent-smoke.ts",
+    "ui:smoke": "NODE_OPTIONS=--no-warnings tsx scripts/ui-smoke.ts",
     "build": "vite build",
     "typecheck": "tsc --noEmit",
     "test": "NODE_OPTIONS=--no-warnings vitest run",
@@ -27,6 +31,7 @@
     "zod": "^4.2.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.0",
     "@types/express": "^5.0.6",
     "@types/node": "^25.0.3",
     "@types/react": "^19.2.7",

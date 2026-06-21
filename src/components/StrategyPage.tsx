@@ -52,6 +52,25 @@ export function StrategyPage() {
     setWorking(true);
     try {
       setDetail(await api.generateStrategy(quoteId));
+      setError(undefined);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not generate strategy");
+    } finally {
+      setWorking(false);
+    }
+  }
+
+  async function revisePlan() {
+    if (!quoteId || !revision.trim()) {
+      return;
+    }
+    setWorking(true);
+    try {
+      setDetail(await api.reviseStrategy(quoteId, revision.trim()));
+      setRevision("");
+      setError(undefined);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "Could not revise strategy");
     } finally {
       setWorking(false);
     }
@@ -127,6 +146,11 @@ export function StrategyPage() {
             <div className="strategy-title">
               <AppIcon name="sparkles" size={20} />
               <h2>The play</h2>
+              {detail.strategy.generation ? (
+                <span className={`generation-pill generation-${detail.strategy.generation.mode}`}>
+                  {detail.strategy.generation.mode === "llm" ? "GPT-5 mini" : "Fallback engine"}
+                </span>
+              ) : null}
             </div>
             <h3>{detail.strategy.headline}</h3>
             <p>{detail.strategy.summary}</p>
@@ -160,12 +184,11 @@ export function StrategyPage() {
             <button
               className="primary-button"
               type="button"
-              onClick={() => {
-                setRevision("");
-              }}
+              disabled={working || !revision.trim()}
+              onClick={() => void revisePlan()}
             >
               <WandSparkles size={16} />
-              Review & update plan
+              {working ? "Reviewing..." : "Review & update plan"}
             </button>
           </section>
         </>
@@ -269,7 +292,12 @@ function StrategyStepView({
   }, [active]);
 
   const canSchedule = active && (nextKind === "schedule_call" || nextKind === "schedule_visit");
-  const canSend = active && (nextKind === "send_final_recap" || nextKind === "follow_up_signature");
+  const canSend =
+    active &&
+    (nextKind === "send_final_recap" ||
+      nextKind === "follow_up_signature" ||
+      nextKind === "send_whatsapp_video" ||
+      nextKind === "send_gift");
 
   return (
     <article className={`strategy-step ${active ? "active" : ""} ${step.status}`}>

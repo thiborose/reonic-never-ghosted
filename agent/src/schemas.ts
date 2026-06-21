@@ -298,6 +298,14 @@ export const RecommendationResponseSchema = z.object({
     calendarActionLabel: z.string().optional(),
     logPromptTitle: z.string(),
   }),
+  generation: z
+    .object({
+      mode: z.enum(["deterministic", "llm", "deterministic_fallback"]),
+      model: z.string(),
+      latencyMs: z.number().int().nonnegative(),
+      fallbackReason: z.string().optional(),
+    })
+    .optional(),
 });
 
 export type RecommendRequest = z.infer<typeof RecommendRequestSchema>;

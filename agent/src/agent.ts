@@ -1,8 +1,32 @@
 import { Agent, createTool, type Memory } from "@voltagent/core";
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
+import { existsSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 
 import { recommendNextAction } from "./recommendation.js";
 import { RecommendRequestSchema, RecommendationResponseSchema } from "./schemas.js";
+
+const agentDir = dirname(fileURLToPath(import.meta.url));
+const rootEnvPath = join(agentDir, "..", "..", ".env");
+if (existsSync(rootEnvPath)) {
+  process.loadEnvFile(rootEnvPath);
+}
+
+export const VOLTAGENT_MODEL = process.env.VOLTAGENT_MODEL ?? "openai/gpt-5-mini";
+const openRouterApiKey = process.env.OPENROUTER_API_KEY ?? process.env.OPENAI_API_KEY;
+
+const openRouter = createOpenAI({
+  name: "openrouter",
+  baseURL: process.env.OPENROUTER_BASE_URL ?? "https://openrouter.ai/api/v1",
+  ...(openRouterApiKey ? { apiKey: openRouterApiKey } : {}),
+  headers: {
+    "HTTP-Referer": process.env.OPENROUTER_SITE_URL ?? "http://localhost:5173",
+    "X-OpenRouter-Title": process.env.OPENROUTER_APP_TITLE ?? "Reonic Marketing Assistant Demo",
+  },
+});
+
+export const openRouterModel = openRouter(VOLTAGENT_MODEL);
 
 export const recommendNextActionTool = createTool({
   name: "recommend_next_action",
@@ -28,7 +52,7 @@ export function createMarketingSalesAssistant(memory: Memory) {
       "Treat buyer profiles and ghosting risk as hypotheses grounded in the supplied data, not as facts about demographics.",
       "For public customer-review patterns, use them only as qualitative background for trust/tone risks. Never quote them to customers or imply another provider's reviews describe this installer.",
     ].join("\n"),
-    model: openai(process.env.VOLTAGENT_MODEL ?? "gpt-4o-mini"),
+    model: openRouterModel,
     tools: [recommendNextActionTool],
     memory,
     temperature: 0.2,

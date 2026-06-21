@@ -5,6 +5,7 @@ import { honoServer } from "@voltagent/server-hono";
 import { createMarketingSalesAssistant } from "./agent.js";
 import { loadKnowledgeBase, summarizeKnowledgeBase } from "./knowledgebase.js";
 import { RecommendRequestSchema } from "./schemas.js";
+import { synthesizeRecommendation } from "./synthesis.js";
 import { recommendNextActionWorkflow } from "./workflow.js";
 
 const port = Number(process.env.PORT ?? 3141);
@@ -85,7 +86,13 @@ export const voltAgent = new VoltAgent({
           );
         }
 
-        return c.json(execution.result);
+        const recommendation = await synthesizeRecommendation({
+          agent: marketingSalesAssistant,
+          request: parsed.data,
+          recommendation: execution.result,
+        });
+
+        return c.json(recommendation);
       });
     },
   }),
