@@ -1,9 +1,12 @@
 // One helper per backend endpoint. No scattered fetch in pages.
 import type {
+  Appointment,
   DealDetail,
   Lead,
+  Note,
   RevisionResult,
   StrategyResult,
+  Week,
 } from "./types";
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
@@ -38,6 +41,21 @@ export const reviseStep = (dealId: number, order: number, instruction: string) =
   req<RevisionResult>(`/deals/${dealId}/steps/${order}/revise`, {
     method: "POST",
     body: JSON.stringify({ instruction }),
+  });
+
+export const addNote = (dealId: number, content: string, type: "text" | "voice" = "text") =>
+  req<Note>(`/deals/${dealId}/notes`, {
+    method: "POST",
+    body: JSON.stringify({ content, type }),
+  });
+
+export const getAppointments = (installerId = 1) =>
+  req<Week>(`/installers/${installerId}/appointments`);
+
+export const addAppointment = (title: string, dealId: number) =>
+  req<Appointment>(`/appointments`, {
+    method: "POST",
+    body: JSON.stringify({ title, deal_id: dealId }),
   });
 
 export const getBenchmarks = (orgId = 1) =>

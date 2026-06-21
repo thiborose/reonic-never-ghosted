@@ -10,6 +10,9 @@ export interface Lead {
   total_price: number;
   currency: string;
   products: string[];
+  ghost_risk: number; // 0..1 — likely to ghost (quiet/unworked)
+  days_since_touch: number;
+  has_strategy: boolean;
 }
 
 export interface Customer {
@@ -91,6 +94,7 @@ export interface PersonaScore {
   persona: string;
   weight: number;
   strength: string;
+  evidence_refs: string[]; // why this persona scored
 }
 
 export interface Step {
@@ -99,6 +103,8 @@ export interface Step {
   lever: string;
   channel: string;
   rationale: string;
+  title?: string | null;
+  timing?: string | null;
   evidence_chips: EvidenceChip[];
 }
 
@@ -115,4 +121,21 @@ export interface RevisionResult {
   applied: boolean;
   step: Step;
   reason: string;
+}
+
+export interface Appointment {
+  id: number;
+  installer_id: number;
+  deal_id?: number | null;
+  title: string;
+  day: number; // 0=Mon … 4=Fri
+  start_hour: number;
+  end_hour: number;
+}
+
+export interface Week {
+  week_label: string;
+  days: string[];
+  slots: number[];
+  appointments: Appointment[];
 }
