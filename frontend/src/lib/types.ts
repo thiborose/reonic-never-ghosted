@@ -106,6 +106,7 @@ export interface Step {
   title?: string | null;
   timing?: string | null;
   evidence_chips: EvidenceChip[];
+  revision_notes?: string[]; // installer instructions applied to this step
 }
 
 export interface StrategyResult {

@@ -17,6 +17,7 @@ import { FeatherPhone } from "@subframe/core";
 import { FeatherRoute } from "@subframe/core";
 import { FeatherShieldCheck } from "@subframe/core";
 import { FeatherSparkles } from "@subframe/core";
+import { FeatherStickyNote } from "@subframe/core";
 import { FeatherUsers } from "@subframe/core";
 import { FeatherWand } from "@subframe/core";
 import { useRouter, useParams } from "next/navigation";
@@ -246,6 +247,18 @@ export default function StrategyPage() {
                             {step.order}. {step.title}
                           </span>
                         )}
+                        {(step.revision_notes ?? []).map((note, i) => (
+                          <div
+                            key={i}
+                            className="flex w-full items-start gap-2 rounded-md border border-solid border-brand-200 bg-brand-50 px-4 py-3"
+                          >
+                            <FeatherStickyNote className="text-body font-body text-brand-600 mt-0.5" />
+                            <div className="flex flex-col items-start gap-0.5">
+                              <span className="text-caption-bold font-caption-bold text-brand-700">Note added by you</span>
+                              <span className="text-body font-body text-default-font">{note}</span>
+                            </div>
+                          </div>
+                        ))}
                         <div className="flex flex-wrap items-center gap-2">
                           <Badge variant="brand">{GOAL_LABEL[step.goal] ?? step.goal}</Badge>
                           <Badge variant="neutral">{step.lever.replace(/_/g, " ")}</Badge>

@@ -48,15 +48,15 @@ def test_draft_and_revise_append(seeded, session):
     assert rev.status_code == 200
     assert rev.json()["applied"] is True
 
-    # the loop closes: the returned step actually changed and reflects the instruction
+    # the loop closes: the returned step carries the installer note
     revised = rev.json()["step"]
     assert revised != before
-    assert "make it warmer" in revised["rationale"]
+    assert "make it warmer" in revised["revision_notes"]
 
-    # and the change is persisted into the play, not just echoed back
+    # and the note is persisted into the play, not just echoed back
     persisted = client.get("/deals/2").json()["strategy"]["steps"]
     step1 = next(s for s in persisted if s["order"] == 1)
-    assert "make it warmer" in step1["rationale"]
+    assert "make it warmer" in step1["revision_notes"]
 
     types = {
         e.event_type

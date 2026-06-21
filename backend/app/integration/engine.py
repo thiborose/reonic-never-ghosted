@@ -54,6 +54,7 @@ class Step(BaseModel):
     title: str | None = None  # short step headline for the timeline
     timing: str | None = None  # suggested timing label (e.g. "Day 1")
     evidence_chips: list[EvidenceChip] = []
+    revision_notes: list[str] = []  # installer instructions applied to this step
 
 
 class StrategyResult(BaseModel):
@@ -146,13 +147,9 @@ class FakeEngine:
         return f"[fake draft] Hi {ctx.customer.name}, re: your quote — {step.rationale}"
 
     def revise(self, ctx: EngineContext, step: Step, instruction: str) -> RevisionResult:
-        # Close the loop: fold the instruction into the step so the play visibly updates.
+        # Close the loop: attach the instruction as a visible note on the step.
         revised = step.model_copy(deep=True)
-        revised.rationale = f"{step.rationale}\n\nRevised per installer: {instruction}"
-        revised.evidence_chips = [
-            *step.evidence_chips,
-            EvidenceChip(kind="behavioral", text=f"installer asked to {instruction}"),
-        ]
+        revised.revision_notes = [*step.revision_notes, instruction]
         return RevisionResult(applied=True, step=revised, reason=f"Updated this step — {instruction}")
 
 
