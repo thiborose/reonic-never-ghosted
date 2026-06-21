@@ -239,12 +239,13 @@ a {
 
 .kanban-board {
   display: grid;
-  grid-template-columns: repeat(4, minmax(250px, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 16px;
   align-items: stretch;
 }
 
 .kanban-column {
+  min-width: 0;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: #fbfbfc;
@@ -256,15 +257,20 @@ a {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 10px;
   margin-bottom: 13px;
 }
 
 .column-title h2 {
   font-size: 15px;
   margin: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .column-count {
+  flex: 0 0 auto;
   min-width: 32px;
   height: 24px;
   border-radius: 5px;
@@ -290,11 +296,13 @@ a {
 }
 
 .quote-list {
+  min-width: 0;
   display: grid;
   gap: 12px;
 }
 
 .quote-card {
+  min-width: 0;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 6px;
@@ -326,6 +334,8 @@ a {
 }
 
 .quote-title-button {
+  min-width: 0;
+  flex: 1 1 auto;
   border: 0;
   background: transparent;
   padding: 0;
@@ -339,6 +349,7 @@ a {
 }
 
 .card-actions {
+  flex: 0 0 auto;
   display: flex;
   gap: 4px;
 }
@@ -361,6 +372,7 @@ a {
 }
 
 .quote-contact {
+  min-width: 0;
   margin-top: 16px;
   display: grid;
   color: var(--muted);
@@ -368,7 +380,14 @@ a {
   line-height: 1.3;
 }
 
+.quote-contact span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .quote-meta-row {
+  min-width: 0;
   min-height: 42px;
   display: grid;
   align-content: center;
@@ -379,6 +398,7 @@ a {
 }
 
 .quote-footer {
+  min-width: 0;
   height: 46px;
   font-size: 13px;
 }
@@ -399,14 +419,18 @@ a {
 }
 
 .next-chip {
+  width: 100%;
+  min-width: 0;
   border: 0;
   border-radius: 5px;
   min-height: 42px;
   padding: 7px 10px;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
   justify-content: space-between;
   gap: 8px;
+  text-align: left;
 }
 
 .next-blue {
@@ -429,6 +453,9 @@ a {
 }
 
 .next-button {
+  min-width: 0;
+  max-width: 100%;
+  justify-self: end;
   min-height: 28px;
   padding: 0 8px;
   display: inline-flex;
@@ -440,6 +467,8 @@ a {
   color: var(--text);
   font-weight: 650;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .badge {
@@ -1487,11 +1516,17 @@ a {
   }
 }
 
-@media (max-width: 1180px) {
+@media (max-width: 1380px) {
   .kanban-board {
     grid-template-columns: repeat(2, minmax(250px, 1fr));
   }
 
+  .page {
+    max-width: 1180px;
+  }
+}
+
+@media (max-width: 1180px) {
   .sidebar {
     width: 236px;
     flex-basis: 236px;
