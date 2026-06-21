@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.voltagent/
+.env
+.env.local
+coverage/
