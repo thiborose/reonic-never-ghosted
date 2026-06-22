@@ -1,4 +1,4 @@
-import { Memory, VoltAgent, VoltAgentObservability } from "@voltagent/core";
+import { Memory, VoltAgent } from "@voltagent/core";
 import { LibSQLMemoryAdapter } from "@voltagent/libsql";
 import { honoServer } from "@voltagent/server-hono";
 
@@ -25,9 +25,6 @@ export const voltAgent = new VoltAgent({
     recommendNextActionWorkflow,
   },
   memory,
-  // Records spans in-memory and streams them over WebSocket so the VoltOps console
-  // (console.voltagent.dev -> localhost:3141) shows live runs without cloud keys.
-  observability: new VoltAgentObservability(),
   server: honoServer({
     port,
     enableSwaggerUI: true,
