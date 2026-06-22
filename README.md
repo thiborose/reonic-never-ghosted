@@ -32,7 +32,16 @@ flowchart TD
 cp .env.example .env      # then put a real OPENAI_API_KEY in it
 ```
 
-That one key is shared by the VoltAgent service and the Python fallback engine.
+This root `.env` is the **only** place keys live. The agent loads it (`../../.env`
+in dev, `env_file` in Docker) and the backend reads it via `env_file` — nothing
+reads a key from elsewhere.
+
+With `OPENAI_API_KEY`, the agent's model (`VOLTAGENT_MODEL`) must be a **bare**
+OpenAI id like `gpt-5-mini`. The default `openai/gpt-5-mini` carries an
+OpenRouter-style prefix that the agent strips automatically when talking to OpenAI
+directly; keep the prefix only if you point it at OpenRouter. If the model id is
+wrong, the agent still returns a result but silently downgrades to its
+deterministic wording (`generation.mode: "deterministic_fallback"`).
 
 ## Run
 

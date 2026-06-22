@@ -19,12 +19,15 @@ agent-driven revision (mapping a whole recommendation back onto one step is the 
 
 from __future__ import annotations
 
+import logging
 import os
 import uuid
 from datetime import datetime
 from typing import Any
 
 import httpx
+
+log = logging.getLogger("reonic.voltagent")
 
 from app.integration.engine import (
     CreativePlay,
@@ -50,6 +53,9 @@ _CHANNEL = {
     "Send WhatsApp Video Message": "whatsapp",
     "Send Gift": "gift",
 }
+# backend Channel -> agent CommunicationSchema channel enum (email|phone|whatsapp|meeting|system|other).
+_COMM_CHANNEL = {"email": "email", "call": "phone", "sms": "other", "whatsapp": "whatsapp", "meeting": "meeting"}
+
 # VoltAgent TaskType -> a plausible persuasion lever (the agent doesn't emit one).
 _LEVER = {
     "Phone Call": PersuasionLever.proximity_trust,
@@ -104,10 +110,9 @@ def _to_request(ctx: EngineContext, *, trigger_type: str, instruction: str | Non
             "scope": [p.get("type", "") for p in (q.products or [])],
             "totalGross": q.total_price,
             "currency": q.currency,
-            "lineItems": [
-                {"label": p.get("type", "item"), "amountGross": None, "optional": False}
-                for p in (q.products or [])
-            ],
+            # amountGross omitted: the agent schema is z.number().optional(), which
+            # rejects null (only undefined). Sending null here 400s the request.
+            "lineItems": [{"label": p.get("type", "item"), "optional": False} for p in (q.products or [])],
         },
         # Be generous with consent so the agent isn't channel-blocked in the demo.
         "consent": {"email": True, "phone": True, "whatsapp": True, "tracking": True},
@@ -116,11 +121,12 @@ def _to_request(ctx: EngineContext, *, trigger_type: str, instruction: str | Non
                 {
                     "occurredAt": _iso(t.timestamp),
                     "direction": t.direction.value,
-                    "channel": t.channel.value,
+                    "channel": _COMM_CHANNEL.get(t.channel.value, "other"),
                     "summary": t.summary or "",
                     **({"body": t.body} if t.body else {}),
                 }
                 for t in ctx.touches
+                if t.timestamp  # occurredAt is required (min length 1); skip undated touches
             ],
             "actions": [],
             "debriefs": [],
@@ -232,13 +238,19 @@ class VoltAgentEngine:
             )
             resp.raise_for_status()
             return _to_result(ctx, resp.json(), include_creative_plays=include_creative_plays)
-        except Exception:
+        except httpx.HTTPStatusError as e:
+            # Surface the agent's own error body (e.g. Zod 400 issues) — don't swallow it.
+            log.warning("VoltAgent %s: %s", e.response.status_code, e.response.text[:500])
             if os.getenv("REONIC_AGENT_STRICT") == "true":
                 raise
-            # Never break the demo: fall back to the deterministic engine.
-            result = self._fake.generate(ctx, include_creative_plays)
-            result.engine = "voltagent (fallback)"
-            return result
+        except Exception as e:
+            log.warning("VoltAgent unreachable: %r", e)
+            if os.getenv("REONIC_AGENT_STRICT") == "true":
+                raise
+        # Never break the demo: fall back to the deterministic engine.
+        result = self._fake.generate(ctx, include_creative_plays)
+        result.engine = "voltagent (fallback)"
+        return result
 
     def draft(self, ctx: EngineContext, step: Step) -> str:
         return self._fake.draft(ctx, step)

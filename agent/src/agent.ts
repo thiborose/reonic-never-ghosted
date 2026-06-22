@@ -13,7 +13,6 @@ if (existsSync(rootEnvPath)) {
   process.loadEnvFile(rootEnvPath);
 }
 
-export const VOLTAGENT_MODEL = process.env.VOLTAGENT_MODEL ?? "openai/gpt-5-mini";
 // Prefer OPENAI_API_KEY; fall back to OPENROUTER_API_KEY so existing .env files keep working.
 const openaiApiKey = process.env.OPENAI_API_KEY ?? process.env.OPENROUTER_API_KEY;
 const openaiBaseUrl =
@@ -21,6 +20,11 @@ const openaiBaseUrl =
   (process.env.OPENROUTER_API_KEY && !process.env.OPENAI_API_KEY
     ? "https://openrouter.ai/api/v1"
     : undefined);
+
+// OpenRouter wants a provider-prefixed id ("openai/gpt-5-mini"); the OpenAI API
+// rejects the prefix. Strip it when we're talking to OpenAI directly.
+const rawModel = process.env.VOLTAGENT_MODEL ?? "openai/gpt-5-mini";
+export const VOLTAGENT_MODEL = openaiBaseUrl ? rawModel : rawModel.replace(/^openai\//, "");
 
 const openai = createOpenAI({
   ...(openaiApiKey ? { apiKey: openaiApiKey } : {}),
