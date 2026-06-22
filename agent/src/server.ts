@@ -1,11 +1,10 @@
-import { Memory, VoltAgent } from "@voltagent/core";
+import { Memory, VoltAgent, VoltAgentObservability } from "@voltagent/core";
 import { LibSQLMemoryAdapter } from "@voltagent/libsql";
 import { honoServer } from "@voltagent/server-hono";
 
 import { createMarketingSalesAssistant } from "./agent.js";
 import { loadKnowledgeBase, summarizeKnowledgeBase } from "./knowledgebase.js";
 import { RecommendRequestSchema, type RecommendRequest } from "./schemas.js";
-import { synthesizeRecommendation } from "./synthesis.js";
 import { recommendNextActionWorkflow } from "./workflow.js";
 
 const port = Number(process.env.PORT ?? 3141);
@@ -26,6 +25,9 @@ export const voltAgent = new VoltAgent({
     recommendNextActionWorkflow,
   },
   memory,
+  // Records spans in-memory and streams them over WebSocket so the VoltOps console
+  // (console.voltagent.dev -> localhost:3141) shows live runs without cloud keys.
+  observability: new VoltAgentObservability(),
   server: honoServer({
     port,
     enableSwaggerUI: true,
@@ -86,13 +88,8 @@ export const voltAgent = new VoltAgent({
           );
         }
 
-        const recommendation = await synthesizeRecommendation({
-          agent: marketingSalesAssistant,
-          request: parsed.data,
-          recommendation: execution.result,
-        });
-
-        return c.json(recommendation);
+        // The workflow's final step already ran LLM synthesis.
+        return c.json(execution.result);
       });
 
       app.post("/api/recommend-next-action/stream", async (c) => {
@@ -174,28 +171,12 @@ function createRecommendationStream(request: RecommendRequest) {
             }
           }
 
-          const deterministicRecommendation = await stream.result;
-          if (deterministicRecommendation === null) {
+          // The workflow's final step already ran LLM synthesis.
+          const recommendation = await stream.result;
+          if (recommendation === null) {
             throw new Error("Recommendation workflow ended without a result");
           }
 
-          trace({
-            phase: "synthesis",
-            title: "Synthesizing demo-ready strategy",
-            detail: "Calling the configured LLM for final wording",
-            status: "running",
-          });
-          const recommendation = await synthesizeRecommendation({
-            agent: marketingSalesAssistant,
-            request,
-            recommendation: deterministicRecommendation,
-          });
-          trace({
-            phase: "synthesis",
-            title: "Strategy wording complete",
-            detail: recommendation.generation?.mode === "llm" ? recommendation.generation.model : "fallback",
-            status: "success",
-          });
           trace({
             phase: "complete",
             title: "Agent run complete",
@@ -286,6 +267,9 @@ function titleForStep(stepId: string | undefined, status: "running" | "success")
   }
   if (normalized === "diagnose-and-score" || normalized.includes("diagnose and score")) {
     return status === "running" ? "Scoring next actions" : "Next actions scored";
+  }
+  if (normalized === "synthesize-strategy" || normalized.includes("synthesize")) {
+    return status === "running" ? "Writing demo-ready strategy" : "Strategy wording complete";
   }
   return `${verb} ${stepId ?? "workflow step"}`;
 }

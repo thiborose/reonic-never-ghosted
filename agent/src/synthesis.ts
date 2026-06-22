@@ -31,7 +31,7 @@ export const SynthesisSchema = z.object({
 });
 
 export async function synthesizeRecommendation(params: {
-  agent: Agent;
+  agent?: Agent; // unused: generateObject calls openaiModel directly. Kept for call-site compatibility.
   request: RecommendRequest;
   recommendation: RecommendationResponse;
 }): Promise<RecommendationResponse> {
