@@ -2,7 +2,8 @@ import { createWorkflowChain } from "@voltagent/core";
 
 import { loadKnowledgeBase, summarizeKnowledgeBase } from "./knowledgebase.js";
 import { recommendNextAction } from "./recommendation.js";
-import { RecommendRequestSchema, RecommendationResponseSchema } from "./schemas.js";
+import { RecommendRequestSchema, RecommendationResponseSchema, type RecommendRequest } from "./schemas.js";
+import { synthesizeRecommendation } from "./synthesis.js";
 
 export const recommendNextActionWorkflow = createWorkflowChain({
   id: "recommend-next-action",
@@ -71,5 +72,33 @@ export const recommendNextActionWorkflow = createWorkflowChain({
         },
       });
       return recommendation;
+    },
+  })
+  .andThen({
+    id: "synthesize-strategy",
+    name: "Synthesize demo-ready strategy",
+    purpose: "Call the configured LLM to turn the deterministic recommendation into precise installer-facing copy.",
+    outputSchema: RecommendationResponseSchema,
+    execute: async ({ data, getStepData, writer }) => {
+      // Original request is the input to the first step; the recommendation is this step's input.
+      const request = getStepData("validate-context")?.input as RecommendRequest;
+      writer.write({
+        type: "agent-progress",
+        metadata: {
+          phase: "synthesize-strategy",
+          title: "Writing demo-ready strategy",
+          detail: "Calling the configured LLM for final wording",
+        },
+      });
+      const synthesized = await synthesizeRecommendation({ request, recommendation: data });
+      writer.write({
+        type: "agent-progress",
+        metadata: {
+          phase: "synthesize-strategy",
+          title: "Strategy wording complete",
+          detail: synthesized.generation?.mode === "llm" ? synthesized.generation.model : "deterministic fallback",
+        },
+      });
+      return synthesized;
     },
   });
