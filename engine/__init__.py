@@ -1,1 +1,0 @@
-"""Never Ghosted strategy engine."""
